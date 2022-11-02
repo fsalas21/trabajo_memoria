@@ -1,0 +1,80 @@
+# npm audit report
+
+d3-color  <3.1.0
+Severity: high
+d3-color vulnerable to ReDoS - https://github.com/advisories/GHSA-36jr-mh4h-2g58
+No fix available
+node_modules/d3-color
+  @nivo/colors  *
+  Depends on vulnerable versions of @nivo/core
+  Depends on vulnerable versions of d3-color
+  Depends on vulnerable versions of d3-scale
+  Depends on vulnerable versions of d3-scale-chromatic
+  node_modules/@nivo/colors
+    @nivo/pie  *
+    Depends on vulnerable versions of @nivo/arcs
+    Depends on vulnerable versions of @nivo/colors
+    Depends on vulnerable versions of @nivo/core
+    Depends on vulnerable versions of @nivo/legends
+    Depends on vulnerable versions of @nivo/tooltip
+    node_modules/@nivo/pie
+  @nivo/core  *
+  Depends on vulnerable versions of @nivo/tooltip
+  Depends on vulnerable versions of d3-color
+  Depends on vulnerable versions of d3-interpolate
+  Depends on vulnerable versions of d3-scale
+  Depends on vulnerable versions of d3-scale-chromatic
+  node_modules/@nivo/core
+    @nivo/arcs  *
+    Depends on vulnerable versions of @nivo/colors
+    Depends on vulnerable versions of @nivo/core
+    node_modules/@nivo/arcs
+    @nivo/legends  >=0.56.0
+    Depends on vulnerable versions of @nivo/core
+    node_modules/@nivo/legends
+    @nivo/tooltip  *
+    Depends on vulnerable versions of @nivo/core
+    node_modules/@nivo/tooltip
+  d3-interpolate  0.1.3 - 2.0.1
+  Depends on vulnerable versions of d3-color
+  node_modules/d3-interpolate
+    d3-scale  0.1.5 - 3.3.0
+    Depends on vulnerable versions of d3-interpolate
+    node_modules/d3-scale
+    d3-scale-chromatic  0.1.0 - 2.0.0
+    Depends on vulnerable versions of d3-color
+    Depends on vulnerable versions of d3-interpolate
+    node_modules/d3-scale-chromatic
+
+nth-check  <2.0.1
+Severity: high
+Inefficient Regular Expression Complexity in nth-check - https://github.com/advisories/GHSA-rp65-9cf3-cjxr
+fix available via `npm audit fix --force`
+Will install react-scripts@2.1.3, which is a breaking change
+node_modules/svgo/node_modules/nth-check
+  css-select  <=3.1.0
+  Depends on vulnerable versions of nth-check
+  node_modules/svgo/node_modules/css-select
+    svgo  1.0.0 - 1.3.2
+    Depends on vulnerable versions of css-select
+    node_modules/svgo
+      @svgr/plugin-svgo  <=5.5.0
+      Depends on vulnerable versions of svgo
+      node_modules/@svgr/plugin-svgo
+        @svgr/webpack  4.0.0 - 5.5.0
+        Depends on vulnerable versions of @svgr/plugin-svgo
+        node_modules/@svgr/webpack
+          react-scripts  >=2.1.4
+          Depends on vulnerable versions of @svgr/webpack
+          node_modules/react-scripts
+
+16 high severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
