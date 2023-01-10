@@ -4,6 +4,13 @@ import './index.css';
 import App from './components/App/App';
 import reportWebVitals from './reportWebVitals';
 
+const express = require('express');
+const aplication = express();
+
+aplication.listen(3000, () => {
+  console.log('Server en el puerto 3000')
+});
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

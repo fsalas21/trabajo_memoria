@@ -1,8 +1,8 @@
 import * as React from 'react';
 // import { NavLink } from 'react-router-dom';
-import { AppBar, Avatar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+// import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 
 function Header() {
 
@@ -12,31 +12,22 @@ function Header() {
     //     Seguimiento: '/seguimiento',
     //     Encuesta: '/encuesta'
     // };
-    const settings = ['Cerrar Sesión'];
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [setAnchorElUser] = React.useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
-    };
-    const handleOpenUserMenu = (event) => {
-        setAnchorElUser(event.currentTarget);
     };
 
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
 
-    const handleCloseUserMenu = () => {
+    const handleLogOut = () => {
         setAnchorElUser(null);
     };
 
-    // console.log(
-    //     Object.entries(pageDict).map(
-    //         ([key, value]) => `My key is ${key} and my value is ${value}`
-    //     )
-    // )
 
     return (
         <AppBar position='static' sx={{ bgcolor: '#00498A' }}>
@@ -68,37 +59,15 @@ function Header() {
                         {pages.map((page) => {
                             console.log(page);
                             return (
-                                <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }} variant='outlined'>
+                                <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block', borderColor: 'white' }} variant='outlined'>
                                 {page}
                                 </Button>
                             )
                         })}
                     </Box>
 
-                    <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title='Configuración'>
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar sx={{ bgcolor: 'inherit' }}>
-                                    <AccountCircleRoundedIcon />
-                                </Avatar>
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            sx={{ mt: '45px' }}
-                            id='menu-appbar'
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                            keepMounted
-                            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                            >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign='center'>{setting}</Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
+                    <Box sx={{ flexGrow: 1, display: {xs: 'none', md: 'flex'}, '& button': { m: 1 } }} display='flex' justifyContent='flex-end'>
+                        <Button onClick={handleLogOut} sx={{ my: 2, color: 'white', display: 'block', bgcolor: 'red', fontSize: 14,  ':hover': { bgcolor: '#B30000' } }} variant='contained'>Cerrar Sesión</Button>
                     </Box>
                 </Toolbar>
             </Container>
