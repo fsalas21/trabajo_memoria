@@ -1,19 +1,17 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Layout from '../Layout/Layout';
+import Graphics from '../../Layout/Graphics.js';
+import SurveyForm from '../Survey/Survey.js';
 
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={ <Layout />}>
-
-        </Route>
+        <Route path='/' element={ <Graphics />}></Route>
+        <Route path='/encuesta-estudiante' element={ <SurveyForm/> }></Route>
       </Routes>
     </BrowserRouter>
   );
 }
 
-export default App;
