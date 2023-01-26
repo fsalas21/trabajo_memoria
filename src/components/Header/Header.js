@@ -4,7 +4,7 @@ import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Ty
 import MenuIcon from '@mui/icons-material/Menu';
 // import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 
-function Header() {
+export default function Header() {
 
     const pages = ['Inicio', 'Seguimiento', 'Encuesta'];
     // const pageDict = {
@@ -74,5 +74,3 @@ function Header() {
         </AppBar>
     );
 }
-
-export default Header;
