@@ -1,5 +1,5 @@
-import Header from '../components/Header/Header'
-import Home from "../components/Home/Home";
+import Header from '../Header/Header'
+import Home from "../Home/Home";
 
 function Layout() {
     return (

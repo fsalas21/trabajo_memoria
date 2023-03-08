@@ -1,5 +1,6 @@
 import { Box, Button, Card, CardContent, Checkbox, FormControl, FormGroup, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import * as React from 'react';
+import "./survey.css";
 
 const CASA_CENTRAL = 'Campus Casa Central Valparaíso';
 const CAMPUS_SJ = 'Campus Santiago San Joaquín';
@@ -25,10 +26,7 @@ const AU_DETAIL_QUESTION = 'Detalles de su respuesta anterior.'
 const OTRO_TITLE = 'Otros motivos';
 const OTRO_QUESTION = 'Detalle qué otros motivos lo habrían motivado a dejar la carrera y/o universidad';
 
-
-export default function SurveyForm() {
-
-
+const SurveyForm = () => {
 
     const [value, setValueRadio] = React.useState('');
 
@@ -40,8 +38,11 @@ export default function SurveyForm() {
         otro : false
     });
 
+    const { SEF, VOC, RA, AU, otro } = stateReasons;
+
     const handleRadioChange = (event) => {
         setValueRadio(event.target.value);
+        console.log(event.target.value);
     };
 
     const handleChangeCheckboxReasons = (event) => {
@@ -56,11 +57,10 @@ export default function SurveyForm() {
         console.table(stateReasons);
     }
 
-    const { SEF, VOC, RA, AU, otro } = stateReasons;
-
     return (
         <Box display='flex' justifyContent='center'>
             <div>
+                {/* Inicio de encuesta */}
                 <Card sx={{ minWidth: 275, maxWidth: 1000 }}>
                     <CardContent>
                         <Typography variant='h2' align='center' > Encuesta Deserción Estudiantil </Typography>
@@ -117,6 +117,7 @@ export default function SurveyForm() {
                         </Box>
                     </CardContent>
                 </Card>
+                {/* Sección de selección de motivos */}
                 <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
                     <CardContent>
                         <Typography variant='h2' align='center' > {TITLE} </Typography>
@@ -152,204 +153,221 @@ export default function SurveyForm() {
                     </CardContent>
                 </Card>
                 {/* Habilitar preguntas dependiendo de las opciones anteriores */}
-                <div>
-                    <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                        <CardContent>
-                            <Typography variant='h2' align='center' > {SEF_SECTION_TITLE} </Typography>
-                            <Typography><br/></Typography>
-                            <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                                <CardContent>
-                                    <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
-                                        <FormLabel component='legend'>{ SEF_QUESTION }</FormLabel>
-                                        {/* <FormGroup>
-                                            <FormControlLabel control={
-                                                <Checkbox checked={SEC} onChange={handleChangeCheckbox} name='SEC' />
-                                            } label='Situación Económica y Familiar' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={VOC} onChange={handleChangeCheckbox} name='VOC' />
-                                            } label='Vocacional' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={RA} onChange={handleChangeCheckbox} name='RA' />
-                                            } label='Rendimiento Académico' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={AU} onChange={handleChangeCheckbox} name='AU' />
-                                            } label='Ambiente Universitario' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={otro} onChange={handleChangeCheckbox} name='otro' />
-                                            } label='Otro (Terminar formulario)' />
-                                        </FormGroup> */}
-                                    </FormControl>
-                                    <Button variant='contained' onClick={onSubmitCheckbox}>
-                                            Submit
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </CardContent>
-                    </Card>
-                </div>
-                <div>
-                    <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                        <CardContent>
-                            <Typography variant='h2' align='center' > {VOC_SECTION_TITLE} </Typography>
-                            <Typography><br/></Typography>
-                            <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                                <CardContent>
-                                    <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
-                                        <FormLabel component='legend'>{ VOC_QUESTION }</FormLabel>
-                                        {/* <FormGroup>
-                                            <FormControlLabel control={
-                                                <Checkbox checked={SEC} onChange={handleChangeCheckbox} name='SEC' />
-                                            } label='Situación Económica y Familiar' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={VOC} onChange={handleChangeCheckbox} name='VOC' />
-                                            } label='Vocacional' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={RA} onChange={handleChangeCheckbox} name='RA' />
-                                            } label='Rendimiento Académico' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={AU} onChange={handleChangeCheckbox} name='AU' />
-                                            } label='Ambiente Universitario' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={otro} onChange={handleChangeCheckbox} name='otro' />
-                                            } label='Otro (Terminar formulario)' />
-                                        </FormGroup> */}
-                                    </FormControl>
-                                    <Button variant='contained' onClick={onSubmitCheckbox}>
-                                            Submit
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </CardContent>
-                    </Card>
-                </div>
-                <div>
-                    <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                        <CardContent>
-                            <Typography variant='h2' align='center' > {RA_TITLE} </Typography>
-                            <Typography><br/></Typography>
-                            <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                                <CardContent>
-                                    <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
-                                        <FormLabel component='legend'>{ RA_FIRST_QUESTION }</FormLabel>
-                                        {/* <FormGroup>
-                                            <FormControlLabel control={
-                                                <Checkbox checked={SEC} onChange={handleChangeCheckbox} name='SEC' />
-                                            } label='Situación Económica y Familiar' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={VOC} onChange={handleChangeCheckbox} name='VOC' />
-                                            } label='Vocacional' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={RA} onChange={handleChangeCheckbox} name='RA' />
-                                            } label='Rendimiento Académico' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={AU} onChange={handleChangeCheckbox} name='AU' />
-                                            } label='Ambiente Universitario' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={otro} onChange={handleChangeCheckbox} name='otro' />
-                                            } label='Otro (Terminar formulario)' />
-                                        </FormGroup> */}
-                                    </FormControl>
-                                    <Button variant='contained' onClick={onSubmitCheckbox}>
-                                            Submit
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                            <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                                <CardContent>
-                                    <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
-                                        <FormLabel component='legend'>{ RA_SECOND_QUESTION }</FormLabel>
-                                        {/* <FormGroup>
-                                            <FormControlLabel control={
-                                                <Checkbox checked={SEC} onChange={handleChangeCheckbox} name='SEC' />
-                                            } label='Situación Económica y Familiar' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={VOC} onChange={handleChangeCheckbox} name='VOC' />
-                                            } label='Vocacional' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={RA} onChange={handleChangeCheckbox} name='RA' />
-                                            } label='Rendimiento Académico' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={AU} onChange={handleChangeCheckbox} name='AU' />
-                                            } label='Ambiente Universitario' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={otro} onChange={handleChangeCheckbox} name='otro' />
-                                            } label='Otro (Terminar formulario)' />
-                                        </FormGroup> */}
-                                    </FormControl>
-                                    <Button variant='contained' onClick={onSubmitCheckbox}>
-                                            Submit
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </CardContent>
-                    </Card>
-                </div>
-                <div>
-                    <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                        <CardContent>
-                            <Typography variant='h2' align='center' > {AU_TITLE} </Typography>
-                            <Typography><br/></Typography>
-                            <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                                <CardContent>
-                                    <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
-                                        <FormLabel component='legend'>{ AU_QUESTION }</FormLabel>
-                                        {/* <FormGroup>
-                                            <FormControlLabel control={
-                                                <Checkbox checked={SEC} onChange={handleChangeCheckbox} name='SEC' />
-                                            } label='Situación Económica y Familiar' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={VOC} onChange={handleChangeCheckbox} name='VOC' />
-                                            } label='Vocacional' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={RA} onChange={handleChangeCheckbox} name='RA' />
-                                            } label='Rendimiento Académico' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={AU} onChange={handleChangeCheckbox} name='AU' />
-                                            } label='Ambiente Universitario' />
-                                            <FormControlLabel control={
-                                                <Checkbox checked={otro} onChange={handleChangeCheckbox} name='otro' />
-                                            } label='Otro (Terminar formulario)' />
-                                        </FormGroup> */}
-                                    </FormControl>
-                                    <Button variant='contained' onClick={onSubmitCheckbox}>
-                                            Submit
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                            <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                                <CardContent>
-                                    <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
-                                        <FormLabel component='legend'>{ AU_DETAIL_QUESTION }</FormLabel>
-                                        {/* RESPUESTA DE TEXTO */}
-                                    </FormControl>
-                                    <Button variant='contained' onClick={onSubmitCheckbox}>
-                                            Submit
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </CardContent>
-                    </Card>
-                </div>
-                <div>
-                    <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                        <CardContent>
-                            <Typography variant='h2' align='center' > {OTRO_TITLE} </Typography>
-                            <Typography><br/></Typography>
-                            <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                                <CardContent>
-                                    <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
-                                        <FormLabel component='legend'>{ OTRO_QUESTION }</FormLabel>
-                                        {/* RESPUESTA DE TEXTO */}
-                                    </FormControl>
-                                    <Button variant='contained' onClick={onSubmitCheckbox}>
-                                            Submit
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </CardContent>
-                    </Card>
-                </div>
+                {
+                    stateReasons['SEF'] &&
+                    <div>
+                        <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                            <CardContent>
+                                <Typography variant='h2' align='center' > {SEF_SECTION_TITLE} </Typography>
+                                <Typography><br/></Typography>
+                                <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                                    <CardContent>
+                                        <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
+                                            <FormLabel component='legend'>{ SEF_QUESTION }</FormLabel>
+                                            {/* <FormGroup>
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={SEC} onChange={handleChangeCheckbox} name='SEC' />
+                                                } label='Situación Económica y Familiar' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={VOC} onChange={handleChangeCheckbox} name='VOC' />
+                                                } label='Vocacional' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={RA} onChange={handleChangeCheckbox} name='RA' />
+                                                } label='Rendimiento Académico' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={AU} onChange={handleChangeCheckbox} name='AU' />
+                                                } label='Ambiente Universitario' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={otro} onChange={handleChangeCheckbox} name='otro' />
+                                                } label='Otro (Terminar formulario)' />
+                                            </FormGroup> */}
+                                        </FormControl>
+                                        <Button variant='contained' onClick={onSubmitCheckbox}>
+                                                Submit
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </CardContent>
+                        </Card>
+                    </div>
+                }
+                {
+                    stateReasons['VOC'] &&
+                    <div>
+                        <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                            <CardContent>
+                                <Typography variant='h2' align='center' > {VOC_SECTION_TITLE} </Typography>
+                                <Typography><br/></Typography>
+                                <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                                    <CardContent>
+                                        <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
+                                            <FormLabel component='legend'>{ VOC_QUESTION }</FormLabel>
+                                            {/* <FormGroup>
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={SEC} onChange={handleChangeCheckbox} name='SEC' />
+                                                } label='Situación Económica y Familiar' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={VOC} onChange={handleChangeCheckbox} name='VOC' />
+                                                } label='Vocacional' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={RA} onChange={handleChangeCheckbox} name='RA' />
+                                                } label='Rendimiento Académico' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={AU} onChange={handleChangeCheckbox} name='AU' />
+                                                } label='Ambiente Universitario' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={otro} onChange={handleChangeCheckbox} name='otro' />
+                                                } label='Otro (Terminar formulario)' />
+                                            </FormGroup> */}
+                                        </FormControl>
+                                        <Button variant='contained' onClick={onSubmitCheckbox}>
+                                                Submit
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </CardContent>
+                        </Card>
+                    </div>
+                }
+                {
+                    stateReasons['RA'] &&
+                    <div>
+                        <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                            <CardContent>
+                                <Typography variant='h2' align='center' > {RA_TITLE} </Typography>
+                                <Typography><br/></Typography>
+                                <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                                    <CardContent>
+                                        <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
+                                            <FormLabel component='legend'>{ RA_FIRST_QUESTION }</FormLabel>
+                                            {/* <FormGroup>
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={SEC} onChange={handleChangeCheckbox} name='SEC' />
+                                                } label='Situación Económica y Familiar' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={VOC} onChange={handleChangeCheckbox} name='VOC' />
+                                                } label='Vocacional' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={RA} onChange={handleChangeCheckbox} name='RA' />
+                                                } label='Rendimiento Académico' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={AU} onChange={handleChangeCheckbox} name='AU' />
+                                                } label='Ambiente Universitario' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={otro} onChange={handleChangeCheckbox} name='otro' />
+                                                } label='Otro (Terminar formulario)' />
+                                            </FormGroup> */}
+                                        </FormControl>
+                                        <Button variant='contained' onClick={onSubmitCheckbox}>
+                                                Submit
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                                <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                                    <CardContent>
+                                        <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
+                                            <FormLabel component='legend'>{ RA_SECOND_QUESTION }</FormLabel>
+                                            {/* <FormGroup>
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={SEC} onChange={handleChangeCheckbox} name='SEC' />
+                                                } label='Situación Económica y Familiar' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={VOC} onChange={handleChangeCheckbox} name='VOC' />
+                                                } label='Vocacional' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={RA} onChange={handleChangeCheckbox} name='RA' />
+                                                } label='Rendimiento Académico' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={AU} onChange={handleChangeCheckbox} name='AU' />
+                                                } label='Ambiente Universitario' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={otro} onChange={handleChangeCheckbox} name='otro' />
+                                                } label='Otro (Terminar formulario)' />
+                                            </FormGroup> */}
+                                        </FormControl>
+                                        <Button variant='contained' onClick={onSubmitCheckbox}>
+                                                Submit
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </CardContent>
+                        </Card>
+                    </div>
+                }
+                {
+                    stateReasons['AU'] &&
+                    <div>
+                        <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                            <CardContent>
+                                <Typography variant='h2' align='center' > {AU_TITLE} </Typography>
+                                <Typography><br/></Typography>
+                                <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                                    <CardContent>
+                                        <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
+                                            <FormLabel component='legend'>{ AU_QUESTION }</FormLabel>
+                                            {/* <FormGroup>
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={SEC} onChange={handleChangeCheckbox} name='SEC' />
+                                                } label='Situación Económica y Familiar' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={VOC} onChange={handleChangeCheckbox} name='VOC' />
+                                                } label='Vocacional' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={RA} onChange={handleChangeCheckbox} name='RA' />
+                                                } label='Rendimiento Académico' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={AU} onChange={handleChangeCheckbox} name='AU' />
+                                                } label='Ambiente Universitario' />
+                                                <FormControlLabel control={
+                                                    <Checkbox checked={otro} onChange={handleChangeCheckbox} name='otro' />
+                                                } label='Otro (Terminar formulario)' />
+                                            </FormGroup> */}
+                                        </FormControl>
+                                        <Button variant='contained' onClick={onSubmitCheckbox}>
+                                                Submit
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                                <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                                    <CardContent>
+                                        <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
+                                            <FormLabel component='legend'>{ AU_DETAIL_QUESTION }</FormLabel>
+                                            {/* RESPUESTA DE TEXTO */}
+                                        </FormControl>
+                                        <Button variant='contained' onClick={onSubmitCheckbox}>
+                                                Submit
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </CardContent>
+                        </Card>
+                    </div>
+                }
+                {
+                    stateReasons['otro'] &&
+                    <div>
+                        <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                            <CardContent>
+                                <Typography variant='h2' align='center' > {OTRO_TITLE} </Typography>
+                                <Typography><br/></Typography>
+                                <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
+                                    <CardContent>
+                                        <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
+                                            <FormLabel component='legend'>{ OTRO_QUESTION }</FormLabel>
+                                            {/* RESPUESTA DE TEXTO */}
+                                        </FormControl>
+                                        <Button variant='contained' onClick={onSubmitCheckbox}>
+                                                Submit
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </CardContent>
+                        </Card>
+                    </div>
+                }
             </div>
         </Box>
     )
 }
+
+export default SurveyForm;

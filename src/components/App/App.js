@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Graphics from '../../Layout/Graphics.js';
+import Graphics from '../Layout/Graphics.js';
 import SurveyForm from '../Survey/Survey.js';
 
 
