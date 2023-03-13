@@ -172,7 +172,7 @@ const SurveyForm = () => {
                             <CardContent>
                                     <Typography variant='h2' align='center' > Encuesta Deserción Estudiantil </Typography>
                                     <ColoredLine color='#fdfdfd' />
-                                    <Typography> El objetivo de esta encuesta es conocer los globalReasons por los cuales estudiantes del DI se han retirado o abandonado su carrera en los últimos  años, de tal manera de contar con evidencias que permitan definir planes de mejoras para reducir la deserción. <br/> <b>Las respuestas serán completamente anónimas</b>, solo se piden algunos datos para temas de mantención de la base de datos. </Typography>
+                                    <Typography variant='body2'> El objetivo de esta encuesta es conocer los globalReasons por los cuales estudiantes del DI se han retirado o abandonado su carrera en los últimos  años, de tal manera de contar con evidencias que permitan definir planes de mejoras para reducir la deserción. <br/> <b>Las respuestas serán completamente anónimas</b>, solo se piden algunos datos para temas de mantención de la base de datos. </Typography>
                             </CardContent>
                         </Card>
                         <br/>
@@ -241,6 +241,7 @@ const SurveyForm = () => {
                 </Card>
                 {/* Habilitar preguntas dependiendo de las opciones anteriores */}
                 <div>
+                    {/* Situación Económica y Familiar */}
                     {
                         globalReasons[0].isChecked &&
                         <div>
@@ -256,6 +257,7 @@ const SurveyForm = () => {
                             </Card>
                         </div>
                     }
+                    {/* Vocacional */}
                     {
                         globalReasons[1].isChecked &&
                         <div>
@@ -273,10 +275,12 @@ const SurveyForm = () => {
                                             <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
                                             <Paper className='paperTest' elevation={0}>
                                                 <TextField
+                                                    sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
+                                                        border: '1px solid #E0E0E0'} }}}
                                                     multiline
                                                     fullWidth
+                                                    rows={3}
                                                     id="filled-textarea"
-                                                    variant="standard"
                                                 />
                                             </Paper>
                                         </div>
@@ -285,6 +289,7 @@ const SurveyForm = () => {
                             </Card>
                         </div>
                     }
+                    {/* Rendimiento Académico */}
                     {
                         globalReasons[2].isChecked &&
                         <div>
@@ -305,6 +310,7 @@ const SurveyForm = () => {
                             </Card>
                         </div>
                     }
+                    {/* Ambiente Universitario */}
                     {
                         globalReasons[3].isChecked &&
                         <div>
@@ -325,10 +331,12 @@ const SurveyForm = () => {
                                             <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
                                             <Paper className='paperTest' elevation={0}>
                                                 <TextField
+                                                    sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
+                                                        border: '1px solid #E0E0E0'} }}}
                                                     multiline
                                                     fullWidth
+                                                    rows={3}
                                                     id="filled-textarea"
-                                                    variant="standard"
                                                 />
                                             </Paper>
                                         </div>
@@ -337,21 +345,25 @@ const SurveyForm = () => {
                             </Card>
                         </div>
                     }
+                    {/* Otros motivos */}
                     {
                         globalReasons[4].isChecked &&
                         <div>
                             <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
                                 <CardContent>
                                     <Typography variant='h3' align='center' > {OTRO_TITLE} </Typography>
-                                    <Typography><br/></Typography>
-                                    <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}>
-                                        <CardContent>
-                                            <FormControl sx={{ m: 3 }} component='fieldset' variant='standard' required>
-                                                <FormLabel component='legend'>{ OTRO_QUESTION }</FormLabel>
-                                                {/* RESPUESTA DE TEXTO */}
-                                            </FormControl>
-                                        </CardContent>
-                                    </Card>
+                                    <ColoredLine color='#E0E0E0' />
+                                    <Typography className='cardSubtitle' variant='body'>{ OTRO_QUESTION }</Typography>
+                                    <Paper className='paperTest' elevation={0}>
+                                        <TextField
+                                            sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
+                                                border: '1px solid #E0E0E0'} }}}
+                                            multiline
+                                            fullWidth
+                                            rows={3}
+                                            id="filled-textarea"
+                                        />
+                                    </Paper>
                                 </CardContent>
                             </Card>
                         </div>
