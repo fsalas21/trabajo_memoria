@@ -1,18 +1,14 @@
-.reasons-list {
-    list-style: none;
-    padding: 0;
+.FirstCard .TitleSection {
+    background-color: #00498A;
+    color: #fdfdfd;
+    text-shadow: rgba(0, 0, 0, 0.63) 1px 0px;
 }
 
-.reasons-list li {
-    margin-bottom: 0.5rem;
+.cardSubtitle {
+    color: rgb(126, 126, 126);
 }
 
-.reasons-list-item {
-    display: flex;
-    justify-content: space-between;
-}
-
-.reasons-list-item label {
-    vertical-align: text-bottom;
-    margin-left: 0.2rem;
+.paperTest {
+    padding-left: 20px;
+    padding-bottom: 15px;
 }
