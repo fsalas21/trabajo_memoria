@@ -5,7 +5,7 @@ import './survey.css';
 
 const CASA_CENTRAL = 'Campus Casa Central Valparaíso';
 const CAMPUS_SJ = 'Campus Santiago San Joaquín';
-const FORMAT = 'Formato: 11111111-1';
+// const FORMAT = 'Formato: 11111111-1';
 
 const TITLE = 'Principales Motivos de Retiro';
 const DESCRIPTION = 'A continuación por favor seleccione las casillas que más se asemejan a su motivo de retiro de la universidad.';
@@ -28,6 +28,9 @@ const DETAIL_QUESTION = 'Detalles de su respuesta anterior.'
 
 const OTRO_TITLE = 'Otros motivos';
 const OTRO_QUESTION = 'Detalle qué otros motivos lo habrían motivado a dejar la carrera y/o universidad';
+
+const MAX_RUT_WIDTH = 10;
+const MAX_ROL_WIDTH = 11;
 
 const SurveyForm = () => {
 
@@ -83,6 +86,49 @@ const SurveyForm = () => {
         {id: '5', name: 'Mala infraestructura (pedir detallar)', isChecked: false},
         {id: '6', name: OTRO_TITLE, isChecked: false}
     ]);
+
+    const [errorRutMessage, setErrorRutMessage] = React.useState("");
+
+    const [rut, setRUT] = React.useState("");
+
+    React.useEffect(() => {
+        let regex = /[a-zA-Z_*.]/;
+        if (rut.length > MAX_RUT_WIDTH) {
+            setErrorRutMessage('RUT contiene más de 9 dígitos.');
+        }
+        else if (regex.test(rut)) {
+            setErrorRutMessage('RUT no debe contener letras o caracteres especiales.')
+        }
+    }, [rut]);
+
+    React.useEffect(() => {
+        let regex = /[a-zA-Z_*.]/;
+        if (rut.length <= MAX_RUT_WIDTH && !(regex.test(rut)) && errorRutMessage) {
+            setErrorRutMessage("");
+        }
+    }, [rut, errorRutMessage]);
+
+    const [errorRolMessage, setErrorRolMessage] = React.useState("");
+
+    const [rol, setRol] = React.useState("");
+
+    React.useEffect(() => {
+        let regex = /[a-zA-Z_*.]/;
+        if (rol.length > MAX_ROL_WIDTH) {
+            setErrorRolMessage('Rol contiene más de 10 dígitos.');
+        }
+        else if (regex.test(rol)) {
+            setErrorRolMessage('Rol no debe contener letras o caracteres especiales.')
+        }
+    }, [rol]);
+
+    React.useEffect(() => {
+        let regex = /[a-zA-Z_*.]/;
+        if (rol.length <= MAX_ROL_WIDTH && !(regex.test(rol)) && errorRolMessage) {
+            setErrorRolMessage("");
+        }
+    }, [rol, errorRolMessage]);
+
 
     const handleRadioChange = (event) => {
         setValueRadio(event.target.value);
@@ -144,12 +190,25 @@ const SurveyForm = () => {
 
     const onSubmitCheckbox = (event) => {
         event.preventDefault();
+        console.log('globalReasons');
+        let selectedGlobalReasons = []
+        globalReasons.forEach(element => {
+            if (element.isChecked) {
+                selectedGlobalReasons.push(element.name);
+            }
+        })
+        console.log('globalFiltered:', selectedGlobalReasons);
         console.table(globalReasons);
-        console.table(familyEconomicReasons);
-        console.table(vocationalReasons);
-        console.table(firstAcademicReasons);
-        console.table(secondAcademicReasons);
-        console.table(atmosphereReasons);
+        // console.log('familyEconomicReasons');
+        // console.table(familyEconomicReasons);
+        // console.log('vocationalReasons');
+        // console.table(vocationalReasons);
+        // console.log('firstAcademicReasons');
+        // console.table(firstAcademicReasons);
+        // console.log('secondAcademicReasons');
+        // console.table(secondAcademicReasons);
+        // console.log('atmosphereReasons');
+        // console.table(atmosphereReasons);
     }
 
     const ColoredLine = ({ color }) => (
@@ -161,6 +220,39 @@ const SurveyForm = () => {
             }}
         />
     );
+
+    const formatRut = (rut) => {
+        rut = rut.replace('-', '');
+        if (rut.length >= MAX_RUT_WIDTH-1) {
+            let notFormattedRut = rut;
+            let firstPart = notFormattedRut.substring(0, rut.length - 1);
+            let dv = notFormattedRut.substring(rut.length - 1);
+            return firstPart + '-' + dv;
+        }
+        return rut;
+    }
+
+    const formatRol = (rol) => {
+        rol = rol.replace('-', '');
+        if (rol.length >= MAX_ROL_WIDTH-1) {
+            let notFormattedRut = rol;
+            let firstPart = notFormattedRut.substring(0, rol.length - 1);
+            let dv = notFormattedRut.substring(rol.length - 1);
+            return firstPart + '-' + dv;
+        }
+        return rol;
+    }
+
+    const handleRUT = (event) => {
+        console.log('event', event);
+        event.target.value = formatRut(event.target.value);
+        setRUT(event.target.value);
+    }
+
+    const handleRol = (event) => {
+        event.target.value = formatRol(event.target.value);
+        setRol(event.target.value);
+    }
 
     return (
         <Box display='flex' justifyContent='center' sx={{marginTop: '30px'}}>
@@ -190,10 +282,10 @@ const SurveyForm = () => {
                             </Grid>
                             <Grid container direction={'row'} columnSpacing={5}>
                                 <Grid item xs={6}>
-                                    <TextField id='rut' label='RUT' helperText={FORMAT} fullWidth required />
+                                    <TextField id='rut' label='RUT' error={rut.length > MAX_RUT_WIDTH || /[a-zA-Z]/.test(rut) } helperText={errorRutMessage} onChange={handleRUT} fullWidth required />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <TextField id='rol' label='Rol USM' helperText={FORMAT} fullWidth required />
+                                    <TextField id='rol' label='Rol USM' error={rol.length > MAX_ROL_WIDTH || /[a-zA-Z]/.test(rol) } helperText={errorRolMessage} onChange={handleRol} fullWidth required />
                                 </Grid>
                             </Grid>
                             <Grid container direction={'row'} spacing={5}>
@@ -374,7 +466,7 @@ const SurveyForm = () => {
                 </div>
             </div>
         </Box>
-    )
+    );
 }
 
 export default SurveyForm;
