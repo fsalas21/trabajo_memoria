@@ -1,17 +1,15 @@
 import * as React from 'react';
-// import { NavLink } from 'react-router-dom';
-import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography, Link } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-// import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import './Header.css'
 
 export default function Header() {
 
-    const pages = ['Inicio', 'Seguimiento', 'Encuesta'];
-    // const pageDict = {
-    //     Inicio: '/',
-    //     Seguimiento: '/seguimiento',
-    //     Encuesta: '/encuesta'
-    // };
+    const pageDict = [
+        {id: 0, Name: 'Inicio', Url: '/'},
+        {id: 1, Name: 'Seguimiento', Url: '/seguimiento'},
+        {id: 2, Name: 'Encuesta', Url: '/encuesta-estudiante'}
+    ];
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [setAnchorElUser] = React.useState(null);
@@ -34,7 +32,7 @@ export default function Header() {
             <Container maxWidth='xl'>
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton size='large' aria-label='account of current user' aria-controls='menu-appbar' aria-haspopup='true' onClick={handleOpenNavMenu} color='inherit'>
+                        <IconButton size='large' aria-controls='menu-appbar' aria-haspopup='true' onClick={handleOpenNavMenu} color='inherit'>
                             <MenuIcon />
                         </IconButton>
                         <Menu
@@ -46,22 +44,22 @@ export default function Header() {
                             open={Boolean(anchorElNav)}
                             onClose={handleCloseNavMenu}
                             sx={{ display: { xs: 'block', md: 'none'} }}
-                            >
-                                {pages.map((page) => (
-                                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                        <Typography textAlign='center'>{page}</Typography>
-                                    </MenuItem>
-                                ))}
+                            >   {pageDict.map((page) => (
+                                <MenuItem key={page.Name} onClick={handleCloseNavMenu}>
+                                    <Typography textAlign='center'>{page.Name}</Typography>
+                                </MenuItem>
+                            ))}
                         </Menu>
                     </Box>
 
                     <Box sx={{ flexGrow: 1, display: {xs: 'none', md: 'flex'}, '& button': { m: 1 } }}>
-                        {pages.map((page) => {
-                            console.log(page);
+                        {pageDict.map((page) => {
                             return (
-                                <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block', borderColor: 'white' }} variant='outlined'>
-                                {page}
-                                </Button>
+                                <Link href={page.Url} key={page.id}  underline='none'>
+                                    <Button className='headerButton' key={page.id} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block', borderColor: 'white', borderWidth: '2px' }} size='large' variant='outlined'>
+                                        {page.Name}
+                                    </Button>
+                                </Link>
                             )
                         })}
                     </Box>

@@ -1,11 +1,11 @@
 import Header from '../Header/Header'
-import Home from "../Home/Home";
+import TableTracking from '../Table/Table';
 
 const Graphics = () => {
     return (
         <div>
             <Header />
-            <Home />
+            <TableTracking />
         </div>
     );
 }
