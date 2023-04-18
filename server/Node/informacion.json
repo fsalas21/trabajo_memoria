@@ -1,0 +1,21 @@
+[{
+  "_id": {
+    "$oid": "642762bdc1c6203282ce2b00"
+  },
+  "nombre": "Fabián Andrés",
+  "apellidos": "Salas Melo",
+  "correo": "f.salasdd@hotmail.com",
+  "surveySentDate": "2023-10-01T21:22:43.000",
+  "answeredSurvey": true,
+  "timesSent": 3
+},{
+  "_id": {
+    "$oid": "642764eec1c6203282ce2b01"
+  },
+  "nombre": "Test Name",
+  "apellidos": "Test Lastname",
+  "correo": "test@test.com",
+  "surveySentDate": "2022-11-01T00:00:00.000",
+  "answeredSurvey": false,
+  "timesSent": 1
+}]

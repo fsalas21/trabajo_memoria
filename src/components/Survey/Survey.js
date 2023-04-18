@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, TextField, Typography } from '@mui/material';
-import CheckboxComponent from '../CheckboxComponent/CheckboxComponent';
-import './survey.css';
-import Header from '../Header/Header';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
+import CheckboxComponent from '../CheckboxComponent/CheckboxComponent';
+import Header from '../Header/Header';
+import './survey.css';
 
 const CASA_CENTRAL = 'Campus Casa Central Valparaíso';
 const CAMPUS_SJ = 'Campus Santiago San Joaquín';
-// const FORMAT = 'Formato: 11111111-1';
 
 const TITLE = 'Principales Motivos de Retiro';
 const DESCRIPTION = 'A continuación por favor seleccione las casillas que más se asemejan a su motivo de retiro de la universidad.';
@@ -39,11 +38,11 @@ const SurveyForm = () => {
     const [value, setValueRadio] = React.useState('');
 
     const [globalReasons, setGlobalReasonCheckbox] = React.useState([
-        {id: '1', name: SEF_SECTION_TITLE, isGlobalChecked: false},
-        {id: '2', name: VOC_SECTION_TITLE, isGlobalChecked: false},
-        {id: '3', name: RA_TITLE, isGlobalChecked: false},
-        {id: '4', name: AU_TITLE, isGlobalChecked: false},
-        {id: '5', name: OTRO_TITLE, isGlobalChecked: false}
+        {id: '1', acronym: 'SEF', name: SEF_SECTION_TITLE, isGlobalChecked: false},
+        {id: '2', acronym: 'VOC', name: VOC_SECTION_TITLE, isGlobalChecked: false},
+        {id: '3', acronym: 'RA', name: RA_TITLE, isGlobalChecked: false},
+        {id: '4', acronym: 'AU', name: AU_TITLE, isGlobalChecked: false},
+        {id: '5', acronym: 'Otro', name: OTRO_TITLE, isGlobalChecked: false}
     ]);
 
     const [familyEconomicReasons, setFamilyEconomicCheckboxReasons] = React.useState([
@@ -88,7 +87,6 @@ const SurveyForm = () => {
         {id: '55', name: 'Mala infraestructura (pedir detallar)', isChecked: false},
         {id: '56', name: OTRO_TITLE, isChecked: false}
     ]);
-
 
     // ------ Validación de RUT correcto ------
     const [errorRutMessage, setErrorRutMessage] = React.useState(" ");
@@ -196,14 +194,15 @@ const SurveyForm = () => {
         }));
     };
 
+    const selectedGlobalReasons = [];
+
     const onSubmitGlobalCheckbox = (event) => {
-        // event.preventDefault();
+        event.preventDefault();
         console.log('globalReasons');
-        let selectedGlobalReasons = []
         globalReasons.forEach(element => {
             console.log(element);
             if (element.isGlobalChecked) {
-                selectedGlobalReasons.push(element.name);
+                selectedGlobalReasons.push(element);
             }
         })
         console.log('globalFiltered:', selectedGlobalReasons);
@@ -347,13 +346,17 @@ const SurveyForm = () => {
                                 <div align='center'>
                                     <Button variant='outlined' size='small' endIcon={<SaveRoundedIcon />} onClick={onSubmitGlobalCheckbox}>Guardar</Button>
                                 </div>
+                            </CardContent>
+                        </Card>
+                        <Card variant='outlined'>
+                            <CardContent>
                                 <div>
                                     {/* Situación Económica y Familiar */}
                                     {
-                                        globalReasons[0].isGlobalChecked ? (
+                                        (globalReasons[0].isGlobalChecked ) ? (
                                             <div>
                                                 {/* <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}> */}
-                                                <Card variant='outlined'>
+                                                <Card className='sectionCard' variant='outlined'>
                                                     <CardContent>
                                                         <Typography variant='h3' align='center' > {SEF_SECTION_TITLE} </Typography>
                                                         <ColoredLine color='#E0E0E0' />
@@ -372,7 +375,8 @@ const SurveyForm = () => {
                                     {
                                         globalReasons[1].isGlobalChecked ? (
                                         <div>
-                                            <Card variant='outlined'>
+                                            <ColoredLine color='#E0E0E0' />
+                                            <Card className='sectionCard' variant='outlined'>
                                                 <CardContent>
                                                     <Typography variant='h3' align='center' > {VOC_SECTION_TITLE} </Typography>
                                                     <ColoredLine color='#E0E0E0' />
@@ -407,7 +411,8 @@ const SurveyForm = () => {
                                     {
                                         globalReasons[2].isGlobalChecked ? (
                                             <div>
-                                                <Card variant='outlined'>
+                                                <ColoredLine color='#E0E0E0' />
+                                                <Card className='sectionCard' variant='outlined'>
                                                     <CardContent>
                                                         <Typography variant='h3' align='center' > { RA_TITLE } </Typography>
                                                         <ColoredLine color='#E0E0E0' />
@@ -431,7 +436,8 @@ const SurveyForm = () => {
                                     {
                                         globalReasons[3].isGlobalChecked ? (
                                             <div>
-                                                <Card variant='outlined'>
+                                                <ColoredLine color='#E0E0E0' />
+                                                <Card className='sectionCard' variant='outlined'>
                                                     <CardContent>
                                                         <Typography variant='h3' align='center' > { AU_TITLE } </Typography>
                                                         <ColoredLine color='#E0E0E0' />
@@ -469,7 +475,8 @@ const SurveyForm = () => {
                                     {
                                         globalReasons[4].isGlobalChecked ? (
                                             <div>
-                                                <Card variant='outlined'>
+                                                <ColoredLine color='#E0E0E0' />
+                                                <Card className='sectionCard' variant='outlined'>
                                                     <CardContent>
                                                         <Typography variant='h3' align='center' > {OTRO_TITLE} </Typography>
                                                         <ColoredLine color='#E0E0E0' />

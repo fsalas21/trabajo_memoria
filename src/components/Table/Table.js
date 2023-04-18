@@ -1,5 +1,6 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import * as React from 'react';
+import axios from 'axios';
 // import { DataGrid } from '@mui/x-data-grid';
 
 
@@ -18,9 +19,17 @@ const TableTracking = () => {
     const [tableData, setTableData] = React.useState([]);
 
     React.useEffect(() => {
-        fetch("http://localhost:5005/api/seguimiento")
-            .then((data) => data.json())
-            .then((data) => setTableData(data))
+
+        async function fetchData() {
+            const { data: respose } = await axios.get("http://localhost:3030/api/seguimiento");
+            setTableData(respose);
+        }
+        
+        fetchData();
+
+        // fetch("http://localhost:3030/api/seguimiento")
+        //     .then((data) => data.json())
+        //     .then((data) => setTableData(data))
     }, [])
 
     function transformBooleanValue(bool) {
