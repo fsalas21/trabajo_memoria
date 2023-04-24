@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap');
+
 .FirstCard .TitleSection {
     background-color: #00498A;
     color: #fdfdfd;
@@ -13,12 +15,20 @@
     padding-bottom: 15px;
 }
 
-.globalContainer {
-    padding: 50px 200px;
+.global-container {
+    /* padding: 50px 50px 50px 50px; */
+    /* display: flex; */
     justify-content: center;
-    justify-items: auto;
+    align-items: center;
 }
 
 .sectionCard {
     padding-top: 10px;
+}
+
+.stepperButton {
+    font-family: 'Fira Sans', sans-serif !important;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    text-transform: capitalize !important;
 }

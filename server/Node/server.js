@@ -9,7 +9,8 @@ app.use(express.json());
 
 // DB Connection
 const mongoose = require('mongoose');
-const uri ='mongodb+srv://Dr4gonFour:2015730296Cuatro@cluster0.hhaw2ck.mongodb.net/memoria?retryWrites=true&w=majority';
+const uri ='mongodb+srv://Dr4gonFour:2015730296Cuatro@cluster0.hhaw2ck.mongodb.net/memoria';
+// const uri ='mongodb://atlas-sql-642646075ccb7d0bcc5d5ac2-0i1kv.a.query.mongodb.net/memoria?ssl=true&authSource=admin';
 
 mongoose.set('strictQuery', true);
 
@@ -19,8 +20,8 @@ mongoose.connection.on('error', (err) => console.log('Connection failed with - '
 
 
 //Model
-const Encuesta = require('./Node/Models/Encuesta.model');
-const Informacion = require('./Node/Models/Informacion.model');
+const Encuesta = require('./Models/Encuesta.model');
+const Informacion = require('./Models/Informacion.model');
 
 //CORS
 app.use(cors());

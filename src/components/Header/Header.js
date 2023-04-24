@@ -65,7 +65,7 @@ export default function Header() {
                     </Box>
 
                     <Box sx={{ flexGrow: 1, display: {xs: 'none', md: 'flex'}, '& button': { m: 1 } }} display='flex' justifyContent='flex-end'>
-                        <Button onClick={handleLogOut} sx={{ my: 2, color: 'white', display: 'block', bgcolor: 'red', fontSize: 14,  ':hover': { bgcolor: '#B30000' } }} variant='contained'>Cerrar Sesión</Button>
+                        <Button className='headerButton' onClick={handleLogOut} sx={{ my: 2, color: 'white', display: 'block', bgcolor: 'red', fontSize: 14,  ':hover': { bgcolor: '#B30000' } }} variant='contained'>Cerrar Sesión</Button>
                     </Box>
                 </Toolbar>
             </Container>

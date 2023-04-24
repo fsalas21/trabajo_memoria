@@ -22,6 +22,6 @@ const surveySchema = new mongoose.Schema({
     otro_motivo: String
 });
 
-const Survey = mongoose.model('Encuesta', surveySchema, 'memoria');
+const Survey = mongoose.model('Encuesta', surveySchema, 'respuestas');
 
 module.exports = Survey;

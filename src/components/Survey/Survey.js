@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, TextField, Typography } from '@mui/material';
-import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
+import { Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
+// import { Controller, useForm } from 'react-hook-form';
+// import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import CheckboxComponent from '../CheckboxComponent/CheckboxComponent';
 import Header from '../Header/Header';
+// import axios from 'axios';
 import './survey.css';
 
 const CASA_CENTRAL = 'Campus Casa Central Valparaíso';
@@ -33,7 +35,68 @@ const OTRO_QUESTION = 'Detalle qué otros motivos lo habrían motivado a dejar l
 const MAX_RUT_WIDTH = 10;
 const MAX_ROL_WIDTH = 11;
 
+const STEPS = ['Datos Personales', 'Motivos Gobales', 'Motivos Específicos', 'Finalizar'];
+
 const SurveyForm = () => {
+
+    // --------- Sección de texto -----------
+
+    // const {handleSubmit, reset, control } = useForm();
+    const [jsonString, setJson] = React.useState({});
+
+    const [nombre, setNombre] = React.useState("");
+    const [primerApellido, setPrimerApellido] = React.useState("");
+    const [segundoApellido, setSegundoApellido] = React.useState("");
+    const [annoIngresoUni, setAnnoIngresoUni] = React.useState("");
+    const [annoRetiroUni, setAnnoRetiroUni] = React.useState("");
+    const [annoIngresoCarrera, setAnnoIngresoCarrera] = React.useState("");
+    // const [checkedGlobal, setCheckedGlobal] = React.useState([]);
+
+    function handleName(e) {
+        let updatedName = {};
+        setNombre(e.target.value);
+        updatedName = {nombre: e.target.value};
+        setJson(json => ({...json, ...updatedName}));
+    }
+
+    function handleFirstLastname(e) {
+        let updateFirstLastname = {};
+        setPrimerApellido(e.target.value);
+        updateFirstLastname = {apellido_paterno: e.target.value};
+        setJson(jsonString => ({...jsonString, ...updateFirstLastname}));
+    }
+
+    function handleSecondLastName(e) {
+        let updateSecondLastname = {};
+        setSegundoApellido(e.target.value);
+        updateSecondLastname = {apellido_materno: e.target.value};
+        setJson(jsonString => ({...jsonString, ...updateSecondLastname}));
+    }
+
+    function handleAnoIngresoCarrera(e) {
+        let updateAnnoIngresoCarrera = {};
+        setAnnoIngresoCarrera(e.target.value);
+        updateAnnoIngresoCarrera = {anno_ingreso_carrera: parseInt(e.target.value)};
+        setJson(jsonString => ({...jsonString, ...updateAnnoIngresoCarrera}));
+    }
+
+    function handleAnoIngresoUni(e) {
+        let updateAnoIngresoUni = {};
+        setAnnoIngresoUni(e.target.value);
+        updateAnoIngresoUni = {anno_ingreso_universidad: parseInt(e.target.value)};
+        setJson(jsonString => ({...jsonString, ...updateAnoIngresoUni}));
+    }
+
+    function handleAnoRetiroUni(e) {
+        let updateAnoRetiroUni = {};
+        setAnnoRetiroUni(e.target.value);
+        updateAnoRetiroUni = {anno_retiro_carrera: parseInt(e.target.value)};
+        setJson(jsonString => ({...jsonString, ...updateAnoRetiroUni}));
+    }
+
+    // --------------------------------------
+
+    const [activeStep, setActiveStep] = React.useState(0);
 
     const [value, setValueRadio] = React.useState('');
 
@@ -135,8 +198,11 @@ const SurveyForm = () => {
     // ------ Validacion del nombre y apellido --------
 
     const handleRadioChange = (event) => {
-        setValueRadio(event.target.value);
         event.preventDefault();
+        let updatedRadio = {};
+        setValueRadio(event.target.value);
+        updatedRadio = {campus: event.target.value}
+        setJson(jsonString => ({...jsonString, ...updatedRadio}));
     };
 
     const handleChangeCheckboxReasons = (reasonId, checkedReason) => {
@@ -146,7 +212,6 @@ const SurveyForm = () => {
             }
             return motivo
         }));
-
     };
 
     function handleChangeCheckboxFamilyEconomy(reasonId, checkedReason) {
@@ -194,34 +259,33 @@ const SurveyForm = () => {
         }));
     };
 
-    const selectedGlobalReasons = [];
-
-    const onSubmitGlobalCheckbox = (event) => {
-        event.preventDefault();
-        console.log('globalReasons');
+    let selectedGlobalReason = [];
+    const onSubmitGlobalCheckbox = () => {
+        let updateGlobalCheckbox = {};
         globalReasons.forEach(element => {
-            console.log(element);
             if (element.isGlobalChecked) {
-                selectedGlobalReasons.push(element);
+                console.log(element.name);
+                selectedGlobalReason.push(element.name);
             }
         })
-        console.log('globalFiltered:', selectedGlobalReasons);
-        console.table(globalReasons);
-        // console.log('familyEconomicReasons');
-        // console.table(familyEconomicReasons);
-        // console.log('vocationalReasons');
-        // console.table(vocationalReasons);
-        // console.log('firstAcademicReasons');
-        // console.table(firstAcademicReasons);
-        // console.log('secondAcademicReasons');
-        // console.table(secondAcademicReasons);
-        // console.log('atmosphereReasons');
-        // console.table(atmosphereReasons);
+
+        let selectedGlobalReasonString = '';
+        selectedGlobalReasonString = selectedGlobalReason.join(', ');
+        updateGlobalCheckbox = {razones: selectedGlobalReasonString};
+        setJson(jsonString => ({...jsonString, ...updateGlobalCheckbox}));
     }
 
-    const onSubmitCheckbox = (event) => {
-        console.log('hola');
-    }
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        console.log('jsonString Old', jsonString);
+        onSubmitGlobalCheckbox();
+        console.log('jsonString New', jsonString);
+        // handleSubmit(onSubmit);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
 
     const ColoredLine = ({ color }) => (
         <hr
@@ -256,27 +320,26 @@ const SurveyForm = () => {
     }
 
     const handleRUT = (event) => {
-        console.log('event', event);
         event.target.value = formatRut(event.target.value);
+        let updateRUT = {};
         setRUT(event.target.value);
+        updateRUT = {rut: event.target.value};
+        setJson(jsonString => ({...jsonString, ...updateRUT}));
     }
 
     const handleRol = (event) => {
         event.target.value = formatRol(event.target.value);
+        let updateRol = {};
         setRol(event.target.value);
+        updateRol = {rol: event.target.value};
+        setJson(jsonString => ({...jsonString, ...updateRol}));
     }
-
-    // const validateNameLastname = (name) => {
-    //     let regex = /[a-zA-Z]/;
-    //     return name === null || regex.test(name)
-    // }
 
     return (
         <div className='global-container'>
             <Header></Header>
-            <Box display='flex' justifyContent='center' sx={{marginTop: '30px'}}>
+            <Box display='flex' justifyContent='center'>
                 <div>
-                    {/* Inicio de encuesta */}
                     <Card className='FirstCard'>
                         <CardContent>
                             <Card className='TitleSection'>
@@ -286,234 +349,253 @@ const SurveyForm = () => {
                                         <Typography variant='body2'> El objetivo de esta encuesta es conocer los globalReasons por los cuales estudiantes del DI se han retirado o abandonado su carrera en los últimos  años, de tal manera de contar con evidencias que permitan definir planes de mejoras para reducir la deserción. <br/> <b>Las respuestas serán completamente anónimas</b>, solo se piden algunos datos para temas de mantención de la base de datos. </Typography>
                                 </CardContent>
                             </Card>
-                            <br/>
-                            <Box component='form' autoComplete='off' sx={{ '& .MuiTextField-root': { mb: 2 } }}>
-                                <Grid container direction={'row'} spacing={5}>
-                                    <Grid item xs={4}>
-                                        <TextField id='nombre' label='Nombre' inputProps={{style: {textTransform: 'capitalize'}}} fullWidth required/>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <TextField id='apellido_paterno' inputProps={{style: {textTransform: 'capitalize'}}} label='Apellido Paterno' fullWidth required />
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <TextField id='apellido_materno' inputProps={{style: {textTransform: 'capitalize'}}} label='Apellido Materno' fullWidth required />
-                                    </Grid>
-                                </Grid>
-                                <Grid container direction={'row'} spacing={5}>
-                                    <Grid item xs={4}>
-                                        <TextField id='anno_ingreso_carrera' label='Año de ingreso a la carrera' inputProps={{style: {textTransform: 'capitalize'}}} fullWidth required/>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <TextField id='anno_ingreso_universidad' label='Año de ingreso a la universidad' fullWidth required />
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <TextField id='anno_retiro_universidad' label='Año de retiro a la carrera' fullWidth required />
-                                    </Grid>
-                                </Grid>
-                                <Grid container direction={'row'} columnSpacing={5}>
-                                    <Grid item xs={4}>
-                                        <TextField id='rut' label='RUT' error={rut.length > MAX_RUT_WIDTH || /[a-zA-Z]/.test(rut) } helperText={errorRutMessage} onChange={handleRUT} fullWidth required />
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <TextField id='rol' label='Rol USM' error={rol.length > MAX_ROL_WIDTH || /[a-zA-Z]/.test(rol) } helperText={errorRolMessage} onChange={handleRol} fullWidth required />
-                                    </Grid>
-                                </Grid>
-                                <Grid container direction={'row'} justifyContent='center'>
-                                    <Grid item xs>
-                                        <Card variant='outlined'>
-                                            <CardContent>
-                                                <FormControl>
-                                                    <FormLabel id='campus'>Campus al que perteneció</FormLabel>
-                                                    <RadioGroup name='campus-group' value={value} onChange={handleRadioChange}>
-                                                        <FormControlLabel value={CASA_CENTRAL} control={<Radio />} label={CASA_CENTRAL}/>
-                                                        <FormControlLabel value={CAMPUS_SJ} control={<Radio />} label={CAMPUS_SJ}/>
-                                                    </RadioGroup>
-                                                </FormControl>
-                                            </CardContent>
-                                        </Card>
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                            <ColoredLine color='#E0E0E0' />
-                        <Card className='GlobalReasons' variant='outlined'>
-                            <CardContent>
-                                <Typography variant='h3' align='center' > {TITLE} </Typography>
-                                <Typography className='cardSubtitle' variant='body2' align='center'> {DESCRIPTION} </Typography>
-                                <ColoredLine color='#E0E0E0' />
-                                <Paper className='paperTest' elevation={0}>
-                                    <CheckboxComponent list={globalReasons} onChange={handleChangeCheckboxReasons} />
-                                </Paper>
-                                <div align='center'>
-                                    <Button variant='outlined' size='small' endIcon={<SaveRoundedIcon />} onClick={onSubmitGlobalCheckbox}>Guardar</Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                        <Card variant='outlined'>
-                            <CardContent>
-                                <div>
-                                    {/* Situación Económica y Familiar */}
-                                    {
-                                        (globalReasons[0].isGlobalChecked ) ? (
-                                            <div>
-                                                {/* <Card variant='outlined' sx={{ minWidth: 275, maxWidth: 1000 }}> */}
-                                                <Card className='sectionCard' variant='outlined'>
+                            <Box sx={{ width: '100%', marginTop: '30px' }}>
+                                <Card variant='outlined'>
+                                    <CardContent>
+                                        <Stepper activeStep={activeStep}>
+                                            {STEPS.map((label) => {
+                                                const stepProps = {};
+                                                const labelProps = {};
+                                                return (
+                                                    <Step key={label} {...stepProps}>
+                                                        <StepLabel {...labelProps}>{label}</StepLabel>
+                                                    </Step>
+                                                );
+                                            })}
+                                        </Stepper>
+                                    </CardContent>
+                                </Card>
+                                {
+                                    activeStep === STEPS.length ? (
+                                    <React.Fragment>
+                                        <Typography sx={{ mt: 2, mb: 1 }}>
+                                            ¡Gracias por contestar la encuesta!
+                                        </Typography>
+                                    </React.Fragment>
+                                ) : (
+                                    <React.Fragment>
+                                        <Box sx={{ width: '100%', marginTop: '10px' }}>
+                                            <div style={{ display: activeStep === 0 ? 'block' : 'none' }}>
+                                                <Card variant='outlined'>
                                                     <CardContent>
-                                                        <Typography variant='h3' align='center' > {SEF_SECTION_TITLE} </Typography>
-                                                        <ColoredLine color='#E0E0E0' />
-                                                        <Typography className='cardSubtitle' variant='body'>{ SEF_QUESTION }</Typography>
-                                                        <Paper className='paperTest' elevation={0}>
-                                                            <CheckboxComponent list={familyEconomicReasons} onChange={handleChangeCheckboxFamilyEconomy} />
-                                                        </Paper>
+                                                    <Box component='form' autoComplete='off' sx={{ '& .MuiTextField-root': { mb: 2 } }}>
+                                                        <Grid container direction={'row'} spacing={5}>
+                                                            <Grid item xs={4}>
+                                                                <TextField id='nombre' label='Nombre' inputProps={{style: {textTransform: 'capitalize'}}} value={nombre} onChange={handleName} fullWidth required/>
+                                                            </Grid>
+                                                            <Grid item xs={4}>
+                                                                <TextField id='apellido_paterno' inputProps={{style: {textTransform: 'capitalize'}}} label='Apellido Paterno' value={primerApellido} onChange={handleFirstLastname} fullWidth required />
+                                                            </Grid>
+                                                            <Grid item xs={4}>
+                                                                <TextField id='apellido_materno' inputProps={{style: {textTransform: 'capitalize'}}} label='Apellido Materno' value={segundoApellido} onChange={handleSecondLastName} fullWidth required />
+                                                            </Grid>
+                                                        </Grid>
+                                                        <Grid container direction={'row'} spacing={5}>
+                                                            <Grid item xs={4}>
+                                                                <TextField id='anno_ingreso_carrera' inputProps={{inputMode: 'numeric', pattern: '[0-9]*', maxLength: 4 }} label='Año de ingreso a la carrera' value={annoIngresoCarrera} onChange={handleAnoIngresoCarrera} fullWidth required/>
+                                                            </Grid>
+                                                            <Grid item xs={4}>
+                                                                <TextField id='anno_ingreso_universidad' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', maxLength: 4 }} label='Año de ingreso a la universidad' value={annoIngresoUni} onChange={handleAnoIngresoUni} fullWidth required />
+                                                            </Grid>
+                                                            <Grid item xs={4}>
+                                                                <TextField id='anno_retiro_universidad' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', maxLength: 4 }} label='Año de retiro a la universidad' value={annoRetiroUni} onChange={handleAnoRetiroUni} fullWidth required />
+                                                            </Grid>
+                                                        </Grid>
+                                                        <Grid container direction={'row'} columnSpacing={5}>
+                                                            <Grid item xs={4}>
+                                                                <TextField id='rut' label='RUT' error={rut.length > MAX_RUT_WIDTH || /[a-zA-Z]/.test(rut) } helperText={errorRutMessage} onChange={handleRUT} fullWidth required />
+                                                            </Grid>
+                                                            <Grid item xs={4}>
+                                                                <TextField id='rol' label='Rol USM' error={rol.length > MAX_ROL_WIDTH || /[a-zA-Z]/.test(rol) } helperText={errorRolMessage} onChange={handleRol} fullWidth required />
+                                                            </Grid>
+                                                        </Grid>
+                                                        <Grid container direction={'row'} justifyContent='center'>
+                                                            <Grid item xs>
+                                                                <Card variant='outlined'>
+                                                                    <CardContent>
+                                                                        <FormControl>
+                                                                            <FormLabel id='campus'>Campus al que perteneció</FormLabel>
+                                                                            <RadioGroup name='campus-group' value={value} onChange={handleRadioChange}>
+                                                                                <FormControlLabel value={CASA_CENTRAL} control={<Radio />} label={CASA_CENTRAL}/>
+                                                                                <FormControlLabel value={CAMPUS_SJ} control={<Radio />} label={CAMPUS_SJ}/>
+                                                                            </RadioGroup>
+                                                                        </FormControl>
+                                                                    </CardContent>
+                                                                </Card>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Box>
                                                     </CardContent>
                                                 </Card>
                                             </div>
-                                        ) : (
-                                            <></>
-                                        )
-                                    }
-                                    {/* Vocacional */}
-                                    {
-                                        globalReasons[1].isGlobalChecked ? (
-                                        <div>
-                                            <ColoredLine color='#E0E0E0' />
-                                            <Card className='sectionCard' variant='outlined'>
+                                            <div style={{ display: activeStep === 1 ? 'block' : 'none' }}>
+                                                <Card className='GlobalReasons' variant='outlined'>
+                                                    <CardContent>
+                                                        <Typography variant='h3' align='center' > {TITLE} </Typography>
+                                                        <Typography className='cardSubtitle' variant='body2' align='center'> {DESCRIPTION} </Typography>
+                                                        <ColoredLine color='#E0E0E0' />
+                                                        <Paper className='paperTest' elevation={0}>
+                                                            <CheckboxComponent list={globalReasons} onChange={handleChangeCheckboxReasons} />
+                                                        </Paper>
+                                                        {/* <div align='center'>
+                                                            <Button variant='outlined' size='small' endIcon={<SaveRoundedIcon />} onClick={onSubmitGlobalCheckbox}>Guardar</Button>
+                                                        </div> */}
+                                                    </CardContent>
+                                                </Card>
+                                            </div>
+                                            <div style={{ display: activeStep === 2 ? 'block' : 'none' }}>
+                                            <Card variant='outlined'>
                                                 <CardContent>
-                                                    <Typography variant='h3' align='center' > {VOC_SECTION_TITLE} </Typography>
-                                                    <ColoredLine color='#E0E0E0' />
-                                                    <Typography className='cardSubtitle' variant='body'>{ VOC_QUESTION }</Typography>
-                                                    <Paper className='paperTest' elevation={0}>
-                                                        <CheckboxComponent list={vocationalReasons} onChange={handleChangeCheckboxVocational} />
-                                                    </Paper>
-                                                    {   vocationalReasons[3].isChecked &&
-                                                        <div>
-                                                            <ColoredLine color='#E0E0E0' />
-                                                            <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
-                                                            <Paper className='paperTest' elevation={0}>
-                                                                <TextField
-                                                                    sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
-                                                                        border: '1px solid #E0E0E0'} }}}
-                                                                    multiline
-                                                                    fullWidth
-                                                                    rows={3}
-                                                                    id="filled-textarea"
-                                                                />
-                                                            </Paper>
+                                                    <div>
+                                                        <div style={{ display: globalReasons[0].isGlobalChecked ? 'block' : 'none' }}>
+                                                            <Card className='sectionCard' variant='outlined'>
+                                                                <CardContent>
+                                                                    <Typography variant='h3' align='center' > {SEF_SECTION_TITLE} </Typography>
+                                                                    <ColoredLine color='#E0E0E0' />
+                                                                    <Typography className='cardSubtitle' variant='body'>{ SEF_QUESTION }</Typography>
+                                                                    <Paper className='paperTest' elevation={0}>
+                                                                        <CheckboxComponent list={familyEconomicReasons} onChange={handleChangeCheckboxFamilyEconomy} />
+                                                                    </Paper>
+                                                                    <div style={{ display: familyEconomicReasons[4].isFamilyChecked ? 'block' : 'none' }}>
+                                                                        <ColoredLine color='#E0E0E0' />
+                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
+                                                                        <Paper className='paperTest' elevation={0}>
+                                                                            <TextField
+                                                                                sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
+                                                                                    border: '1px solid #E0E0E0'} }}}
+                                                                                multiline
+                                                                                fullWidth
+                                                                                rows={3}
+                                                                                id="filled-textarea"
+                                                                            />
+                                                                        </Paper>
+                                                                    </div>
+                                                                </CardContent>
+                                                            </Card>
                                                         </div>
-                                                    }
+                                                        <div style={{ display: globalReasons[1].isGlobalChecked ? 'block' : 'none' }}>
+                                                            <ColoredLine color='#E0E0E0' />
+                                                            <Card className='sectionCard' variant='outlined'>
+                                                                <CardContent>
+                                                                    <Typography variant='h3' align='center' > {VOC_SECTION_TITLE} </Typography>
+                                                                    <ColoredLine color='#E0E0E0' />
+                                                                    <Typography className='cardSubtitle' variant='body'>{ VOC_QUESTION }</Typography>
+                                                                    <Paper className='paperTest' elevation={0}>
+                                                                        <CheckboxComponent list={vocationalReasons} onChange={handleChangeCheckboxVocational} />
+                                                                    </Paper>
+                                                                    <div style={{ display: (vocationalReasons[3].isChecked || vocationalReasons[4].isChecked) ? 'block' : 'none' }}>
+                                                                        <ColoredLine color='#E0E0E0' />
+                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
+                                                                        <Paper className='paperTest' elevation={0}>
+                                                                            <TextField
+                                                                                sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
+                                                                                    border: '1px solid #E0E0E0'} }}}
+                                                                                multiline
+                                                                                fullWidth
+                                                                                rows={3}
+                                                                                id="filled-textarea"
+                                                                            />
+                                                                        </Paper>
+                                                                    </div>
+                                                                </CardContent>
+                                                            </Card>
+                                                        </div>
+                                                        <div style={{ display: globalReasons[2].isGlobalChecked ? 'block' : 'none' }}>
+                                                            <ColoredLine color='#E0E0E0' />
+                                                            <Card className='sectionCard' variant='outlined'>
+                                                                <CardContent>
+                                                                    <Typography variant='h3' align='center' > { RA_TITLE } </Typography>
+                                                                    <ColoredLine color='#E0E0E0' />
+                                                                    <Typography className='cardSubtitle' variant='body'>{ RA_FIRST_QUESTION }</Typography>
+                                                                    <Paper className='paperTest' elevation={0}>
+                                                                        <CheckboxComponent list={firstAcademicReasons} onChange={handleChangeCheckboxFirstAcademic} />
+                                                                    </Paper>
+                                                                    <ColoredLine color='#E0E0E0' />
+                                                                    <Typography className='cardSubtitle' variant='body'>{ RA_SECOND_QUESTION }</Typography>
+                                                                    <Paper className='paperTest' elevation={0}>
+                                                                        <CheckboxComponent list={secondAcademicReasons} onChange={handleChangeCheckboxSecondAcademic} />
+                                                                    </Paper>
+                                                                    <div style={{ display: (firstAcademicReasons[5].isChecked || secondAcademicReasons[5].isChecked) ? 'block' : 'none' }}>
+                                                                        <ColoredLine color='#E0E0E0' />
+                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
+                                                                        <Paper className='paperTest' elevation={0}>
+                                                                            <TextField
+                                                                                sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
+                                                                                    border: '1px solid #E0E0E0'} }}}
+                                                                                multiline
+                                                                                fullWidth
+                                                                                rows={3}
+                                                                                id="filled-textarea"
+                                                                            />
+                                                                        </Paper>
+                                                                    </div>
+                                                                </CardContent>
+                                                            </Card>
+                                                        </div>
+                                                        <div style={{ display: globalReasons[3].isGlobalChecked ? 'block' : 'none' }}>
+                                                            <ColoredLine color='#E0E0E0' />
+                                                            <Card className='sectionCard' variant='outlined'>
+                                                                <CardContent>
+                                                                    <Typography variant='h3' align='center' > { AU_TITLE } </Typography>
+                                                                    <ColoredLine color='#E0E0E0' />
+                                                                    <Typography className='cardSubtitle' variant='body'>{ AU_QUESTION }</Typography>
+                                                                    <Paper className='paperTest' elevation={0}>
+                                                                        <CheckboxComponent list={atmosphereReasons} onChange={handleChangeCheckboxAtmosphere} />
+                                                                    </Paper>
+                                                                    <div style={{ display: (atmosphereReasons[3].isChecked || atmosphereReasons[4].isChecked || atmosphereReasons[5].isChecked) ? 'block' : 'none' }}>
+                                                                        <ColoredLine color='#E0E0E0' />
+                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
+                                                                        <Paper className='paperTest' elevation={0}>
+                                                                            <TextField
+                                                                                sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
+                                                                                    border: '1px solid #E0E0E0'} }}}
+                                                                                multiline
+                                                                                fullWidth
+                                                                                rows={3}
+                                                                                id="filled-textarea"
+                                                                            />
+                                                                        </Paper>
+                                                                    </div>
+                                                                </CardContent>
+                                                            </Card>
+                                                        </div>
+                                                        <div style={{ display: globalReasons[4].isGlobalChecked ? 'block' : 'none' }}>
+                                                            <ColoredLine color='#E0E0E0' />
+                                                            <Card className='sectionCard' variant='outlined'>
+                                                                <CardContent>
+                                                                    <Typography variant='h3' align='center' > {OTRO_TITLE} </Typography>
+                                                                    <ColoredLine color='#E0E0E0' />
+                                                                    <Typography className='cardSubtitle' variant='body'>{ OTRO_QUESTION }</Typography>
+                                                                    <Paper className='paperTest' elevation={0}>
+                                                                        <TextField
+                                                                            sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
+                                                                                border: '1px solid #E0E0E0'} }}}
+                                                                            multiline
+                                                                            fullWidth
+                                                                            rows={3}
+                                                                            id="filled-textarea"
+                                                                        />
+                                                                    </Paper>
+                                                                </CardContent>
+                                                            </Card>
+                                                        </div>
+                                                    </div>
                                                 </CardContent>
                                             </Card>
-                                        </div>
-                                        ) : (
-                                            <></>
-                                        )
-                                    }
-                                    {/* Rendimiento Académico */}
-                                    {
-                                        globalReasons[2].isGlobalChecked ? (
-                                            <div>
-                                                <ColoredLine color='#E0E0E0' />
-                                                <Card className='sectionCard' variant='outlined'>
-                                                    <CardContent>
-                                                        <Typography variant='h3' align='center' > { RA_TITLE } </Typography>
-                                                        <ColoredLine color='#E0E0E0' />
-                                                        <Typography className='cardSubtitle' variant='body'>{ RA_FIRST_QUESTION }</Typography>
-                                                        <Paper className='paperTest' elevation={0}>
-                                                            <CheckboxComponent list={firstAcademicReasons} onChange={handleChangeCheckboxFirstAcademic} />
-                                                        </Paper>
-                                                        <ColoredLine color='#E0E0E0' />
-                                                        <Typography className='cardSubtitle' variant='body'>{ RA_SECOND_QUESTION }</Typography>
-                                                        <Paper className='paperTest' elevation={0}>
-                                                            <CheckboxComponent list={secondAcademicReasons} onChange={handleChangeCheckboxSecondAcademic} />
-                                                        </Paper>
-                                                    </CardContent>
-                                                </Card>
                                             </div>
-                                        ) : (
-                                            <></>
-                                        )
-                                    }
-                                    {/* Ambiente Universitario */}
-                                    {
-                                        globalReasons[3].isGlobalChecked ? (
-                                            <div>
-                                                <ColoredLine color='#E0E0E0' />
-                                                <Card className='sectionCard' variant='outlined'>
-                                                    <CardContent>
-                                                        <Typography variant='h3' align='center' > { AU_TITLE } </Typography>
-                                                        <ColoredLine color='#E0E0E0' />
-                                                        <Typography className='cardSubtitle' variant='body'>{ AU_QUESTION }</Typography>
-                                                        <Paper className='paperTest' elevation={0}>
-                                                            <CheckboxComponent list={atmosphereReasons} onChange={handleChangeCheckboxAtmosphere} />
-                                                        </Paper>
-                                                        {
-                                                            (atmosphereReasons[3].isChecked ||
-                                                            atmosphereReasons[4].isChecked ||
-                                                            atmosphereReasons[5].isChecked ) &&
-                                                            <div>
-                                                                <ColoredLine color='#E0E0E0' />
-                                                                <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
-                                                                <Paper className='paperTest' elevation={0}>
-                                                                    <TextField
-                                                                        sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
-                                                                            border: '1px solid #E0E0E0'} }}}
-                                                                        multiline
-                                                                        fullWidth
-                                                                        rows={3}
-                                                                        id="filled-textarea"
-                                                                    />
-                                                                </Paper>
-                                                            </div>
-                                                        }
-                                                    </CardContent>
-                                                </Card>
-                                            </div>
-                                        ) : (
-                                            <></>
-                                        )
-                                    }
-                                    {/* Otros motivos */}
-                                    {
-                                        globalReasons[4].isGlobalChecked ? (
-                                            <div>
-                                                <ColoredLine color='#E0E0E0' />
-                                                <Card className='sectionCard' variant='outlined'>
-                                                    <CardContent>
-                                                        <Typography variant='h3' align='center' > {OTRO_TITLE} </Typography>
-                                                        <ColoredLine color='#E0E0E0' />
-                                                        <Typography className='cardSubtitle' variant='body'>{ OTRO_QUESTION }</Typography>
-                                                        <Paper className='paperTest' elevation={0}>
-                                                            <TextField
-                                                                sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
-                                                                    border: '1px solid #E0E0E0'} }}}
-                                                                multiline
-                                                                fullWidth
-                                                                rows={3}
-                                                                id="filled-textarea"
-                                                            />
-                                                        </Paper>
-                                                    </CardContent>
-                                                </Card>
-                                            </div>
-                                        ) : (
-                                            <></>
-                                        )
-                                    }
-                                </div>
-                            </CardContent>
-                        </Card>
-                        <Card className='footer-section' elevation={0}>
-                            <CardContent>
-                                <div align='center'>
-                                    <Button variant='contained' size='large' onClick={onSubmitCheckbox}>Submit</Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-
+                                        </Box>
+                                        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                                            <Button className='stepperButton' color="inherit" variant='outlined' disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>Atrás</Button>
+                                            <Box sx={{ flex: '1 1 auto' }} />
+                                            <Button className='stepperButton' onClick={handleNext} variant='contained'>
+                                                {activeStep === STEPS.length - 1 ? 'Enviar' : 'Siguiente'}
+                                            </Button>
+                                        </Box>
+                                    </React.Fragment>
+                                )}
+                            </Box>
                         </CardContent>
                     </Card>
-                    {/* Sección de selección de globalReasons */}
-                    {/* Habilitar preguntas dependiendo de las opciones anteriores */}
                 </div>
             </Box>
         </div>
