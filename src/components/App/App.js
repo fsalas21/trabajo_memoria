@@ -1,10 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import moment from 'moment';
 import { Routes, Route } from 'react-router-dom';
 import Graphics from '../Layout/Graphics.js';
 import SurveyForm from '../Survey/Survey.js';
 import Tracking from '../Layout/Tracking'
 
 const App = () => {
+	window.moment = moment;
 	return (
 		<div>
 			<Routes>

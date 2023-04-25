@@ -5,6 +5,12 @@ import Box from '@mui/material/Box';
 import ActionButton from '../ActionButton/ActionButton';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { alpha, styled } from '@mui/material/styles';
+import './Table.css';
+
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
+import { Tooltip } from '@mui/material';
 
 function transformBooleanValue(bool) {
     return bool ? 'Si' : 'No';
@@ -29,7 +35,7 @@ function formatDate(date) {
 const columns = [
     { field: 'nombre', headerName: 'Nombres', flex: 1, align: 'center', headerAlign: 'center' },
     { field: 'apellidos', headerName: 'Apellidos', flex: 1, align: 'center', headerAlign: 'center' },
-    { field: 'correo', headerName: 'Correo', sorteable: false, flex: 1},
+    { field: 'correo', headerName: 'Correo', sorteable: false, flex: 1,align: 'center', headerAlign: 'center'},
     { field: 'surveySentDate', headerName: 'Fecha de Encuesta Enviada', flex: 1, align: 'center', valueFormatter: params =>  formatDate(params?.value), headerAlign: 'center' },
     { field: 'answeredSurvey', headerName: 'Encuesta Respondida', flex: 1, align: 'center', valueFormatter: params => transformBooleanValue(params?.value), headerAlign: 'center' },
     { field: 'timesSent', headerName: 'Veces Enviada la Encuesta', flex: 1, align: 'center', headerAlign: 'center' },
@@ -40,36 +46,36 @@ const columns = [
 const ODD_OPACITY = 0.2;
 
 const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
-  [`& .${gridClasses.row}.even`]: {
-    backgroundColor: theme.palette.grey[200],
-    '&:hover, &.Mui-hovered': {
-      backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
-      '@media (hover: none)': {
-        backgroundColor: 'transparent',
-      },
-    },
-    '&.Mui-selected': {
-      backgroundColor: alpha(
-        theme.palette.primary.main,
-        ODD_OPACITY + theme.palette.action.selectedOpacity,
-      ),
-      '&:hover, &.Mui-hovered': {
-        backgroundColor: alpha(
-          theme.palette.primary.main,
-          ODD_OPACITY +
-            theme.palette.action.selectedOpacity +
-            theme.palette.action.hoverOpacity,
-        ),
-        // Reset on touch devices, it doesn't add specificity
-        '@media (hover: none)': {
-          backgroundColor: alpha(
-            theme.palette.primary.main,
-            ODD_OPACITY + theme.palette.action.selectedOpacity,
-          ),
+    [`& .${gridClasses.row}.even`]: {
+        backgroundColor: theme.palette.grey[200],
+        '&:hover, &.Mui-hovered': {
+            backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
+            '@media (hover: none)': {
+                backgroundColor: 'transparent',
+            },
         },
-      },
+        '&.Mui-selected': {
+            backgroundColor: alpha(
+                theme.palette.primary.main,
+                ODD_OPACITY + theme.palette.action.selectedOpacity,
+            ),
+            '&:hover, &.Mui-hovered': {
+                backgroundColor: alpha(
+                    theme.palette.primary.main,
+                    ODD_OPACITY +
+                        theme.palette.action.selectedOpacity +
+                        theme.palette.action.hoverOpacity,
+                    ),
+                // Reset on touch devices, it doesn't add specificity
+                '@media (hover: none)': {
+                    backgroundColor: alpha(
+                        theme.palette.primary.main,
+                        ODD_OPACITY + theme.palette.action.selectedOpacity,
+                    ),
+                },
+            },
+        },
     },
-  },
 }));
 
 const TableTracking = () => {
@@ -85,13 +91,31 @@ const TableTracking = () => {
 
         fetchData();
 
-        // fetch("http://localhost:3030/api/seguimiento")
-        //     .then((data) => data.json())
-        //     .then((data) => setTableData(data))
     }, [])
 
     return (
-        <Box justifyContent='center' sx={{marginTop: '30px', marginInline: '30px'}}>
+        <Box justifyContent='center' sx={{ marginTop: '30px', marginInline: '30px' }}>
+            <AppBar position="static" sx={{ bgcolor: '#00498A', borderTopRightRadius: '7px', borderTopLeftRadius: '7px' }} elevation={0}>
+                <Toolbar>
+                    <Box sx={{ flex: '1 1 auto' }} />
+                    <div>
+                        <input
+                            accept=".csv"
+                            type="file"
+                            id="select-image"
+                            style={{ display: 'none' }}
+                        />
+                        <label htmlFor="select-image">
+                            <Tooltip title="Cargar archivo con nueva data" arrow>
+                                <Button sx={{ my: 2, color: 'white', display: 'block', borderColor: 'white', borderWidth: '1px' }}
+                                    className='appBarButton' variant="outlined">
+                                        Subir Archivo
+                                </Button>
+                            </Tooltip>
+                        </label>
+                    </div>
+                </Toolbar>
+            </AppBar>
             <StripedDataGrid
                 autoHeight
                 rows={tableData}

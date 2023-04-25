@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
 // import { Controller, useForm } from 'react-hook-form';
-// import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
+import CheckIcon from '@mui/icons-material/Check';
 import CheckboxComponent from '../CheckboxComponent/CheckboxComponent';
 import Header from '../Header/Header';
 // import axios from 'axios';
@@ -28,6 +28,7 @@ const AU_QUESTION = '¿Cuál de las siguientes alternativas refleja mejor su pro
 
 
 const DETAIL_QUESTION = 'Detalles de su respuesta anterior.'
+const DETAIL_OTHER_QUESTION = 'Detalles sus otros motivos de la pregunta anterior.'
 
 const OTRO_TITLE = 'Otros motivos';
 const OTRO_QUESTION = 'Detalle qué otros motivos lo habrían motivado a dejar la carrera y/o universidad';
@@ -50,7 +51,15 @@ const SurveyForm = () => {
     const [annoIngresoUni, setAnnoIngresoUni] = React.useState("");
     const [annoRetiroUni, setAnnoRetiroUni] = React.useState("");
     const [annoIngresoCarrera, setAnnoIngresoCarrera] = React.useState("");
-    // const [checkedGlobal, setCheckedGlobal] = React.useState([]);
+
+    const [otherFamilyReasons, setOtherFamilyReasons] = React.useState("");
+    const [otherVocationalReasons, setOtherVocationalReasons] = React.useState("");
+    const [otherFirstAcademicReasons, setOtherFirstAcademicReasons] = React.useState("");
+    const [otherSecondAcademicReasons, setOtherSecondAcademicReasons] = React.useState("");
+    const [detailAtmosphericReasons, setDetailAtmosphericReasons] = React.useState("");
+    const [otherAtmosphericReasons, setOtherAtmosphericReasons] = React.useState("");
+    const [otherReasons, setOtherReasons] = React.useState("");
+
 
     function handleName(e) {
         let updatedName = {};
@@ -94,6 +103,55 @@ const SurveyForm = () => {
         setJson(jsonString => ({...jsonString, ...updateAnoRetiroUni}));
     }
 
+    function handleOtherFamily(e) {
+        let updateOtherFamily = {};
+        setOtherFamilyReasons(e.target.value);
+        updateOtherFamily = {OTHER_SEF: e.target.value};
+        setJson(jsonString => ({...jsonString, ...updateOtherFamily}));
+    }
+
+    function handleOtherVocational(e) {
+        let updateOtherVocational = {};
+        setOtherVocationalReasons(e.target.value);
+        updateOtherVocational = {OTHER_VOC: e.target.value};
+        setJson(jsonString => ({...jsonString, ...updateOtherVocational}));
+    }
+
+    function handleOtherFirstAcademic(e) {
+        let updateOtherFirstAcademic = {};
+        setOtherFirstAcademicReasons(e.target.value);
+        updateOtherFirstAcademic = {OTHER_RA1: e.target.value};
+        setJson(jsonString => ({...jsonString, ...updateOtherFirstAcademic}));
+    }
+
+    function handleOtherSecondAcademic(e) {
+        let updateOtherSecondAcademic = {};
+        setOtherSecondAcademicReasons(e.target.value);
+        updateOtherSecondAcademic = {OTHER_RA2: e.target.value};
+        setJson(jsonString => ({...jsonString, ...updateOtherSecondAcademic}));
+    }
+
+    function handleDetailAtmospheric(e) {
+        let updateDetailAtmospheric = {};
+        setDetailAtmosphericReasons(e.target.value);
+        updateDetailAtmospheric = {Detail_AU: e.target.value};
+        setJson(jsonString => ({...jsonString, ...updateDetailAtmospheric}));
+    }
+
+    function handleOtherAtmospheric(e) {
+        let updateOtherAtmospheric = {};
+        setOtherAtmosphericReasons(e.target.value);
+        updateOtherAtmospheric = {OTHER_AU: e.target.value};
+        setJson(jsonString => ({...jsonString, ...updateOtherAtmospheric}));
+    }
+
+    function handleOtherReasons(e) {
+        let updateOtherReasons = {};
+        setOtherReasons(e.target.value);
+        updateOtherReasons = {otro_motivo: e.target.value};
+        setJson(jsonString => ({...jsonString, ...updateOtherReasons}));
+    }
+
     // --------------------------------------
 
     const [activeStep, setActiveStep] = React.useState(0);
@@ -101,11 +159,11 @@ const SurveyForm = () => {
     const [value, setValueRadio] = React.useState('');
 
     const [globalReasons, setGlobalReasonCheckbox] = React.useState([
-        {id: '1', acronym: 'SEF', name: SEF_SECTION_TITLE, isGlobalChecked: false},
-        {id: '2', acronym: 'VOC', name: VOC_SECTION_TITLE, isGlobalChecked: false},
-        {id: '3', acronym: 'RA', name: RA_TITLE, isGlobalChecked: false},
-        {id: '4', acronym: 'AU', name: AU_TITLE, isGlobalChecked: false},
-        {id: '5', acronym: 'Otro', name: OTRO_TITLE, isGlobalChecked: false}
+        {id: 'SEF', acronym: 'SEF', name: SEF_SECTION_TITLE, isGlobalChecked: false},
+        {id: 'VOC', acronym: 'VOC', name: VOC_SECTION_TITLE, isGlobalChecked: false},
+        {id: 'RA', acronym: 'RA', name: RA_TITLE, isGlobalChecked: false},
+        {id: 'AU', acronym: 'AU', name: AU_TITLE, isGlobalChecked: false},
+        {id: 'Otro', acronym: 'Otro', name: OTRO_TITLE, isGlobalChecked: false}
     ]);
 
     const [familyEconomicReasons, setFamilyEconomicCheckboxReasons] = React.useState([
@@ -153,7 +211,6 @@ const SurveyForm = () => {
 
     // ------ Validación de RUT correcto ------
     const [errorRutMessage, setErrorRutMessage] = React.useState(" ");
-
     const [rut, setRUT] = React.useState("");
 
     React.useEffect(() => {
@@ -175,7 +232,6 @@ const SurveyForm = () => {
 
     // ------ Validación de Rol correcto ------
     const [errorRolMessage, setErrorRolMessage] = React.useState(" ");
-
     const [rol, setRol] = React.useState("");
 
     React.useEffect(() => {
@@ -264,7 +320,6 @@ const SurveyForm = () => {
         let updateGlobalCheckbox = {};
         globalReasons.forEach(element => {
             if (element.isGlobalChecked) {
-                console.log(element.name);
                 selectedGlobalReason.push(element.name);
             }
         })
@@ -275,12 +330,97 @@ const SurveyForm = () => {
         setJson(jsonString => ({...jsonString, ...updateGlobalCheckbox}));
     }
 
+    let selectedFamilyEconomicReasons = [];
+    const onSubmitFamilyEconomicReason = () => {
+        let updateSefCheckbox = {};
+        familyEconomicReasons.forEach(element => {
+            if (element.isFamilyChecked) {
+                selectedFamilyEconomicReasons.push(element.name);
+            }
+        })
+
+        let selectedFamilyEconomicReasonsString = '';
+        selectedFamilyEconomicReasonsString = selectedFamilyEconomicReasons.join(', ');
+        updateSefCheckbox = {SEF: selectedFamilyEconomicReasonsString};
+        setJson(jsonString => ({...jsonString, ...updateSefCheckbox}));
+    }
+
+    let selectedVocationalReasons = [];
+    const onSubmitVocationalReason = () => {
+        let updateVocCheckbox = {};
+        vocationalReasons.forEach(element => {
+            if (element.isChecked) {
+                selectedVocationalReasons.push(element.name);
+            }
+        })
+
+        let selectedVocationalString = '';
+        selectedVocationalString = selectedVocationalReasons.join(', ');
+        updateVocCheckbox = {VOC: selectedVocationalString};
+        setJson(jsonString => ({...jsonString, ...updateVocCheckbox}));
+    }
+
+    let selectedFirstAcademicReasons = [];
+    const onSubmitFirstAcademicReason = () => {
+        let updateFirstAcademicCheckbox = {};
+        firstAcademicReasons.forEach(element => {
+            if (element.isChecked) {
+                selectedFirstAcademicReasons.push(element.name);
+            }
+        })
+
+        let selectedFirstAcademicString = '';
+        selectedFirstAcademicString = selectedFirstAcademicReasons.join(', ');
+        updateFirstAcademicCheckbox = {RA1: selectedFirstAcademicString};
+        setJson(jsonString => ({...jsonString, ...updateFirstAcademicCheckbox}));
+    }
+
+    let selectedSecondAcademicReasons = [];
+    const onSubmitSecondAcademicReason = () => {
+        let updateSecondAcademicCheckbox = {};
+        secondAcademicReasons.forEach(element => {
+            if (element.isChecked) {
+                selectedSecondAcademicReasons.push(element.name);
+            }
+        })
+
+        let selectedSecondAcademicString = '';
+        selectedSecondAcademicString = selectedSecondAcademicReasons.join(', ');
+        updateSecondAcademicCheckbox = {RA2: selectedSecondAcademicString};
+        setJson(jsonString => ({...jsonString, ...updateSecondAcademicCheckbox}));
+    }
+
+    let selectedAtmosphericReasons = [];
+    const onSubmitAtmosphericReason = () => {
+        let updateAtmosphericCheckbox = {};
+        secondAcademicReasons.forEach(element => {
+            if (element.isChecked) {
+                selectedAtmosphericReasons.push(element.name);
+            }
+        })
+
+        let selectedAtmosphericString = '';
+        selectedAtmosphericString = selectedAtmosphericReasons.join(', ');
+        updateAtmosphericCheckbox = {AU: selectedAtmosphericString};
+        setJson(jsonString => ({...jsonString, ...updateAtmosphericCheckbox}));
+    }
+
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        console.log('jsonString Old', jsonString);
-        onSubmitGlobalCheckbox();
-        console.log('jsonString New', jsonString);
-        // handleSubmit(onSubmit);
+        if (activeStep === 1) {
+            onSubmitGlobalCheckbox();
+        }
+        else if (activeStep === 2) {
+            onSubmitFamilyEconomicReason();
+            onSubmitVocationalReason();
+            onSubmitFirstAcademicReason();
+            onSubmitSecondAcademicReason();
+            onSubmitAtmosphericReason();
+        }
+        else if (activeStep === 3) {
+            console.log('console');
+            //submitJson
+        }
     };
 
     const handleBack = () => {
@@ -349,7 +489,7 @@ const SurveyForm = () => {
                                         <Typography variant='body2'> El objetivo de esta encuesta es conocer los globalReasons por los cuales estudiantes del DI se han retirado o abandonado su carrera en los últimos  años, de tal manera de contar con evidencias que permitan definir planes de mejoras para reducir la deserción. <br/> <b>Las respuestas serán completamente anónimas</b>, solo se piden algunos datos para temas de mantención de la base de datos. </Typography>
                                 </CardContent>
                             </Card>
-                            <Box sx={{ width: '100%', marginTop: '30px' }}>
+                            <Box sx={{ width: '100%', marginTop: '20px' }}>
                                 <Card variant='outlined'>
                                     <CardContent>
                                         <Stepper activeStep={activeStep}>
@@ -368,11 +508,12 @@ const SurveyForm = () => {
                                 {
                                     activeStep === STEPS.length ? (
                                     <React.Fragment>
-                                        <Typography sx={{ mt: 2, mb: 1 }}>
-                                            ¡Gracias por contestar la encuesta!
-                                        </Typography>
+                                        <Alert icon={<CheckIcon fontSize="inherit" />} severity='success' sx={{marginTop: '20px'}}>
+                                            La encuesta ha sido enviada correctamente.
+                                        </Alert>
                                     </React.Fragment>
                                 ) : (
+                                    (console.log('jsonString:', jsonString)) ||
                                     <React.Fragment>
                                         <Box sx={{ width: '100%', marginTop: '10px' }}>
                                             <div style={{ display: activeStep === 0 ? 'block' : 'none' }}>
@@ -458,11 +599,13 @@ const SurveyForm = () => {
                                                                     </Paper>
                                                                     <div style={{ display: familyEconomicReasons[4].isFamilyChecked ? 'block' : 'none' }}>
                                                                         <ColoredLine color='#E0E0E0' />
-                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
+                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_OTHER_QUESTION }</Typography>
                                                                         <Paper className='paperTest' elevation={0}>
                                                                             <TextField
                                                                                 sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
                                                                                     border: '1px solid #E0E0E0'} }}}
+                                                                                value={otherFamilyReasons}
+                                                                                onChange={handleOtherFamily}
                                                                                 multiline
                                                                                 fullWidth
                                                                                 rows={3}
@@ -485,11 +628,13 @@ const SurveyForm = () => {
                                                                     </Paper>
                                                                     <div style={{ display: (vocationalReasons[3].isChecked || vocationalReasons[4].isChecked) ? 'block' : 'none' }}>
                                                                         <ColoredLine color='#E0E0E0' />
-                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
+                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_OTHER_QUESTION }</Typography>
                                                                         <Paper className='paperTest' elevation={0}>
                                                                             <TextField
                                                                                 sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
                                                                                     border: '1px solid #E0E0E0'} }}}
+                                                                                value={otherVocationalReasons}
+                                                                                onChange={handleOtherVocational}
                                                                                 multiline
                                                                                 fullWidth
                                                                                 rows={3}
@@ -510,18 +655,36 @@ const SurveyForm = () => {
                                                                     <Paper className='paperTest' elevation={0}>
                                                                         <CheckboxComponent list={firstAcademicReasons} onChange={handleChangeCheckboxFirstAcademic} />
                                                                     </Paper>
+                                                                    <div style={{ display: (firstAcademicReasons[5].isChecked) ? 'block' : 'none' }}>
+                                                                        <ColoredLine color='#E0E0E0' />
+                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_OTHER_QUESTION }</Typography>
+                                                                        <Paper className='paperTest' elevation={0}>
+                                                                            <TextField
+                                                                                sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
+                                                                                    border: '1px solid #E0E0E0'} }}}
+                                                                                value={otherFirstAcademicReasons}
+                                                                                onChange={handleOtherFirstAcademic}
+                                                                                multiline
+                                                                                fullWidth
+                                                                                rows={3}
+                                                                                id="filled-textarea"
+                                                                            />
+                                                                        </Paper>
+                                                                    </div>
                                                                     <ColoredLine color='#E0E0E0' />
                                                                     <Typography className='cardSubtitle' variant='body'>{ RA_SECOND_QUESTION }</Typography>
                                                                     <Paper className='paperTest' elevation={0}>
                                                                         <CheckboxComponent list={secondAcademicReasons} onChange={handleChangeCheckboxSecondAcademic} />
                                                                     </Paper>
-                                                                    <div style={{ display: (firstAcademicReasons[5].isChecked || secondAcademicReasons[5].isChecked) ? 'block' : 'none' }}>
+                                                                    <div style={{ display: (secondAcademicReasons[5].isChecked) ? 'block' : 'none' }}>
                                                                         <ColoredLine color='#E0E0E0' />
-                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
+                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_OTHER_QUESTION }</Typography>
                                                                         <Paper className='paperTest' elevation={0}>
                                                                             <TextField
                                                                                 sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
                                                                                     border: '1px solid #E0E0E0'} }}}
+                                                                                value={otherSecondAcademicReasons}
+                                                                                onChange={handleOtherSecondAcademic}
                                                                                 multiline
                                                                                 fullWidth
                                                                                 rows={3}
@@ -542,13 +705,31 @@ const SurveyForm = () => {
                                                                     <Paper className='paperTest' elevation={0}>
                                                                         <CheckboxComponent list={atmosphereReasons} onChange={handleChangeCheckboxAtmosphere} />
                                                                     </Paper>
-                                                                    <div style={{ display: (atmosphereReasons[3].isChecked || atmosphereReasons[4].isChecked || atmosphereReasons[5].isChecked) ? 'block' : 'none' }}>
+                                                                    <div style={{ display: (atmosphereReasons[3].isChecked || atmosphereReasons[4].isChecked) ? 'block' : 'none' }}>
                                                                         <ColoredLine color='#E0E0E0' />
                                                                         <Typography className='cardSubtitle' variant='body'>{ DETAIL_QUESTION }</Typography>
                                                                         <Paper className='paperTest' elevation={0}>
                                                                             <TextField
                                                                                 sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
                                                                                     border: '1px solid #E0E0E0'} }}}
+                                                                                value={detailAtmosphericReasons}
+                                                                                onChange={handleDetailAtmospheric}
+                                                                                multiline
+                                                                                fullWidth
+                                                                                rows={3}
+                                                                                id="filled-textarea"
+                                                                            />
+                                                                        </Paper>
+                                                                    </div>
+                                                                    <div style={{ display: (atmosphereReasons[5].isChecked) ? 'block' : 'none' }}>
+                                                                        <ColoredLine color='#E0E0E0' />
+                                                                        <Typography className='cardSubtitle' variant='body'>{ DETAIL_OTHER_QUESTION }</Typography>
+                                                                        <Paper className='paperTest' elevation={0}>
+                                                                            <TextField
+                                                                                sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
+                                                                                    border: '1px solid #E0E0E0'} }}}
+                                                                                value={otherAtmosphericReasons}
+                                                                                onChange={handleOtherAtmospheric}
                                                                                 multiline
                                                                                 fullWidth
                                                                                 rows={3}
@@ -570,6 +751,8 @@ const SurveyForm = () => {
                                                                         <TextField
                                                                             sx={{'& .MuiOutlinedInput-root': {'& fieldset': { borderColor: '#E0E0E0'}, '&:hover fieldset': {borderColor: '#E0E0E0'}, '&.Mui-focused fieldset': {
                                                                                 border: '1px solid #E0E0E0'} }}}
+                                                                            value={otherReasons}
+                                                                            onChange={handleOtherReasons}
                                                                             multiline
                                                                             fullWidth
                                                                             rows={3}
@@ -580,6 +763,15 @@ const SurveyForm = () => {
                                                             </Card>
                                                         </div>
                                                     </div>
+                                                </CardContent>
+                                            </Card>
+                                            </div>
+                                            <div style={{ display: activeStep === 3 ? 'block' : 'none' }}>
+                                            <Card variant='outlined'>
+                                                <CardContent>
+                                                    <Typography variant='h4' align='center' > Antes de enviar la encuesta, le agradecemos su tiempo.<br/>Estos datos nos ayudarán a mejorar como departemento. </Typography>
+                                                    <ColoredLine color='#E0E0E0' />
+                                                    <Typography className='anonMessage' variant='body2' align='center'> Le recordamos que esta encuesta es <b>anónima</b> y sus datos personales no serán usados. </Typography>
                                                 </CardContent>
                                             </Card>
                                             </div>

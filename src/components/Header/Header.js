@@ -56,7 +56,7 @@ export default function Header() {
                         {pageDict.map((page) => {
                             return (
                                 <Link href={page.Url} key={page.id}  underline='none'>
-                                    <Button className='headerButton' key={page.id} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block', borderColor: 'white', borderWidth: '2px' }} size='large' variant='outlined'>
+                                    <Button className='headerButton' key={page.id} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block', borderColor: 'white', borderWidth: '1px' }} size='large' variant='outlined'>
                                         {page.Name}
                                     </Button>
                                 </Link>
