@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { Alert, Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
-// import { Controller, useForm } from 'react-hook-form';
 import CheckIcon from '@mui/icons-material/Check';
 import CheckboxComponent from '../CheckboxComponent/CheckboxComponent';
 import Header from '../Header/Header';
-// import axios from 'axios';
+import axios from 'axios';
 import './survey.css';
 
 const CASA_CENTRAL = 'Campus Casa Central Valparaíso';
@@ -60,6 +59,10 @@ const SurveyForm = () => {
     const [otherAtmosphericReasons, setOtherAtmosphericReasons] = React.useState("");
     const [otherReasons, setOtherReasons] = React.useState("");
 
+    function addRespuesta(student) {
+        axios.post("http://localhost:3030/api/encuestas", student)
+            .then(response => console.log('Añadidos', response));
+    }
 
     function handleName(e) {
         let updatedName = {};
@@ -418,8 +421,35 @@ const SurveyForm = () => {
             onSubmitAtmosphericReason();
         }
         else if (activeStep === 3) {
-            console.log('console');
-            //submitJson
+            console.log('jsonString', jsonString);
+            console.log(jsonString.nombre);
+            console.log(jsonString?.nombre );
+            let date = new Date().toISOString().slice(0,23)
+            let respuesta = {
+                fecha: date,
+                nombre: jsonString.nombre ? jsonString.nombre : null,
+                apellido_paterno: jsonString.apellido_paterno ? jsonString.apellido_paterno : null,
+                apellido_materno: jsonString.apellido_materno ? jsonString.apellido_materno : null,
+                anno_ingreso_carrera: jsonString.anno_ingreso_carrera ? jsonString.anno_ingreso_carrera : null,
+                anno_ingreso_universidad: jsonString.anno_ingreso_universidad ? jsonString.anno_ingreso_universidad : null,
+                anno_retiro_carrera: jsonString.anno_retiro_carrera ? jsonString.anno_retiro_carrera : null,
+                rut: jsonString.rut ? jsonString.rut : null,
+                rol: jsonString.rol ? jsonString.rol : null,
+                campus: jsonString.campus ? jsonString.campus : null,
+                razones: jsonString.razones ? jsonString.razones : null,
+                OTHER_SEF: jsonString.OTHER_SEF ? jsonString.OTHER_SEF : "-",
+                OTHER_VOC: jsonString.OTHER_VOC ? jsonString.OTHER_VOC : "-",
+                OTHER_RA1: jsonString.OTHER_RA1 ? jsonString.OTHER_RA1 : "-",
+                OTHER_RA2: jsonString.OTHER_RA2 ? jsonString.OTHER_RA2 : "-",
+                OTHER_AU: jsonString.OTHER_AU ? jsonString.OTHER_AU : "-",
+                otro_motivo: jsonString.otro_motivo ? jsonString.otro_motivo : "-",
+                SEF: jsonString.SEF ? jsonString.SEF : "-",
+                VOC: jsonString.VOC ? jsonString.VOC : "-",
+                RA1: jsonString.RA1 ? jsonString.RA1 : "-",
+                RA2: jsonString.RA2 ? jsonString.RA2 : "-",
+                AU: jsonString.AU ? jsonString.AU : "-",
+            }
+            addRespuesta(respuesta);
         }
     };
 
@@ -544,10 +574,10 @@ const SurveyForm = () => {
                                                         </Grid>
                                                         <Grid container direction={'row'} columnSpacing={5}>
                                                             <Grid item xs={4}>
-                                                                <TextField id='rut' label='RUT' error={rut.length > MAX_RUT_WIDTH || /[a-zA-Z]/.test(rut) } helperText={errorRutMessage} onChange={handleRUT} fullWidth required />
+                                                                <TextField id='rut' label='RUT' inputProps={{ pattern: '[0-9]*-[0-9]', maxLength: 10 }} error={rut.length > MAX_RUT_WIDTH || /[a-zA-Z]/.test(rut) } helperText={errorRutMessage} onChange={handleRUT} fullWidth required />
                                                             </Grid>
                                                             <Grid item xs={4}>
-                                                                <TextField id='rol' label='Rol USM' error={rol.length > MAX_ROL_WIDTH || /[a-zA-Z]/.test(rol) } helperText={errorRolMessage} onChange={handleRol} fullWidth required />
+                                                                <TextField id='rol' label='Rol USM' inputProps={{ pattern: '[0-9]*-[0-9]', maxLength: 11 }} error={rol.length > MAX_ROL_WIDTH || /[a-zA-Z]/.test(rol) } helperText={errorRolMessage} onChange={handleRol} fullWidth required />
                                                             </Grid>
                                                         </Grid>
                                                         <Grid container direction={'row'} justifyContent='center'>

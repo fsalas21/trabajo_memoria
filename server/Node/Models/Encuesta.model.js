@@ -20,6 +20,8 @@ const surveySchema = new mongoose.Schema({
     AU1: String,
     AU2: String,
     otro_motivo: String
+}, {
+    versionKey: false // You should be aware of the outcome after set to false
 });
 
 const Survey = mongoose.model('Encuesta', surveySchema, 'respuestas');
