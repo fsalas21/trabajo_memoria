@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography, Link } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import './Header.css'
+import './Header.css';
 
 export default function Header() {
 
     const pageDict = [
-        {id: 0, Name: 'Inicio', Url: '/'},
-        {id: 1, Name: 'Seguimiento', Url: '/seguimiento'},
-        {id: 2, Name: 'Encuesta', Url: '/encuesta-estudiante'}
+        { id: 0, Name: 'Inicio', Url: '/' },
+        { id: 1, Name: 'Seguimiento', Url: '/seguimiento' },
+        { id: 2, Name: 'Encuesta', Url: '/encuesta-estudiante' }
     ];
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [setAnchorElUser] = React.useState(null);
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -24,11 +24,12 @@ export default function Header() {
 
     const handleLogOut = () => {
         setAnchorElUser(null);
+        console.log('anchorElUser', anchorElUser);
     };
 
 
     return (
-        <AppBar position='static' sx={{ bgcolor: '#00498A' }}>
+        <AppBar position='static' sx={{ bgcolor: '#00498A', marginBottom: 2 }}>
             <Container maxWidth='xl'>
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -43,29 +44,29 @@ export default function Header() {
                             transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                             open={Boolean(anchorElNav)}
                             onClose={handleCloseNavMenu}
-                            sx={{ display: { xs: 'block', md: 'none'} }}
-                            >   {pageDict.map((page) => (
-                                <MenuItem key={page.Name} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign='center'>{page.Name}</Typography>
-                                </MenuItem>
-                            ))}
+                            sx={{ display: { xs: 'block', md: 'none' } }}
+                        >   {pageDict.map((page) => (
+                            <MenuItem key={page.Name} onClick={handleCloseNavMenu}>
+                                <Typography textAlign='center'>{page.Name}</Typography>
+                            </MenuItem>
+                        ))}
                         </Menu>
                     </Box>
 
-                    <Box sx={{ flexGrow: 1, display: {xs: 'none', md: 'flex'}, '& button': { m: 1 } }}>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, '& button': { m: 1 } }}>
                         {pageDict.map((page) => {
                             return (
-                                <Link href={page.Url} key={page.id}  underline='none'>
+                                <Link href={page.Url} key={page.id} underline='none'>
                                     <Button className='headerButton' key={page.id} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block', borderColor: 'white', borderWidth: '1px' }} size='large' variant='outlined'>
                                         {page.Name}
                                     </Button>
                                 </Link>
-                            )
+                            );
                         })}
                     </Box>
 
-                    <Box sx={{ flexGrow: 1, display: {xs: 'none', md: 'flex'}, '& button': { m: 1 } }} display='flex' justifyContent='flex-end'>
-                        <Button className='headerButton' onClick={handleLogOut} sx={{ my: 2, color: 'white', display: 'block', bgcolor: 'red', fontSize: 14,  ':hover': { bgcolor: '#B30000' } }} variant='contained'>Cerrar Sesión</Button>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, '& button': { m: 1 } }} display='flex' justifyContent='flex-end'>
+                        <Button className='headerButton' onClick={handleLogOut} sx={{ my: 2, color: 'white', display: 'block', bgcolor: 'red', fontSize: 14, ':hover': { bgcolor: '#B30000' } }} variant='contained'>Cerrar Sesión</Button>
                     </Box>
                 </Toolbar>
             </Container>

@@ -1,4 +1,4 @@
-import Header from '../Header/Header'
+import Header from '../Header/Header';
 import Home from "../Home/Home";
 
 const Graphics = () => {
@@ -8,6 +8,6 @@ const Graphics = () => {
             <Home />
         </div>
     );
-}
+};
 
 export default Graphics;

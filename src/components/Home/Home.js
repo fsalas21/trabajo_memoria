@@ -1,11 +1,119 @@
-import React from "react";
+import axios from "axios";
+import * as React from 'react';
+import { Box, Card, CardContent, CardHeader, FormControl, FormControlLabel, FormLabel, Grid, InputLabel, MenuItem, Radio, RadioGroup, Select, Typography } from '@mui/material';
+// import { styled } from "@mui/material/styles";
+import './Home.css';
 
-function Home() {
-    return(
-        <div>
-            <br></br>
-        </div>
+const SEF_SECTION_TITLE = 'Situación Económica y Familiar';
+const VOC_SECTION_TITLE = 'Vocacional';
+const RA_TITLE = 'Rendimiento Académico';
+const AU_TITLE = 'Ambiente Universitario';
+
+export default function Home() {
+
+    const [surveyData, setSurveyData] = React.useState();
+    const [radioButton, setRadioButton] = React.useState(SEF_SECTION_TITLE);
+    const [years, setYears] = React.useState([]);
+    const [selectedYear, setSelectedYear] = React.useState('');
+
+    // React.useEffect(() => {
+    //     axios.get(url).then(res => {
+    //         const yearArray = [];
+    //         res.data.forEach(element => {
+    //             if (!yearArray.includes(element.anno_retiro_universidad)) {
+    //                 yearArray.push(element.anno_retiro_universidad);
+    //             }
+    //         });
+    //         setYears(yearArray);
+    //     })
+    // }, []);
+
+    const ColoredLine = ({ color }) => (
+        <hr
+            style={{
+                color: color,
+                backgroundColor: color,
+                height: 1
+            }}
+        />
+    );
+
+    React.useEffect(() => {
+        async function fetchData() {
+            const { data: response } = await axios.get("http://localhost:3030/api/encuestasRespondidas/");
+            const yearArray = [];
+            setSurveyData(response);
+            response.forEach(element => {
+                if (!yearArray.includes(element.anno_retiro_universidad)) {
+                    yearArray.push(element.anno_retiro_universidad);
+                }
+            });
+            setYears(yearArray.sort());
+        }
+
+        fetchData();
+    }, []);
+
+    function handleRadioChange(e) {
+        e.preventDefault();
+        setRadioButton(e.target.value);
+    }
+
+    function handleYearChange(event) {
+        setSelectedYear(event.target.value);
+    }
+
+    console.log('surveyData', surveyData);
+    console.log('years', years);
+    console.log('selectedYear', selectedYear);
+
+    return (
+        <Box display='flex' justifyContent="center" alignItems='center' sx={{ border: '1px dashed grey', my: 2, mx: 2 }}>
+            <Grid container sx={{ border: '1px dashed blue' }}>
+                <Grid item xs={6} sx={{ p: 2, border: '1px dashed red' }}>
+                    <Card variant='outlined' >
+                        <CardHeader title={
+                            <Typography textAlign='center' variant="h3">Filtros</Typography>
+                        } />
+                        <ColoredLine color='#E0E0E0' />
+                        <CardContent sx={{ mx: 2 }}>
+                            <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+                                <InputLabel >Año de retiro</InputLabel>
+                                <Select label="Año de retiro" value={selectedYear} onChange={handleYearChange}>
+                                    {years.map(option => {
+                                        return (
+                                            <MenuItem key={option} value={option}>
+                                                {option}
+                                            </MenuItem>
+                                        );
+                                    })}
+                                </Select>
+                            </FormControl>
+                            <ColoredLine color='#E0E0E0' />
+                            <FormControl>
+                                <FormLabel>Razones generales</FormLabel>
+                                <RadioGroup value={radioButton} onChange={handleRadioChange}>
+                                    <FormControlLabel value={SEF_SECTION_TITLE} control={<Radio size="small" />} label={SEF_SECTION_TITLE} />
+                                    <FormControlLabel value={VOC_SECTION_TITLE} control={<Radio size="small" />} label={VOC_SECTION_TITLE} />
+                                    <FormControlLabel value={RA_TITLE} control={<Radio size="small" />} label={RA_TITLE} />
+                                    <FormControlLabel value={AU_TITLE} control={<Radio size="small" />} label={AU_TITLE} />
+                                </RadioGroup>
+                            </FormControl>
+                        </CardContent>
+                    </Card>
+                </Grid>
+
+                <Grid item xs={6} sx={{ p: 2, border: '1px dashed red' }}>
+                    <Card variant='outlined'>
+                        <CardHeader title={
+                            <Typography textAlign='center' variant="h3">Gráficos</Typography>
+                        } />
+                        <CardContent>
+                            <p>hola</p>
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
+        </Box>
     );
 }
-
-export default Home;

@@ -4,6 +4,7 @@ const informationSchema = new mongoose.Schema({
     nombre: String,
     apellidos: String,
     correo: String,
+    codigoAcceso: String,
     surveySentDate: String,
     answeredSurvey: Boolean,
     timesSent: Number

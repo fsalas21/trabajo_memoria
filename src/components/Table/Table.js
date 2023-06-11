@@ -1,14 +1,13 @@
-// import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import * as React from 'react';
-import axios from 'axios';
-import { AppBar, Box, Button, Stack, Toolbar, Tooltip } from '@mui/material';
-import ActionButton from '../ActionButton/ActionButton';
-import FileDownloadDoneRoundedIcon from '@mui/icons-material/FileDownloadDoneRounded';
-import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
+import FileDownloadDoneRoundedIcon from '@mui/icons-material/FileDownloadDoneRounded';
+import axios from 'axios';
+import ActionButton from '../ActionButton/ActionButton';
+import emailjs from '@emailjs/browser';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { AppBar, Box, Button, Stack, Toolbar, Tooltip } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
-// import Papa from 'papaparse';
 import './Table.css';
 
 function transformBooleanValue(bool) {
@@ -17,9 +16,9 @@ function transformBooleanValue(bool) {
 
 function formatDate(date) {
     var newDate = new Date(date),
-    month = '' + (newDate.getMonth() + 1),
-    day = '' + newDate.getDate(),
-    year = newDate.getFullYear();
+        month = '' + (newDate.getMonth() + 1),
+        day = '' + newDate.getDate(),
+        year = newDate.getFullYear();
 
     if (month.length < 2) {
         month = '0' + month;
@@ -34,11 +33,11 @@ function formatDate(date) {
 const columns = [
     { field: 'nombre', headerName: 'Nombres', flex: 1, align: 'center', headerAlign: 'center' },
     { field: 'apellidos', headerName: 'Apellidos', flex: 1, align: 'center', headerAlign: 'center' },
-    { field: 'correo', headerName: 'Correo', sorteable: false, flex: 1,align: 'center', headerAlign: 'center'},
-    { field: 'surveySentDate', headerName: 'Fecha de Encuesta Enviada', flex: 1, align: 'center', valueFormatter: params =>  formatDate(params?.value), headerAlign: 'center' },
+    { field: 'correo', headerName: 'Correo', sorteable: false, flex: 1, align: 'center', headerAlign: 'center' },
+    { field: 'surveySentDate', headerName: 'Fecha de Encuesta Enviada', flex: 1, align: 'center', valueFormatter: params => formatDate(params?.value), headerAlign: 'center' },
     { field: 'answeredSurvey', headerName: 'Encuesta Respondida', flex: 1, align: 'center', valueFormatter: params => transformBooleanValue(params?.value), headerAlign: 'center' },
     { field: 'timesSent', headerName: 'Veces Enviada la Encuesta', flex: 1, align: 'center', headerAlign: 'center' },
-    { field: 'action', headerName: 'Acciones', flex: 1, sortable: false, renderCell : ActionButton, align: 'center', headerAlign: 'center' }
+    { field: 'action', headerName: 'Acciones', flex: 1, sortable: false, renderCell: ActionButton, align: 'center', headerAlign: 'center' }
 
 ];
 
@@ -62,9 +61,9 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
                 backgroundColor: alpha(
                     theme.palette.primary.main,
                     ODD_OPACITY +
-                        theme.palette.action.selectedOpacity +
-                        theme.palette.action.hoverOpacity,
-                    ),
+                    theme.palette.action.selectedOpacity +
+                    theme.palette.action.hoverOpacity,
+                ),
                 // Reset on touch devices, it doesn't add specificity
                 '@media (hover: none)': {
                     backgroundColor: alpha(
@@ -107,11 +106,11 @@ const TableTracking = () => {
     }
 
     function handleUploadFile(e) {
-        // e.preventDefault();
+        e.preventDefault();
         if (file) {
             fileReader.onload = function (event) {
                 let csvOutput = event.target.result;
-                let date = new Date().toISOString().slice(0,23)
+                let date = new Date().toISOString().slice(0, 23);
                 console.log('csvOutput', csvOutput);
                 console.log('file', file);
                 const csvHeader = csvOutput.slice(0, csvOutput.indexOf("\r\n")).split(",");
@@ -124,29 +123,42 @@ const TableTracking = () => {
                     }, {});
                     return obj;
                 });
-                // setFileArray(array);
-                console.log('array', array);
+                const codigo = randomCode();
+                console.log('Access Code', codigo);
                 array.forEach(element => {
                     let student = {
                         nombre: element.Nombres,
                         apellidos: element.Apellidos,
                         correo: element.Correo,
                         surveySentDate: date,
+                        codigoAcceso: codigo,
                         answeredSurvey: false,
                         timesSent: 1,
-                    }
+                    };
                     console.log('Nombre:', student);
                     addStudents(student);
-                })
-
+                    sendEmail(element.Nombres, codigo, element.Correo);
+                });
                 // csvFileToArray(csvOutput);
             };
             fileReader.readAsText(file);
         }
     }
 
-    const downloadTemplate = ({data}) => {
-        const blob = new Blob([data], {type: 'text/csv'});
+    function sendEmail(name, code, email) {
+        emailjs.send(
+            process.env.REACT_APP_SERVICE_ID,
+            process.env.REACT_APP_TEMPLATE_ID,
+            { to_name: name, message: code, to_email: email },
+            process.env.REACT_APP_PUBLIC_KEY
+        ).then(
+            result => console.log('result', result.text),
+            error => console.log('error', error.text)
+        );
+    }
+
+    const downloadTemplate = ({ data }) => {
+        const blob = new Blob([data], { type: 'text/csv' });
         const a = document.createElement('a');
         a.download = 'template.csv';
         a.href = window.URL.createObjectURL(blob);
@@ -157,12 +169,29 @@ const TableTracking = () => {
         });
         a.dispatchEvent(clickEvent);
         a.remove();
+    };
+
+    function randomCode() {
+        const characters =
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        let result = '';
+
+        // Create an array of 32-bit unsigned integers
+        const randomValues = new Uint32Array(15);
+
+        // Generate random values
+        window.crypto.getRandomValues(randomValues);
+        randomValues.forEach((value) => {
+            result += characters.charAt(value % charactersLength);
+        });
+        return result;
     }
 
     function exportCSV(e) {
         e.preventDefault();
         let HEADERS = ['Nombres', 'Apellidos', 'Correo'];
-        downloadTemplate({data: [...HEADERS]});
+        downloadTemplate({ data: [...HEADERS] });
     }
 
     return (
@@ -171,13 +200,13 @@ const TableTracking = () => {
                 <Toolbar>
                     <Stack direction='row' spacing={2} >
                         <Tooltip title="Cargar archivo con nueva data" arrow>
-                            <Button sx={{ my: 2, color: 'white', borderColor: 'white', borderWidth: '1px' }} startIcon={<FileDownloadDoneRoundedIcon/>} className='appBarButton' variant="outlined" onClick={exportCSV}>
+                            <Button sx={{ my: 2, color: 'white', borderColor: 'white', borderWidth: '1px' }} startIcon={<FileDownloadDoneRoundedIcon />} className='appBarButton' variant="outlined" onClick={exportCSV}>
                                 Decargar Template
                             </Button>
                         </Tooltip>
                         <Tooltip title="Cargar archivo con nueva data" arrow>
                             <span>
-                                <Button sx={{ my: 2, color: 'white', borderColor: 'white', borderWidth: '1px' }} startIcon={<FileUploadRoundedIcon/>} className='appBarButton' component='label' variant="outlined" >
+                                <Button sx={{ my: 2, color: 'white', borderColor: 'white', borderWidth: '1px' }} startIcon={<FileUploadRoundedIcon />} className='appBarButton' component='label' variant="outlined" >
                                     Cargar Archivo
                                     <input hidden accept=".csv" type="file" onChange={handleFileChange} />
                                 </Button>
@@ -185,14 +214,12 @@ const TableTracking = () => {
                         </Tooltip>
                         <Tooltip title="Enviar archivo al servidor" arrow>
                             <span>
-                                <Button  sx={{ my: 2, color: 'white', borderColor: 'white', borderWidth: '1px' }} startIcon={<SendRoundedIcon/>} disabled={!existingFile} className='appBarButton' variant="outlined" onClick={(e) => {handleUploadFile(e) }}>
+                                <Button sx={{ my: 2, color: 'white', borderColor: 'white', borderWidth: '1px' }} startIcon={<SendRoundedIcon />} disabled={!existingFile} className='appBarButton' variant="outlined" onClick={(e) => { handleUploadFile(e); }}>
                                     Enviar
                                 </Button>
                             </span>
                         </Tooltip>
                     </Stack>
-                    {/* <Box sx={{ flexGrow: 1, display: {xs: 'none', md: 'flex'}, '& button': { m: 1 } }}>
-                    </Box> */}
                 </Toolbar>
             </AppBar>
             <StripedDataGrid
@@ -205,29 +232,9 @@ const TableTracking = () => {
                 density='comfortable'
                 getRowClassName={(params) => params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'}
             />
-            {/* <div>
-                <table>
-                    <thead>
-                        <tr key={"header"}>
-                            {headerKeys.map((key) => (
-                            <th>{key}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {fileArray.map((item) => (
-                            <tr key={item.id}>
-                                {Object.values(item).map((val) => (
-                                    <td>{val}</td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div> */}
         </Box>
-    )
+    );
 
-}
+};
 
 export default TableTracking;
