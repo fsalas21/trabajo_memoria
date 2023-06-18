@@ -1,7 +1,7 @@
 import axios from 'axios';
 import CheckIcon from '@mui/icons-material/Check';
 import CheckboxComponent from '../CheckboxComponent/CheckboxComponent';
-import Header from '../Header/Header';
+// import Header from '../Header/Header';
 import * as React from 'react';
 import { Alert, Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
 import './survey.css';
@@ -493,7 +493,7 @@ export default function SurveyForm() {
 
     return (
         <div className='global-container'>
-            <Header></Header>
+            {/* <Header></Header> */}
             <Box display='flex' justifyContent='center'>
                 <div>
                     <Card className='FirstCard'>
@@ -792,13 +792,7 @@ export default function SurveyForm() {
                                                                             <Typography className='cardSubtitle' variant='body'>{OTRO_QUESTION}</Typography>
                                                                             <Paper className='paperTest' elevation={0}>
                                                                                 <TextField
-                                                                                    sx={{
-                                                                                        '& .MuiOutlinedInput-root': {
-                                                                                            '& fieldset': { borderColor: '#E0E0E0' }, '&:hover fieldset': { borderColor: '#E0E0E0' }, '&.Mui-focused fieldset': {
-                                                                                                border: '1px solid #E0E0E0'
-                                                                                            }
-                                                                                        }
-                                                                                    }}
+                                                                                    sx={{ '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#E0E0E0' }, '&:hover fieldset': { borderColor: '#E0E0E0' }, '&.Mui-focused fieldset': { border: '1px solid #E0E0E0' } } }}
                                                                                     value={otherReasons}
                                                                                     onChange={handleOtherReasons}
                                                                                     multiline

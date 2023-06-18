@@ -1,22 +1,89 @@
 import * as React from 'react';
+import { Alert, Button, Menu, MenuItem, Snackbar, Stack } from '@mui/material';
+import axios from 'axios';
+import emailjs from '@emailjs/browser';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-// import {styled, alpha } from '@mui/material/styles';
-import { Button, Menu, MenuItem } from '@mui/material';
-import './ActionButton.css'
+import './ActionButton.css';
 
-const ActionButton = () => {
+const SENT_EMAIL_MESSAGE = 'Se ha reenviado el correo al estudiante.';
+const ERROR_SENT_EMAIL_MESSAGE = 'Hubo un problema la enviar el correo.';
+
+const ActionButton = (estudiante) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [openAlert, setOpenAlert] = React.useState(false);
+    const [sendEmailMsg, setSendEmailMsg] = React.useState('');
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
+    function sendEmail(name, code, email) {
+        emailjs.send(
+            process.env.REACT_APP_SERVICE_ID,
+            process.env.REACT_APP_TEMPLATE_ID,
+            { to_name: name, message: code, to_email: email },
+            process.env.REACT_APP_PUBLIC_KEY)
+            .then(result => {
+                console.log('result', result);
+                console.log('result', result.text);
+                // setSendEmailStatus(result.status);
+                setSendEmailMsg(SENT_EMAIL_MESSAGE);
+            })
+            .catch(error => {
+                console.log('error', error.text);
+                // setSendEmailStatus(error.status);
+                setSendEmailMsg(ERROR_SENT_EMAIL_MESSAGE);
+            });
+    }
+
+    function handleResendMail() {
+        const nombres = estudiante.nombre;
+        const code = estudiante.codigoAcceso;
+        const correo = estudiante.correo;
+        sendEmail(nombres, code, correo);
+        setAnchorEl(null);
+        setOpenAlert(true);
+    }
+
+    function handleClose() {
+        console.log('params', estudiante);
         setAnchorEl(null);
     };
 
+    function handleSnackClose() {
+        setOpenAlert(false);
+    }
+
+    function refresh() {
+        setTimeout(function () {
+            window.location.reload();
+        }, 600);
+    }
+
+    function handleUpdateStudent() {
+        axios.put("http://localhost:3030/api/seguimiento/" + estudiante._id, { "answeredSurvey": true })
+            .then(result => {
+                console.log('Result', result);
+                console.log('Estudiante', estudiante);
+            })
+            .catch(error => {
+                window.console.log('Error', error);
+            });
+        setAnchorEl(null);
+        refresh();
+    }
+
     return (
-        <div>
+        <Stack>
+            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                open={openAlert}
+                onClose={handleSnackClose}
+                autoHideDuration={6000}
+            >
+                <Alert onClose={handleSnackClose} severity="info" sx={{ width: '100%' }}>
+                    {sendEmailMsg}
+                </Alert>
+            </Snackbar>
             <Button
                 className='actionButton'
                 size='medium'
@@ -34,12 +101,12 @@ const ActionButton = () => {
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem sx={{ fontSize: 15 }} onClick={handleClose} disableRipple>Reenviar Correo</MenuItem>
-                <MenuItem sx={{ fontSize: 15 }} onClick={handleClose} disableRipple>No desea responder</MenuItem>
-                <MenuItem sx={{ fontSize: 15 }} onClick={handleClose} disableRipple>Cerrar Seguimiento</MenuItem>
+                <MenuItem sx={{ fontSize: 13 }} onClick={handleResendMail} disableRipple>Reenviar Correo</MenuItem>
+                <MenuItem sx={{ fontSize: 13 }} onClick={handleUpdateStudent} disableRipple>No desea responder</MenuItem>
+                {/* <MenuItem sx={{ fontSize: 13 }} onClick={handleClose} disableRipple>Cerrar Seguimiento</MenuItem> */}
             </Menu>
-        </div>
-    )
-}
+        </Stack>
+    );
+};
 
 export default ActionButton;

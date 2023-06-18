@@ -37,7 +37,13 @@ const columns = [
     { field: 'surveySentDate', headerName: 'Fecha de Encuesta Enviada', flex: 1, align: 'center', valueFormatter: params => formatDate(params?.value), headerAlign: 'center' },
     { field: 'answeredSurvey', headerName: 'Encuesta Respondida', flex: 1, align: 'center', valueFormatter: params => transformBooleanValue(params?.value), headerAlign: 'center' },
     { field: 'timesSent', headerName: 'Veces Enviada la Encuesta', flex: 1, align: 'center', headerAlign: 'center' },
-    { field: 'action', headerName: 'Acciones', flex: 1, sortable: false, renderCell: ActionButton, align: 'center', headerAlign: 'center' }
+    {
+        field: 'action', headerName: 'Acciones', flex: 1, sortable: false, renderCell: (params) => {
+            return (
+                ActionButton(params.row)
+            );
+        }, align: 'center', headerAlign: 'center'
+    }
 
 ];
 
@@ -227,9 +233,9 @@ const TableTracking = () => {
                 rows={tableData}
                 columns={columns}
                 getRowId={(row) => row._id}
+                density="compact"
                 hideFooter
                 disableRowSelectionOnClick
-                density='comfortable'
                 getRowClassName={(params) => params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'}
             />
         </Box>

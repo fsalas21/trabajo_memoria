@@ -1,7 +1,6 @@
 import axios from "axios";
 import * as React from 'react';
 import { Box, Card, CardContent, CardHeader, FormControl, FormControlLabel, FormLabel, Grid, InputLabel, MenuItem, Radio, RadioGroup, Select, Typography } from '@mui/material';
-// import { styled } from "@mui/material/styles";
 import './Home.css';
 
 const SEF_SECTION_TITLE = 'Situación Económica y Familiar';
@@ -11,22 +10,10 @@ const AU_TITLE = 'Ambiente Universitario';
 
 export default function Home() {
 
-    const [surveyData, setSurveyData] = React.useState();
+    const [formattedSurveyData, setFormattedSurveyData] = React.useState();
     const [radioButton, setRadioButton] = React.useState(SEF_SECTION_TITLE);
     const [years, setYears] = React.useState([]);
     const [selectedYear, setSelectedYear] = React.useState('');
-
-    // React.useEffect(() => {
-    //     axios.get(url).then(res => {
-    //         const yearArray = [];
-    //         res.data.forEach(element => {
-    //             if (!yearArray.includes(element.anno_retiro_universidad)) {
-    //                 yearArray.push(element.anno_retiro_universidad);
-    //             }
-    //         });
-    //         setYears(yearArray);
-    //     })
-    // }, []);
 
     const ColoredLine = ({ color }) => (
         <hr
@@ -42,7 +29,8 @@ export default function Home() {
         async function fetchData() {
             const { data: response } = await axios.get("http://localhost:3030/api/encuestasRespondidas/");
             const yearArray = [];
-            setSurveyData(response);
+            console.log('response', response);
+            setFormattedSurveyData(JSON.parse(JSON.stringify(response)).map(formatData(this)));
             response.forEach(element => {
                 if (!yearArray.includes(element.anno_retiro_universidad)) {
                     yearArray.push(element.anno_retiro_universidad);
@@ -63,14 +51,39 @@ export default function Home() {
         setSelectedYear(event.target.value);
     }
 
-    console.log('surveyData', surveyData);
-    console.log('years', years);
-    console.log('selectedYear', selectedYear);
+    function formatData(self) {
+        return record => {
+            let object = {};
+            object.campus = record.campus;
+            object.anno_ingreso_carrera = record.anno_ingreso_carrera;
+            object.ingreso_universidad = record.anno_ingreso_universidad;
+            object.retiro_universidad = record.anno_retiro_universidad;
+            object.retiro_universidad = record.anno_retiro_universidad;
+            object.razones = record.razones;
+            object.SEF = record.SEF;
+            object.OTHER_SEF = record.OTHER_SEF;
+            object.VOC = record.VOC;
+            object.OTHER_VOC = record.OTHER_VOC;
+            object.Detail_VOC = record.Detail_VOC;
+            object.RA1 = record.RA1;
+            object.OTHER_RA1 = record.OTHER_RA1;
+            object.RA2 = record.RA2;
+            object.OTHER_RA2 = record.OTHER_RA2;
+            object.AU = record.AU;
+            object.OTHER_AU = record.OTHER_AU;
+            object.Detail_AU = record.Detail_AU;
+            object.otro_motivo = record.otro_motivo;
+            return object;
+        };
+
+    }
+
+    console.log('formattedSurveyData', formattedSurveyData);
 
     return (
         <Box display='flex' justifyContent="center" alignItems='center' sx={{ border: '1px dashed grey', my: 2, mx: 2 }}>
             <Grid container sx={{ border: '1px dashed blue' }}>
-                <Grid item xs={6} sx={{ p: 2, border: '1px dashed red' }}>
+                <Grid item xs={3} sx={{ p: 2, border: '1px dashed red' }}>
                     <Card variant='outlined' >
                         <CardHeader title={
                             <Typography textAlign='center' variant="h3">Filtros</Typography>
@@ -103,7 +116,7 @@ export default function Home() {
                     </Card>
                 </Grid>
 
-                <Grid item xs={6} sx={{ p: 2, border: '1px dashed red' }}>
+                <Grid item xs={9} sx={{ p: 2, border: '1px dashed red' }}>
                     <Card variant='outlined'>
                         <CardHeader title={
                             <Typography textAlign='center' variant="h3">Gráficos</Typography>

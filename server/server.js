@@ -65,6 +65,7 @@ app.post('/api/studentCode', (req, res) => {
             res.json(result);
         }
         else {
+            res.json(error);
             console.log('Error', error);
         }
     });
@@ -72,6 +73,30 @@ app.post('/api/studentCode', (req, res) => {
 
 app.get('/api/seguimiento/', (req, res) => {
     Informacion.find().then((allInformation => res.json(allInformation)));
+});
+
+app.get('/api/seguimiento/:studentId', (req, res) => {
+    const { studentId } = req.params;
+    Informacion.findById(studentId).then(student => res.json(student));
+});
+
+app.put('/api/seguimiento/:studentId', (req, res) => {
+    console.log('req', req.body);
+    console.log('req.params', req.params);
+    const updateObj = req.body;
+    Informacion.findByIdAndUpdate(
+        { _id: req.params.studentId },
+        updateObj,
+        (err, result) => {
+            if (result) {
+                console.log('Result', result);
+                res.json(result);
+            }
+            else {
+                console.log('Error', err);
+            }
+        }
+    );
 });
 
 app.post('/api/seguimiento/', (req, res) => {

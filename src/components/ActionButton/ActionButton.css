@@ -5,4 +5,6 @@
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     text-transform: capitalize !important;
+    height: 25px;
+    width: 120px;
 }
