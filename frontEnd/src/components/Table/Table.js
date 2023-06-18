@@ -92,7 +92,8 @@ const TableTracking = () => {
 
     React.useEffect(() => {
         async function fetchData() {
-            const { data: response } = await axios.get("http://localhost:3030/api/seguimiento/");
+            // const { data: response } = await axios.get("http://localhost:3030/api/seguimiento/");
+            const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/seguimiento");
             setTableData(response);
         }
         fetchData();
@@ -100,7 +101,8 @@ const TableTracking = () => {
 
     // POST Estudiantes nuevos luego de agregar el CSV
     function addStudents(student) {
-        axios.post("http://localhost:3030/api/seguimiento", student)
+        // axios.post("http://localhost:3030/api/seguimiento", student)
+        axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/seguimiento", student)
             .then(response => console.log('Añadidos', response));
     }
 
