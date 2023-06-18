@@ -1,0 +1,101 @@
+{
+    "properties": {
+        "AU": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "Detail_AU": {
+            "bsonType": "string"
+        },
+        "Detail_VOC": {
+            "bsonType": "string"
+        },
+        "OTHER_AU": {
+            "bsonType": "string"
+        },
+        "OTHER_RA1": {
+            "bsonType": "string"
+        },
+        "OTHER_RA2": {
+            "bsonType": "string"
+        },
+        "OTHER_SEF": {
+            "bsonType": "string"
+        },
+        "OTHER_VOC": {
+            "bsonType": "string"
+        },
+        "RA1": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "RA2": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "SEF": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "VOC": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "anno_ingreso_carrera": {
+            "bsonType": "int"
+        },
+        "anno_ingreso_universidad": {
+            "bsonType": "int"
+        },
+        "anno_retiro_universidad": {
+            "bsonType": "int"
+        },
+        "apellido_materno": {
+            "bsonType": "string"
+        },
+        "apellido_paterno": {
+            "bsonType": "string"
+        },
+        "campus": {
+            "bsonType": "string"
+        },
+        "fecha": {
+            "bsonType": "string"
+        },
+        "nombre": {
+            "bsonType": "string"
+        },
+        "otro_motivo": {
+            "bsonType": "string"
+        },
+        "razones": {
+            "bsonType": "array",
+            "items": {
+                "bsonType": "string"
+            }
+        },
+        "rol": {
+            "bsonType": "string"
+        },
+        "rol_usm": {
+            "bsonType": "string"
+        },
+        "rut": {
+            "bsonType": "string"
+        }
+    },
+    "title": "respuesta"
+}

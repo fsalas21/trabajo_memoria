@@ -1,0 +1,29 @@
+{
+    "properties": {
+        "_id": {
+            "bsonType": "objectId"
+        },
+        "answeredSurvey": {
+            "bsonType": "bool"
+        },
+        "apellidos": {
+            "bsonType": "string"
+        },
+        "codigoAcceso": {
+            "bsonType": "string"
+        },
+        "correo": {
+            "bsonType": "string"
+        },
+        "nombre": {
+            "bsonType": "string"
+        },
+        "surveySentDate": {
+            "bsonType": "string"
+        },
+        "timesSent": {
+            "bsonType": "int"
+        }
+    },
+    "title": "informacion"
+}
