@@ -61,16 +61,18 @@ const ActionButton = (estudiante) => {
     }
 
     function handleUpdateStudent() {
-        axios.put("http://localhost:3030/api/seguimiento/" + estudiante._id, { "answeredSurvey": true })
+        let status = { rut: estudiante.RUT, answeredSurvey: true };
+        console.log('Estudiante: ', estudiante);
+        console.log('Rut', estudiante.RUT);
+        axios.put("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/updateSurveyStatus", status)
             .then(result => {
-                console.log('Result', result);
-                console.log('Estudiante', estudiante);
+                console.log('Estado actualizado. Resultado: \n', result);
+                refresh();
             })
             .catch(error => {
-                window.console.log('Error', error);
+                console.log('No se ha encontrado un estudiante con ese RUT. Error: \n', error);
             });
         setAnchorEl(null);
-        refresh();
     }
 
     return (

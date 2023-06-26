@@ -84,9 +84,10 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
 
 const TableTracking = () => {
 
-    const [tableData, setTableData] = React.useState([]);
-    const [file, setFile] = React.useState();
     const [existingFile, setExistingFile] = React.useState(false);
+    const [isDataLoaded, setIsDataLoaded] = React.useState(false);
+    const [file, setFile] = React.useState();
+    const [tableData, setTableData] = React.useState([]);
 
     const fileReader = new FileReader();
 
@@ -99,13 +100,6 @@ const TableTracking = () => {
         fetchData();
     }, []);
 
-    // POST Estudiantes nuevos luego de agregar el CSV
-    function addStudents(student) {
-        // axios.post("http://localhost:3030/api/seguimiento", student)
-        axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/seguimiento", student)
-            .then(response => console.log('Añadidos', response));
-    }
-
     function handleFileChange(e) {
         if (e.target.files) {
             setFile(e.target.files[0]);
@@ -114,7 +108,7 @@ const TableTracking = () => {
     }
 
     function handleUploadFile(e) {
-        e.preventDefault();
+        // e.preventDefault();
         if (file) {
             fileReader.onload = function (event) {
                 let csvOutput = event.target.result;
@@ -123,34 +117,51 @@ const TableTracking = () => {
                 console.log('file', file);
                 const csvHeader = csvOutput.slice(0, csvOutput.indexOf("\r\n")).split(",");
                 const csvRows = csvOutput.slice(csvOutput.indexOf("\n") + 1).split(/\r?\n/).filter(element => element);
+
                 const array = csvRows.map(row => {
                     const values = row.split(",");
                     const obj = csvHeader.reduce((object, header, index) => {
                         object[header] = values[index];
                         return object;
                     }, {});
+                    console.log('CSV Object', obj);
                     return obj;
                 });
-                const codigo = randomCode();
-                console.log('Access Code', codigo);
                 array.forEach(element => {
+                    const codigo = randomCode();
+                    console.log('Access Code', codigo);
                     let student = {
                         nombre: element.Nombres,
                         apellidos: element.Apellidos,
                         correo: element.Correo,
                         surveySentDate: date,
+                        RUT: element.RUT,
                         codigoAcceso: codigo,
                         answeredSurvey: false,
                         timesSent: 1,
                     };
-                    console.log('Nombre:', student);
+                    console.log('Student Data:', student);
                     addStudents(student);
-                    sendEmail(element.Nombres, codigo, element.Correo);
                 });
-                // csvFileToArray(csvOutput);
             };
             fileReader.readAsText(file);
         }
+        setIsDataLoaded(true);
+        console.log('isDataLoaded', isDataLoaded);
+        if (isDataLoaded) {
+            refresh();
+        }
+    }
+
+    function addStudents(student) {
+        // axios.post("http://localhost:3030/api/seguimiento", student)
+        axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/seguimiento", student)
+            .then(response => {
+                console.log('Nombre', student.nombre);
+                console.log('Codigo', student.codigoAcceso);
+                console.log('Correo', student.correo);
+                sendEmail(student.nombre, student.codigoAcceso, student.correo);
+            });
     }
 
     function sendEmail(name, code, email) {
@@ -163,6 +174,12 @@ const TableTracking = () => {
             result => console.log('result', result.text),
             error => console.log('error', error.text)
         );
+    }
+
+    function refresh() {
+        setTimeout(function () {
+            window.location.reload();
+        }, 2000);
     }
 
     const downloadTemplate = ({ data }) => {
@@ -198,7 +215,7 @@ const TableTracking = () => {
 
     function exportCSV(e) {
         e.preventDefault();
-        let HEADERS = ['Nombres', 'Apellidos', 'Correo'];
+        let HEADERS = ['RUT', 'Nombres', 'Apellidos', 'Correo'];
         downloadTemplate({ data: [...HEADERS] });
     }
 

@@ -27,7 +27,7 @@ export default function Home() {
 
     React.useEffect(() => {
         async function fetchData() {
-            const { data: response } = await axios.get("http://localhost:3030/api/encuestasRespondidas/");
+            const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
             const yearArray = [];
             console.log('response', response);
             setFormattedSurveyData(JSON.parse(JSON.stringify(response)).map(formatData(this)));

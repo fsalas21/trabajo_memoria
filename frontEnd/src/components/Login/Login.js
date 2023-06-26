@@ -40,24 +40,24 @@ export default function Login() {
 
     function handleLogin(e) {
         e.preventDefault();
+        let payload = { 'code': code, 'surveyAnswered': surveyAnswered };
 
-        axios.post("http://localhost:3030/api/studentCode",
-            JSON.stringify({ code, surveyAnswered }),
-            {
-                headers: { 'Content-Type': 'application/json' },
-                withCredentials: true
-            }
-        ).then(result => {
-            console.log('result', result);
-            setAuth({ code: result.data.codigoAcceso, surveyAnswered: result.data.answeredSurvey });
-            setCode('');
-            navigate(from, { replace: true });
-        }).catch(error => {
-            setErrorMsg('Ya se ha respondido una encuesta con el código ingresado o es incorrecto.');
-            setOpenAlert(true);
-            setCode('');
-            window.console.log('No es posible obtener datos con ese código. Error: ' + error);
-        });
+        axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/studentCode",
+            payload)
+            .then(result => {
+                console.log('payload ok', payload);
+                console.log('result', result);
+                setAuth({ code: result.data.codigoAcceso, surveyAnswered: result.data.answeredSurvey });
+                setCode('');
+                navigate(from, { replace: true });
+            })
+            .catch(error => {
+                console.log('payload okn\'t', payload);
+                setErrorMsg('Ya se ha respondido una encuesta con el código ingresado o es incorrecto.');
+                setOpenAlert(true);
+                setCode('');
+                window.console.log('No es posible obtener datos con ese código. Error: \n' + error);
+            });
     }
 
     return (
