@@ -169,7 +169,7 @@ const TableTracking = () => {
             process.env.REACT_APP_SERVICE_ID,
             process.env.REACT_APP_TEMPLATE_ID,
             { to_name: name, message: code, to_email: email },
-            'Kd47feZBSZ7UeutUl'
+            process.env.REACT_APP_PUBLIC_KEY
         ).then(
             result => console.log('result', result.text),
             error => console.log('error', error.text)
