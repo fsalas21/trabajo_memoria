@@ -1,7 +1,7 @@
 import axios from 'axios';
 import CheckIcon from '@mui/icons-material/Check';
 import CheckboxComponent from '../CheckboxComponent/CheckboxComponent';
-import Header from '../Header/Header';
+// import Header from '../Header/Header';
 import * as React from 'react';
 import { Alert, Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Stack, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
 import './survey.css';
@@ -28,7 +28,7 @@ const AU_QUESTION = '¿Cuál de las siguientes alternativas refleja mejor su pro
 const DETAIL_QUESTION = 'Detalles de su respuesta anterior.';
 const DETAIL_OTHER_QUESTION = 'Detalles sus otros motivos de la pregunta anterior.';
 
-const OTRO_TITLE = 'Otros motivos';
+const OTRO_TITLE = 'Otros Motivos';
 const OTRO_QUESTION = 'Detalle qué otros motivos lo habrían motivado a dejar la carrera y/o universidad';
 
 const MAX_RUT_WIDTH = 10;

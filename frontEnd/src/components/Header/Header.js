@@ -12,7 +12,7 @@ export default function Header() {
     ];
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    // const [anchorElUser, setAnchorElUser] = React.useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -22,10 +22,10 @@ export default function Header() {
         setAnchorElNav(null);
     };
 
-    const handleLogOut = () => {
-        setAnchorElUser(null);
-        console.log('anchorElUser', anchorElUser);
-    };
+    // const handleLogOut = () => {
+    //     setAnchorElUser(null);
+    //     console.log('anchorElUser', anchorElUser);
+    // };
 
 
     return (
@@ -65,9 +65,9 @@ export default function Header() {
                         })}
                     </Box>
 
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, '& button': { m: 1 } }} display='flex' justifyContent='flex-end'>
+                    {/* <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, '& button': { m: 1 } }} display='flex' justifyContent='flex-end'>
                         <Button className='headerButton' onClick={handleLogOut} sx={{ my: 2, color: 'white', display: 'block', bgcolor: 'red', fontSize: 14, ':hover': { bgcolor: '#B30000' } }} variant='contained'>Cerrar Sesión</Button>
-                    </Box>
+                    </Box> */}
                 </Toolbar>
             </Container>
         </AppBar>

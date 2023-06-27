@@ -1,0 +1,210 @@
+[
+    {
+        "campus": "Campus Casa Central Valparaíso",
+        "anno_ingreso_carrera": 2017,
+        "ingreso_universidad": 2017,
+        "retiro_universidad": 2019,
+        "razones": [
+            "Rendimiento Académico",
+            "Ambiente Universitario",
+            "Otros Motivos"
+        ],
+        "SEF": [],
+        "OTHER_SEF": "-",
+        "VOC": [],
+        "OTHER_VOC": "-",
+        "Detail_VOC": "-",
+        "RA1": [
+            "Mi formación previa fue muy mala",
+            "No tenía hábitos de estudio",
+            "No iba mucho a clases y ayudantías",
+            "No asistí al CIAC regularmente"
+        ],
+        "OTHER_RA1": "-",
+        "RA2": [
+            "Las clases y las metodologías que se imparten no son de calidad lo que dificulta el aprendizaje",
+            "No había preocupación ni apoyo de la USM por los alumnos con problemas"
+        ],
+        "OTHER_RA2": "-",
+        "AU": [
+            "Los paros frecuentes no me gustaban"
+        ],
+        "OTHER_AU": "-",
+        "Detail_AU": "-",
+        "otro_motivo": "Ya no me veía terminando la carrera"
+    },
+    {
+        "campus": "Campus Casa Central Valparaíso",
+        "anno_ingreso_carrera": 2017,
+        "ingreso_universidad": 2017,
+        "retiro_universidad": 2019,
+        "razones": [
+            "Ambiente Universitario",
+            "Otros Motivos"
+        ],
+        "SEF": [],
+        "OTHER_SEF": "-",
+        "VOC": [],
+        "OTHER_VOC": "-",
+        "Detail_VOC": "-",
+        "RA1": [],
+        "OTHER_RA1": "-",
+        "RA2": [],
+        "OTHER_RA2": "-",
+        "AU": [
+            "Los paros frecuentes no me gustaban",
+            "El nivel de competencia que sentía por parte de mis compañeros y profesores"
+        ],
+        "OTHER_AU": "No era agradable sentir que te miraban en menos por no sacarte buena nota, a pesar de haber aprovado algún certamen. Además sentí muchas veces envidia por haber pasado ramos que otra gente no pasó.\nPor parte de los profes, varios (en especial de ramos comunes, Estadística Computacional y Computación Científica) ponían mucho esfuerzo en hacer difícil el ramo en vez de que nosotros aprendiéramos, o directamente no explicaban de manera clara los contenidos.",
+        "Detail_AU": "-",
+        "otro_motivo": "El nivel de corrupción evidente de administración y la poca o nula disposición por arreglar los problemas que tenía la universidad, por lo menos cuando yo estaba allí."
+    },
+    {
+        "campus": "Campus Casa Central Valparaíso",
+        "anno_ingreso_carrera": 2017,
+        "ingreso_universidad": 2017,
+        "retiro_universidad": 2019,
+        "razones": [
+            "Ambiente Universitario",
+            "Otros Motivos"
+        ],
+        "SEF": [],
+        "OTHER_SEF": "-",
+        "VOC": [],
+        "OTHER_VOC": "-",
+        "Detail_VOC": "-",
+        "RA1": [],
+        "OTHER_RA1": "-",
+        "RA2": [],
+        "OTHER_RA2": "-",
+        "AU": [
+            "Los paros frecuentes no me gustaban, Mal servicio dentro de la Universidad (pedir detallar)"
+        ],
+        "OTHER_AU": "Múltiples problemas de coordinación con ramos de plan común. Metodologías de enseñanza obsoletos. Profesores de “vieja escuela” que están desactualizados en la enseñanza moderna. Profesores que no tienen pedagogía (ingenieros que dictan clases como si nada)",
+        "Detail_AU": "-",
+        "otro_motivo": "Múltiples problemas de coordinación con ramos de plan común. Metodologías de enseñanza obsoletos. Profesores de “vieja escuela” que están desactualizados en la enseñanza moderna. Profesores que no tienen pedagogía(ingenieros que dictan clases como si nada)\nSumando los múltiples paros que tenían larga duración por problemas que se arrastran históricamente en la universidad, lo cual dan un indicio de que las autoridades no están dispuestas a mejorar y progresar en busca de responder y resolver los problemas actuales de la educación chilena"
+    },
+    {
+        "campus": "Campus Casa Central Valparaíso",
+        "anno_ingreso_carrera": 2015,
+        "ingreso_universidad": 2015,
+        "retiro_universidad": 2016,
+        "razones": [
+            "Situación Económica y Familiar",
+            "Vocacional",
+            "Rendimiento Académico",
+            "Ambiente Universitario",
+            "Otros motivos"
+        ],
+        "SEF": [
+            "No seguí estudiando porque no tenía para costear mis estudios",
+            "Poca flexibilidad académica y de horario para compatibilizar trabajo-estudios"
+        ],
+        "OTHER_SEF": "-",
+        "VOC": [
+            "No era mi primera preferencia para estudiar"
+        ],
+        "OTHER_VOC": "-",
+        "RA1": [
+            "Mi formación previa fue muy mala",
+            "No logré armar un grupo de estudios"
+        ],
+        "OTHER_RA1": "-",
+        "RA2": [
+            "Los profesores no eran muy claros al explicar la materia",
+            "No había preocupación ni apoyo de la USM por los alumnos con problemas"
+        ],
+        "OTHER_RA2": "-",
+        "AU": [
+            "Los profesores no eran muy claros al explicar la materia",
+            "No había preocupación ni apoyo de la USM por los alumnos con problemas"
+        ],
+        "OTHER_AU": "-",
+        "Detail_AU": "-",
+        "otro_motivo": "Test otros motivos"
+    },
+    {
+        "campus": "Campus Casa Central Valparaíso",
+        "anno_ingreso_carrera": 2017,
+        "ingreso_universidad": 2017,
+        "retiro_universidad": 2019,
+        "razones": [
+            "Rendimiento Académico",
+            "Ambiente Universitario",
+            "Otros Motivos"
+        ],
+        "SEF": [],
+        "OTHER_SEF": "-",
+        "VOC": [],
+        "OTHER_VOC": "-",
+        "Detail_VOC": "-",
+        "RA1": [
+            "Mi formación previa fue muy mala",
+            "No tenía hábitos de estudio",
+            "No iba mucho a clases y ayudantías",
+            "No asistí al CIAC regularmente"
+        ],
+        "OTHER_RA1": "-",
+        "RA2": [
+            "Las clases y las metodologías que se imparten no son de calidad lo que dificulta el aprendizaje",
+            "No había preocupación ni apoyo de la USM por los alumnos con problemas"
+        ],
+        "OTHER_RA2": "-",
+        "AU": [
+            "Los paros frecuentes no me gustaban"
+        ],
+        "OTHER_AU": "-",
+        "Detail_AU": "-",
+        "otro_motivo": "Ya no me veía terminando la carrera"
+    },
+    {
+        "campus": "Campus Casa Central Valparaíso",
+        "anno_ingreso_carrera": 2013,
+        "ingreso_universidad": 2015,
+        "retiro_universidad": 2018,
+        "razones": [
+            "Rendimiento Académico"
+        ],
+        "SEF": [],
+        "OTHER_SEF": "-",
+        "VOC": [],
+        "OTHER_VOC": "-",
+        "RA1": [
+            "No tenía hábitos de estudio"
+        ],
+        "OTHER_RA1": "-",
+        "RA2": [
+            "Las clases y las metodologías que se imparten no son de calidad lo que dificulta el aprendizaje"
+        ],
+        "OTHER_RA2": "-",
+        "AU": [
+            "Las clases y las metodologías que se imparten no son de calidad lo que dificulta el aprendizaje"
+        ],
+        "OTHER_AU": "-",
+        "Detail_AU": "-",
+        "otro_motivo": "-"
+    },
+    {
+        "campus": "Campus Casa Central Valparaíso",
+        "anno_ingreso_carrera": 2015,
+        "ingreso_universidad": 2015,
+        "retiro_universidad": 2018,
+        "razones": [
+            "Vocacional"
+        ],
+        "SEF": [],
+        "OTHER_SEF": "-",
+        "VOC": [
+            "El nivel de estrés superaba mis capacidades"
+        ],
+        "OTHER_VOC": "-",
+        "RA1": [],
+        "OTHER_RA1": "-",
+        "RA2": [],
+        "OTHER_RA2": "-",
+        "AU": [],
+        "OTHER_AU": "-",
+        "Detail_AU": "-",
+        "otro_motivo": "-"
+    }
+]
