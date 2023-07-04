@@ -2,3 +2,9 @@
     border-style: dotted;
     border-color: crimson;
 }
+
+.graphics {
+    display: grid;
+    place-content: center;
+    text-align: center;
+}

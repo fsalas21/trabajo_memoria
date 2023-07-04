@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as React from 'react';
 import { Box, Card, CardContent, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
-import { CartesianGrid, XAxis, YAxis, BarChart, Bar, Tooltip, Cell, PieChart, Pie, LineChart, Line, Legend } from "recharts";
+import { CartesianGrid, XAxis, YAxis, Tooltip, Cell, PieChart, Pie, LineChart, Line, Legend } from "recharts";
 import './Home.css';
 
 const SEF_SECTION_TITLE = 'Situación Económica y Familiar';
@@ -168,172 +168,96 @@ export default function Home() {
                                 </Select>
                             </FormControl>
                             <Typography textAlign='center' variant="h4">Gráficos</Typography>
-                            <Box className="graphics">
-                                <Typography textAlign='center' variant="h7">Deserción por años</Typography>
-                                <LineChart width={900} height={300} data={retiredByYearCount} >
-                                    <CartesianGrid strokeDasharray={"3 3"} />
-                                    <XAxis dataKey="Año" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Line type="monotone" isAnimationActive={false} dataKey="Cantidad" stroke="#8884d8" dot={true} />
-                                </LineChart>
-                            </Box>
                             <ColoredLine color='#E0E0E0' />
-                            <div style={{ display: selectedReason === TODAS ? 'block' : 'none' }}>
-                                <Box className="graphics">
-                                    <Typography textAlign='center' variant="h7">Razones Globales de Deserción</Typography>
-                                    <BarChart layout="horizontal" width={900} height={300} data={globalReasonsCount} barSize={90}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <YAxis type="number" />
-                                        <XAxis tickFormatter={(value) => value.toLocaleString().replace(/ /g, '\u00A0')} tick={{ fontSize: 14, width: 250 }} dataKey="Razon" type="category" />
-                                        <Tooltip />
-                                        <Bar dataKey={"Cantidad"} fill="blue" >
-                                            {
-                                                COLORS.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                                                ))
-                                            }
-                                        </Bar>
-                                    </BarChart>
-                                </Box>
+                            <div style={{ display: selectedReason === TODAS && selectedYear === TODOS ? 'block' : 'none' }}>
+                                <Grid container>
+                                    <Grid item xs={4}>
+                                        <Box className="graphics">
+                                            <Typography textAlign='center' variant="h7">Deserción por años</Typography>
+                                            <LineChart width={400} height={300} data={retiredByYearCount} >
+                                                <CartesianGrid strokeDasharray={"3 3"} />
+                                                <XAxis dataKey="Año" />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Line type="monotone" isAnimationActive={false} dataKey="Cantidad" stroke="#8884d8" dot={true} />
+                                            </LineChart>
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <Box className="graphics">
+                                            <Typography textAlign='center' variant="h7">Razones Globales de Deserción</Typography>
+                                            <PieChart width={800} height={300}>
+                                                <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                                <Pie data={globalReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={120} innerRadius={30} >
+                                                    {COLORS.map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                    ))}
+                                                </Pie>
+                                            </PieChart>
+                                        </Box>
+                                    </Grid>
+                                </Grid>
                             </div>
 
                             <div style={{ display: selectedReason === RA_TITLE ? 'block' : 'none' }}>
                                 <Box className="graphics">
                                     <PieChart width={1000} height={500}>
-                                        <Legend layout="vertical" verticalAlign="middle" align="right" />
-                                        <Pie data={academicReasonOneCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={100} innerRadius={30} >
+                                        <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                        <Pie data={academicReasonOneCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
                                             {COLORS.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
                                     </PieChart>
                                     <PieChart width={1000} height={500}>
-                                        <Legend layout="vertical" verticalAlign="middle" align="right" />
-                                        <Pie data={academicReasonTwoCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={100} innerRadius={30} >
+                                        <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                        <Pie data={academicReasonTwoCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
                                             {COLORS.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
                                     </PieChart>
                                 </Box>
-                                {/* <Box className="graphics">
-                                    <Typography textAlign='center' variant="h5">Razones Académicas</Typography>
-                                    <BarChart layout="vertical" width={900} height={300} data={academicReasonOneCount}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis type="number" />
-                                        <YAxis tickFormatter={(value) => value.toLocaleString().replace(/ /g, '\u00A0')} dataKey="Razon" type="category" />
-                                        <Tooltip />
-                                        <Bar dataKey={"Cantidad"} fill="blue">
-                                            {
-                                                COLORS.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                                                ))
-                                            }
-                                        </Bar>
-                                    </BarChart>
-                                    <BarChart layout="vertical" width={900} height={300} data={academicReasonTwoCount} >
-                                        <CartesianGrid strokeDasharray="6 6" />
-                                        <XAxis type="number" />
-                                        <YAxis tickFormatter={(value) => value.toLocaleString().replace(/ /g, '\u00A0')} dataKey="Razon" type="category" />
-                                        <Tooltip />
-                                        <Bar dataKey={"Cantidad"} fill="blue">
-                                            {
-                                                COLORS.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                                                ))
-                                            }
-                                        </Bar>
-                                    </BarChart>
-                                </Box> */}
                             </div>
 
                             <div style={{ display: selectedReason === SEF_SECTION_TITLE ? 'block' : 'none' }}>
                                 <Box className="graphics">
                                     <PieChart width={1000} height={500}>
-                                        <Legend layout="vertical" verticalAlign="middle" align="right" width={300} />
-                                        <Pie data={economicReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={100} innerRadius={30} >
+                                        <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                        <Pie data={economicReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
                                             {COLORS.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
                                     </PieChart>
                                 </Box>
-                                {/* <Box className="graphics">
-                                    <Typography textAlign='center' variant="h5">Situación Económica y Familiar</Typography>
-                                    <BarChart layout="vertical" width={900} height={300} data={economicReasonsCount} >
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis type="number" />
-                                        <YAxis tickFormatter={(value) => value.toLocaleString().replace(/ /g, '\u00A0')} dataKey="Razon" type="category" />
-                                        <Tooltip />
-                                        <Bar dataKey={"Cantidad"} fill="blue">
-                                            {
-                                                COLORS.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                                                ))
-                                            }
-                                        </Bar>
-                                    </BarChart>
-                                </Box> */}
                             </div>
 
                             <div style={{ display: selectedReason === VOC_SECTION_TITLE ? 'block' : 'none' }}>
                                 <Box className="graphics">
                                     <PieChart width={1000} height={500}>
-                                        <Legend layout="vertical" verticalAlign="middle" align="right" />
-                                        <Pie data={vocationalRasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={100} innerRadius={30} >
+                                        <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                        <Pie data={vocationalRasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
                                             {COLORS.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
                                     </PieChart>
                                 </Box>
-                                {/* <Box className="graphics">
-                                    <Typography textAlign='center' variant="h5">Vocacional</Typography>
-                                    <BarChart layout="vertical" width={900} height={300} data={vocationalRasonsCount} >
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis type="number" />
-                                        <YAxis tickFormatter={(value) => value.toLocaleString().replace(/ /g, '\u00A0')} dataKey="Razon" type="category" />
-                                        <Tooltip />
-                                        <Bar dataKey={"Cantidad"} fill="blue">
-                                            {
-                                                COLORS.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                                                ))
-                                            }
-                                        </Bar>
-                                    </BarChart>
-                                </Box> */}
                             </div>
 
                             <div style={{ display: selectedReason === AU_TITLE ? 'block' : 'none' }}>
                                 <Box className="graphics">
                                     <PieChart width={1000} height={500}>
-                                        <Legend layout="vertical" verticalAlign="middle" align="right" />
-                                        <Pie data={atmosphericReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={100} innerRadius={30} >
+                                        <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                        <Pie data={atmosphericReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
                                             {COLORS.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
                                     </PieChart>
                                 </Box>
-                                {/* <Box className="graphics">
-                                    <Typography textAlign='center' variant="h5">Ambiente Universitario</Typography>
-                                    <BarChart layout="horizontal" width={900} height={300} data={atmosphericReasonsCount} >
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <YAxis type="number" />
-                                        <XAxis tickFormatter={(value) => value.toLocaleString().replace(/ /g, '\u00A0')} dataKey="Razon" type="category" padding="gap" />
-                                        <Tooltip />
-                                        <Bar dataKey={"Cantidad"} fill="blue">
-                                            {
-                                                COLORS.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                                                ))
-                                            }
-                                        </Bar>
-                                    </BarChart>
-                                </Box> */}
                             </div>
                         </CardContent>
                     </Card>
