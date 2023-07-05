@@ -19,6 +19,16 @@ export default function Login() {
     const [surveyAnswered] = React.useState(false);
     const [openAlert, setOpenAlert] = React.useState(false);
 
+    const [params, setParams] = React.useState(null);
+
+    React.useEffect(() => {
+        const queryParams = new URLSearchParams(location.search).get('accessCode');
+        setParams(queryParams);
+        if (params) {
+            setCode(params);
+        }
+    }, [location.search, params]);
+
     React.useEffect(() => {
         codeRef.current.focus();
     }, []);

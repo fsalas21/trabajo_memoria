@@ -52,6 +52,7 @@ export default function SurveyForm() {
     const [otherFirstAcademicReasons, setOtherFirstAcademicReasons] = React.useState("");
     const [otherSecondAcademicReasons, setOtherSecondAcademicReasons] = React.useState("");
     const [detailAtmosphericReasons, setDetailAtmosphericReasons] = React.useState("");
+    const [detailVocationalReasons, setDetailVocationalReasons] = React.useState("");
     const [otherAtmosphericReasons, setOtherAtmosphericReasons] = React.useState("");
     const [otherReasons, setOtherReasons] = React.useState("");
 
@@ -123,6 +124,13 @@ export default function SurveyForm() {
         setOtherSecondAcademicReasons(e.target.value);
         updateOtherSecondAcademic = { OTHER_RA2: e.target.value };
         setJson(jsonString => ({ ...jsonString, ...updateOtherSecondAcademic }));
+    }
+
+    function handleDetailVocational(e) {
+        let updateDetailVocational = {};
+        setDetailVocationalReasons(e.target.value);
+        updateDetailVocational = { Detail_VOC: e.target.value };
+        setJson(jsonString => ({ ...jsonString, ...updateDetailVocational }));
     }
 
     function handleDetailAtmospheric(e) {
@@ -429,6 +437,7 @@ export default function SurveyForm() {
                 RA2: jsonString.RA2 ? jsonString.RA2 : [],
                 AU: jsonString.AU ? jsonString.AU : [],
                 Detail_AU: jsonString.Detail_AU ? jsonString.Detail_AU : "-",
+                Detail_VOC: jsonString.Detail_VOC ? jsonString.Detail_VOC : "-"
             };
             addRespuesta(respuesta);
             updateStudent(respuesta.rut);
@@ -661,7 +670,28 @@ export default function SurveyForm() {
                                                                                 <Paper className='paperTest' elevation={0}>
                                                                                     <CheckboxComponent list={vocationalReasons} onChange={handleChangeCheckboxVocational} />
                                                                                 </Paper>
-                                                                                <div style={{ display: (vocationalReasons[3].isChecked || vocationalReasons[4].isChecked) ? 'block' : 'none' }}>
+                                                                                <div style={{ display: (vocationalReasons[3].isChecked) ? 'block' : 'none' }}>
+                                                                                    <ColoredLine color='#E0E0E0' />
+                                                                                    <Typography className='cardSubtitle' variant='body'>{DETAIL_QUESTION}</Typography>
+                                                                                    <Paper className='paperTest' elevation={0}>
+                                                                                        <TextField
+                                                                                            sx={{
+                                                                                                '& .MuiOutlinedInput-root': {
+                                                                                                    '& fieldset': { borderColor: '#E0E0E0' }, '&:hover fieldset': { borderColor: '#E0E0E0' }, '&.Mui-focused fieldset': {
+                                                                                                        border: '1px solid #E0E0E0'
+                                                                                                    }
+                                                                                                }
+                                                                                            }}
+                                                                                            value={detailVocationalReasons}
+                                                                                            onChange={handleDetailVocational}
+                                                                                            multiline
+                                                                                            fullWidth
+                                                                                            rows={3}
+                                                                                            id="filled-textarea"
+                                                                                        />
+                                                                                    </Paper>
+                                                                                </div>
+                                                                                <div style={{ display: (vocationalReasons[4].isChecked) ? 'block' : 'none' }}>
                                                                                     <ColoredLine color='#E0E0E0' />
                                                                                     <Typography className='cardSubtitle' variant='body'>{DETAIL_OTHER_QUESTION}</Typography>
                                                                                     <Paper className='paperTest' elevation={0}>

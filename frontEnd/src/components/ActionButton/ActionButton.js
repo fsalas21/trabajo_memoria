@@ -24,23 +24,28 @@ const ActionButton = (estudiante) => {
             { to_name: name, message: code, to_email: email },
             process.env.REACT_APP_PUBLIC_KEY)
             .then(result => {
-                console.log('result', result);
-                console.log('result', result.text);
-                // setSendEmailStatus(result.status);
                 setSendEmailMsg(SENT_EMAIL_MESSAGE);
             })
             .catch(error => {
                 console.log('error', error.text);
-                // setSendEmailStatus(error.status);
                 setSendEmailMsg(ERROR_SENT_EMAIL_MESSAGE);
             });
     }
 
     function handleResendMail() {
+        let status = { rut: estudiante.RUT, timesSent: estudiante.timesSent + 1 };
         const nombres = estudiante.nombre;
         const code = estudiante.codigoAcceso;
         const correo = estudiante.correo;
         sendEmail(nombres, code, correo);
+        axios.put("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/updateTimesSent", status)
+            .then(result => {
+                console.log('Estado actualizado. Resultado: \n', result);
+                refresh(2000);
+            })
+            .catch(error => {
+                console.log('No se ha encontrado un estudiante con ese RUT. Error: \n', error);
+            });
         setAnchorEl(null);
         setOpenAlert(true);
     }
@@ -54,20 +59,18 @@ const ActionButton = (estudiante) => {
         setOpenAlert(false);
     }
 
-    function refresh() {
+    function refresh(time) {
         setTimeout(function () {
             window.location.reload();
-        }, 600);
+        }, time);
     }
 
     function handleUpdateStudent() {
         let status = { rut: estudiante.RUT, answeredSurvey: true };
-        console.log('Estudiante: ', estudiante);
-        console.log('Rut', estudiante.RUT);
         axios.put("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/updateSurveyStatus", status)
             .then(result => {
                 console.log('Estado actualizado. Resultado: \n', result);
-                refresh();
+                refresh(600);
             })
             .catch(error => {
                 console.log('No se ha encontrado un estudiante con ese RUT. Error: \n', error);
