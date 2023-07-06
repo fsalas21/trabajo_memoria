@@ -386,7 +386,7 @@ export default function SurveyForm() {
     let selectedAtmosphericReasons = [];
     const onSubmitAtmosphericReason = () => {
         let updateAtmosphericCheckbox = {};
-        secondAcademicReasons.forEach(element => {
+        atmosphereReasons.forEach(element => {
             if (element.isChecked) {
                 selectedAtmosphericReasons.push(element.name);
             }

@@ -147,10 +147,11 @@ const TableTracking = () => {
             fileReader.readAsText(file);
         }
         setIsDataLoaded(true);
-        console.log('isDataLoaded', isDataLoaded);
-        if (isDataLoaded) {
-            refresh();
-        }
+    }
+
+    console.log('isDataLoaded', isDataLoaded);
+    if (isDataLoaded) {
+        refresh();
     }
 
     function addStudents(student) {
@@ -183,7 +184,7 @@ const TableTracking = () => {
     }
 
     const downloadTemplate = ({ data }) => {
-        const blob = new Blob([data], { type: 'text/csv' });
+        const blob = new Blob(["\uFEFF" + data], { type: 'text/csv;charset=utf-8;' });
         const a = document.createElement('a');
         a.download = 'template.csv';
         a.href = window.URL.createObjectURL(blob);
