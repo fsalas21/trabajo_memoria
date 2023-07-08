@@ -9,6 +9,11 @@ const SEF_SECTION_TITLE = 'Situación Económica y Familiar';
 const VOC_SECTION_TITLE = 'Vocacional';
 const RA_TITLE = 'Rendimiento Académico';
 const AU_TITLE = 'Ambiente Universitario';
+// const SEF_TRANSLATED = 'SEF';
+// const VOC_TRANSLATED = 'VOC';
+// const RA1_TRANSLATED = 'RA1';
+// const RA2_TRANSLATED = 'RA2';
+// const AU_TRANSLATED = 'AU';
 const TODAS = 'Todas';
 const TODOS = 'Todos';
 
@@ -31,6 +36,7 @@ export default function Home() {
     const [detailAUResponse, setDetailAtmosphericReasons] = React.useState([]);
     const [detailVOCResponse, setDetailVocationalReasons] = React.useState([]);
 
+    const [submitting, setSubmitting] = React.useState(true);
     const [formattedSurveyData, setFormattedSurveyData] = React.useState();
     const [retiredByYearCount, setRetiredByYearCount] = React.useState();
     const [globalReasonsCount, setGlobalReasonsCount] = React.useState();
@@ -39,7 +45,7 @@ export default function Home() {
     const [atmosphericReasonsCount, setAtmosphericReasonsCount] = React.useState();
     const [vocationalRasonsCount, setVocationalRasonsCount] = React.useState();
     const [economicReasonsCount, setEconomicReasonsCount] = React.useState();
-    const [years, setYears] = React.useState([]);
+    const [years, setYears] = React.useState([TODOS]);
     const [selectedYear, setSelectedYear] = React.useState(TODOS);
     const [selectedReason, setSelectedReson] = React.useState(TODAS);
 
@@ -65,7 +71,7 @@ export default function Home() {
         async function fetchData() {
             const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
             setFormattedSurveyData(JSON.parse(JSON.stringify(response.survey)).map(formatSurveyData(this)));
-            let yearArray = [];
+
             let detailVOCResponseArray = [];
             let detailAUResponseArray = [];
             let otherVOCOptionResponseArray = [];
@@ -74,11 +80,9 @@ export default function Home() {
             let otherSEFOptionResponseArray = [];
             let otrosMotivoResponseArray = [];
 
-            yearArray.push(TODOS);
-            formattedSurveyData.forEach(element => {
-                if (!yearArray.includes(element.retiro_universidad)) {
-                    yearArray.push(element.retiro_universidad);
-                }
+            setYears([TODOS, ...new Set(formattedSurveyData?.map(item => item.retiro_universidad))]);
+
+            formattedSurveyData?.forEach(element => {
                 element.Detail_VOC !== "-" ? detailVOCResponseArray.push(element.Detail_VOC) : dummyFunction(element.Detail_VOC);
                 element.Detail_AU !== "-" ? detailAUResponseArray.push(element.Detail_AU) : dummyFunction(element.Detail_AU);
                 element.OTHER_VOC !== "-" ? otherVOCOptionResponseArray.push(element.OTHER_VOC) : dummyFunction(element.OTHER_VOC);
@@ -88,7 +92,7 @@ export default function Home() {
                 element.OTHER_SEF !== "-" ? otherSEFOptionResponseArray.push(element.OTHER_SEF) : dummyFunction(element.OTHER_SEF);
                 element.otro_motivo !== "-" ? otrosMotivoResponseArray.push(element.otro_motivo) : dummyFunction(element.otro_motivo);
             });
-            setYears(yearArray.sort().reverse());
+
             setDetailVocationalReasons(detailVOCResponseArray);
             setDetailAtmosphericReasons(detailAUResponseArray);
             setOtherAUOptionResponse(otherAUOptionResponseArray);
@@ -100,20 +104,56 @@ export default function Home() {
         fetchData();
     }, [formattedSurveyData]);
 
-    React.useMemo(() => {
+    const getData = React.useCallback(async () => {
+        const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
+        console.log('response.retiredByYear', response.retiredByYear);
+        setRetiredByYearCount(JSON.parse(JSON.stringify(response.retiredByYear)).map(formatRetireByYearData(this)));
+        setGlobalReasonsCount(JSON.parse(JSON.stringify(response.globalReasons)).map(formatReasonsData(this)));
+        setAcademicReasonOneCount(JSON.parse(JSON.stringify(response.academicReasonOne)).map(formatReasonsData(this)));
+        setAcademicReasonTwoCount(JSON.parse(JSON.stringify(response.academicReasonTwo)).map(formatReasonsData(this)));
+        setAtmosphericReasonsCount(JSON.parse(JSON.stringify(response.atmosphericReasons)).map(formatReasonsData(this)));
+        setVocationalRasonsCount(JSON.parse(JSON.stringify(response.vocationalRasons)).map(formatReasonsData(this)));
+        setEconomicReasonsCount(JSON.parse(JSON.stringify(response.economicReasons)).map(formatReasonsData(this)));
+    }, []);
+
+    React.useEffect(() => {
         async function fetchPipelinesData() {
             console.log('Se llamo a la BD');
-            const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
-            setRetiredByYearCount(JSON.parse(JSON.stringify(response.retiredByYear)).map(formatRetireByYearData(this)));
-            setGlobalReasonsCount(JSON.parse(JSON.stringify(response.globalReasons)).map(formatReasonsData(this)));
-            setAcademicReasonOneCount(JSON.parse(JSON.stringify(response.academicReasonOne)).map(formatReasonsData(this)));
-            setAcademicReasonTwoCount(JSON.parse(JSON.stringify(response.academicReasonTwo)).map(formatReasonsData(this)));
-            setAtmosphericReasonsCount(JSON.parse(JSON.stringify(response.atmosphericReasons)).map(formatReasonsData(this)));
-            setVocationalRasonsCount(JSON.parse(JSON.stringify(response.vocationalRasons)).map(formatReasonsData(this)));
-            setEconomicReasonsCount(JSON.parse(JSON.stringify(response.economicReasons)).map(formatReasonsData(this)));
+            console.log('SelectedYear', selectedYear, '\nSelectedReason', selectedReason);
+
+            // console.log('Hola');
+            // const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
+            // console.log('response.retiredByYear', response.retiredByYear);
+            // setRetiredByYearCount(JSON.parse(JSON.stringify(response.retiredByYear)).map(formatRetireByYearData(this)));
+            // setGlobalReasonsCount(JSON.parse(JSON.stringify(response.globalReasons)).map(formatReasonsData(this)));
+            // setAcademicReasonOneCount(JSON.parse(JSON.stringify(response.academicReasonOne)).map(formatReasonsData(this)));
+            // setAcademicReasonTwoCount(JSON.parse(JSON.stringify(response.academicReasonTwo)).map(formatReasonsData(this)));
+            // setAtmosphericReasonsCount(JSON.parse(JSON.stringify(response.atmosphericReasons)).map(formatReasonsData(this)));
+            // setVocationalRasonsCount(JSON.parse(JSON.stringify(response.vocationalRasons)).map(formatReasonsData(this)));
+            // setEconomicReasonsCount(JSON.parse(JSON.stringify(response.economicReasons)).map(formatReasonsData(this)));
+
+            if (selectedYear !== TODOS) {
+                let pipeline = JSON.stringify({ selectedYear });
+                const { data: newResponse } = await axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/respuestasFiltradas", { pipeline: pipeline });
+                setRetiredByYearCount(JSON.parse(JSON.stringify(newResponse.retiredByYear)).map(formatRetireByYearData(this)));
+                setGlobalReasonsCount(JSON.parse(JSON.stringify(newResponse.globalReasons)).map(formatReasonsData(this)));
+                setAcademicReasonOneCount(JSON.parse(JSON.stringify(newResponse.academicReasonOne)).map(formatReasonsData(this)));
+                setAcademicReasonTwoCount(JSON.parse(JSON.stringify(newResponse.academicReasonTwo)).map(formatReasonsData(this)));
+                setAtmosphericReasonsCount(JSON.parse(JSON.stringify(newResponse.atmosphericReasons)).map(formatReasonsData(this)));
+                setVocationalRasonsCount(JSON.parse(JSON.stringify(newResponse.vocationalRasons)).map(formatReasonsData(this)));
+                setEconomicReasonsCount(JSON.parse(JSON.stringify(newResponse.economicReasons)).map(formatReasonsData(this)));
+            }
+            else {
+                if (submitting) {
+                    console.log('Submitting');
+                    getData().then(() => setSubmitting(false));
+
+                }
+            }
         }
         fetchPipelinesData();
-    }, []);
+        setSubmitting(true);
+    }, [selectedReason, selectedYear, getData, submitting]);
 
     function handleYearChange(event) {
         setSelectedYear(event.target.value);
@@ -183,6 +223,10 @@ export default function Home() {
         };
     }
 
+    function BigSpinner() {
+        return <h2>🌀 Loading...</h2>;
+    }
+
     return (
         <Box display='flex' justifyContent="center" alignItems='center' sx={{ my: 2, mx: 2 }}>
             <Grid container>
@@ -230,32 +274,94 @@ export default function Home() {
                                     </Modal>
                                 </Box>
                             </Stack>
-                            <ColoredLine color='#E0E0E0' />
-                            {/* <center>{detailAUResponse.map((lista, i) => <p key={i}>{lista}</p>)}</center>
-                            <ColoredLine color='#E0E0E0' /> */}
-                            <Typography textAlign='center' variant="h4">Gráficos</Typography>
-                            {/* <ColoredLine color='#E0E0E0' /> */}
-                            <Grid container>
-                                <Grid item xs={selectedReason === TODAS ? 4 : 12}>
-                                    <Box className="graphics">
-                                        <Typography textAlign='center' variant="h7">Deserción por años</Typography>
-                                        <LineChart width={selectedReason === TODAS ? 400 : 900} height={300} data={retiredByYearCount} >
-                                            <CartesianGrid strokeDasharray={"3 3"} />
-                                            <XAxis dataKey="Año" />
-                                            <YAxis />
-                                            <Tooltip />
-                                            <Legend />
-                                            <Line type="monotone" isAnimationActive={false} dataKey="Cantidad" stroke="#8884d8" dot={true} />
-                                        </LineChart>
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={8}>
-                                    <div style={{ display: selectedReason === TODAS ? 'block' : 'none' }}>
+                        </CardContent>
+                    </Card>
+                    <React.Suspense fallback={<BigSpinner />}>
+
+                        <Card>
+                            <CardContent>
+                                <Typography textAlign='center' variant="h4">Gráficos</Typography>
+                                <Grid container>
+                                    <Grid item xs={selectedReason === TODAS ? 4 : 12}>
                                         <Box className="graphics">
-                                            <Typography textAlign='center' variant="h7">Razones Globales de Deserción</Typography>
-                                            <PieChart width={800} height={300}>
+                                            <Typography textAlign='center' variant="h7">Deserción por años</Typography>
+                                            <LineChart width={selectedReason === TODAS ? 400 : 900} height={300} data={retiredByYearCount} >
+                                                <CartesianGrid strokeDasharray={"3 3"} />
+                                                <XAxis dataKey="Año" />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Line type="monotone" isAnimationActive={false} dataKey="Cantidad" stroke="#8884d8" dot={true} />
+                                            </LineChart>
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <div style={{ display: (selectedReason === TODAS) ? 'block' : 'none' }}>
+                                            <Box className="graphics">
+                                                <Typography textAlign='center' variant="h7">Razones Globales de Deserción</Typography>
+                                                <PieChart width={800} height={300}>
+                                                    <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                                    <Pie data={globalReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={120} innerRadius={30} >
+                                                        {COLORS.map((entry, index) => (
+                                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                        ))}
+                                                    </Pie>
+                                                </PieChart>
+                                            </Box>
+                                        </div>
+                                    </Grid>
+                                    <div style={{ display: selectedReason === RA_TITLE ? 'block' : 'none' }}>
+                                        <Box className="graphics">
+                                            <PieChart width={1000} height={500}>
                                                 <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
-                                                <Pie data={globalReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={120} innerRadius={30} >
+                                                <Pie data={academicReasonOneCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
+                                                    {COLORS.map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                    ))}
+                                                </Pie>
+                                            </PieChart>
+                                            <PieChart width={1000} height={500}>
+                                                <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                                <Pie data={academicReasonTwoCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
+                                                    {COLORS.map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                    ))}
+                                                </Pie>
+                                            </PieChart>
+                                        </Box>
+                                    </div>
+
+                                    <div style={{ display: selectedReason === SEF_SECTION_TITLE ? 'block' : 'none' }}>
+                                        <Box className="graphics">
+                                            <PieChart width={1000} height={500}>
+                                                <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                                <Pie data={economicReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
+                                                    {COLORS.map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                    ))}
+                                                </Pie>
+                                            </PieChart>
+                                        </Box>
+                                    </div>
+
+                                    <div style={{ display: selectedReason === VOC_SECTION_TITLE ? 'block' : 'none' }}>
+                                        <Box className="graphics">
+                                            <PieChart width={1000} height={500}>
+                                                <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                                <Pie data={vocationalRasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
+                                                    {COLORS.map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                    ))}
+                                                </Pie>
+                                            </PieChart>
+                                        </Box>
+                                    </div>
+
+                                    <div style={{ display: selectedReason === AU_TITLE ? 'block' : 'none' }}>
+                                        <Box className="graphics">
+                                            <PieChart width={1000} height={500}>
+                                                <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                                <Pie data={atmosphericReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
                                                     {COLORS.map((entry, index) => (
                                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                                     ))}
@@ -264,69 +370,10 @@ export default function Home() {
                                         </Box>
                                     </div>
                                 </Grid>
-                                <div style={{ display: selectedReason === RA_TITLE ? 'block' : 'none' }}>
-                                    <Box className="graphics">
-                                        <PieChart width={1000} height={500}>
-                                            <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
-                                            <Pie data={academicReasonOneCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
-                                                {COLORS.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                                ))}
-                                            </Pie>
-                                        </PieChart>
-                                        <PieChart width={1000} height={500}>
-                                            <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
-                                            <Pie data={academicReasonTwoCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
-                                                {COLORS.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                                ))}
-                                            </Pie>
-                                        </PieChart>
-                                    </Box>
-                                </div>
 
-                                <div style={{ display: selectedReason === SEF_SECTION_TITLE ? 'block' : 'none' }}>
-                                    <Box className="graphics">
-                                        <PieChart width={1000} height={500}>
-                                            <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
-                                            <Pie data={economicReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
-                                                {COLORS.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                                ))}
-                                            </Pie>
-                                        </PieChart>
-                                    </Box>
-                                </div>
-
-                                <div style={{ display: selectedReason === VOC_SECTION_TITLE ? 'block' : 'none' }}>
-                                    <Box className="graphics">
-                                        <PieChart width={1000} height={500}>
-                                            <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
-                                            <Pie data={vocationalRasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
-                                                {COLORS.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                                ))}
-                                            </Pie>
-                                        </PieChart>
-                                    </Box>
-                                </div>
-
-                                <div style={{ display: selectedReason === AU_TITLE ? 'block' : 'none' }}>
-                                    <Box className="graphics">
-                                        <PieChart width={1000} height={500}>
-                                            <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
-                                            <Pie data={atmosphericReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={150} innerRadius={30} >
-                                                {COLORS.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                                ))}
-                                            </Pie>
-                                        </PieChart>
-                                    </Box>
-                                </div>
-                            </Grid>
-
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    </React.Suspense>
                 </Grid>
             </Grid>
         </Box>
