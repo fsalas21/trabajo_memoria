@@ -57,15 +57,15 @@ export default function Home() {
         return;
     }
 
-    const ColoredLine = ({ color }) => (
-        <hr
-            style={{
-                color: color,
-                backgroundColor: color,
-                height: 1
-            }}
-        />
-    );
+    // const ColoredLine = ({ color }) => (
+    //     <hr
+    //         style={{
+    //             color: color,
+    //             backgroundColor: color,
+    //             height: 1
+    //         }}
+    //     />
+    // );
 
     React.useMemo(() => {
         async function fetchData() {
@@ -104,39 +104,107 @@ export default function Home() {
         fetchData();
     }, [formattedSurveyData]);
 
+    const transformRetiredByYear = React.useCallback((object) => {
+        let formattedObj = object.map(record => {
+            let newObj = {};
+            newObj.Año = record.x;
+            if (record.color === "Campus Casa Central Valparaíso") {
+                newObj.CC = record.y;
+                newObj.CSJ = 0;
+            }
+            else {
+                newObj.CC = 0;
+                newObj.CSJ = record.y;
+            }
+            return newObj;
+        });
+
+        let result = formattedObj.reduce((prev, next) => {
+            if (next.Año in prev) {
+                prev[next.Año].CC += next.CC;
+                prev[next.Año].CSJ += next.CSJ;
+            }
+            else {
+                prev[next.Año] = next;
+            }
+            return prev;
+        }, {});
+
+
+        let finalresult = Object.keys(result).map(x => result[x]);
+        return finalresult;
+        // let retiredYearsCC = object.filter(record => record.color === "Campus Casa Central Valparaíso").map(formatRetireByYearData(this));
+        // let retiredYearsCSJ = object.filter(record => record.color === "Campus Santiago San Joaquín").map(formatRetireByYearData(this));
+        // let seriesData = [
+        //     {
+        //         campus: "Campus Casa Central Valparaíso",
+        //         data: retiredYearsCC
+        //     },
+        //     {
+        //         campus: "Campus Santiago San Joaquín",
+        //         data: retiredYearsCSJ
+        //     }
+        // ];
+        // return seriesData;
+    }, []);
+
     const getData = React.useCallback(async () => {
         const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
-        setRetiredByYearCount(JSON.parse(JSON.stringify(response?.retiredByYear)).map(formatRetireByYearData(this)));
+        console.log('response?.retiredByYear', response?.retiredByYear);
+        console.log('trasnformed: ', transformRetiredByYear(response?.retiredByYear));
+
+        // setRetiredByYearCount(JSON.parse(JSON.stringify(response?.retiredByYear)).map(formatRetireByYearData(this)));
+        setRetiredByYearCount(transformRetiredByYear(response?.retiredByYear));
         setGlobalReasonsCount(JSON.parse(JSON.stringify(response?.globalReasons)).map(formatReasonsData(this)));
         setAcademicReasonOneCount(JSON.parse(JSON.stringify(response?.academicReasonOne)).map(formatReasonsData(this)));
         setAcademicReasonTwoCount(JSON.parse(JSON.stringify(response?.academicReasonTwo)).map(formatReasonsData(this)));
         setAtmosphericReasonsCount(JSON.parse(JSON.stringify(response?.atmosphericReasons)).map(formatReasonsData(this)));
         setVocationalRasonsCount(JSON.parse(JSON.stringify(response?.vocationalRasons)).map(formatReasonsData(this)));
         setEconomicReasonsCount(JSON.parse(JSON.stringify(response?.economicReasons)).map(formatReasonsData(this)));
-    }, []);
+    }, [transformRetiredByYear]);
 
-    React.useMemo(() => {
-        async function fetchPipelinesData() {
-            if (selectedYear !== TODOS) {
-                let pipeline = JSON.stringify({ selectedYear });
-                const { data: newResponse } = await axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/respuestasFiltradas", { pipeline: pipeline });
-                setRetiredByYearCount(JSON.parse(JSON.stringify(newResponse?.retiredByYear)).map(formatRetireByYearData(this)));
-                setGlobalReasonsCount(JSON.parse(JSON.stringify(newResponse?.globalReasons)).map(formatReasonsData(this)));
-                setAcademicReasonOneCount(JSON.parse(JSON.stringify(newResponse?.academicReasonOne)).map(formatReasonsData(this)));
-                setAcademicReasonTwoCount(JSON.parse(JSON.stringify(newResponse?.academicReasonTwo)).map(formatReasonsData(this)));
-                setAtmosphericReasonsCount(JSON.parse(JSON.stringify(newResponse?.atmosphericReasons)).map(formatReasonsData(this)));
-                setVocationalRasonsCount(JSON.parse(JSON.stringify(newResponse?.vocationalRasons)).map(formatReasonsData(this)));
-                setEconomicReasonsCount(JSON.parse(JSON.stringify(newResponse?.economicReasons)).map(formatReasonsData(this)));
-            }
-            else {
-                if (submitting) {
-                    getData().then(() => setSubmitting(false));
-                }
+    const fetchPipeData = React.useCallback(async () => {
+        if (selectedYear !== TODOS) {
+            let pipeline = JSON.stringify({ selectedYear });
+            const { data: newResponse } = await axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/respuestasFiltradas", { pipeline: pipeline });
+            setRetiredByYearCount(JSON.parse(JSON.stringify(newResponse?.retiredByYear)).map(formatRetireByYearData(this)));
+            setGlobalReasonsCount(JSON.parse(JSON.stringify(newResponse?.globalReasons)).map(formatReasonsData(this)));
+            setAcademicReasonOneCount(JSON.parse(JSON.stringify(newResponse?.academicReasonOne)).map(formatReasonsData(this)));
+            setAcademicReasonTwoCount(JSON.parse(JSON.stringify(newResponse?.academicReasonTwo)).map(formatReasonsData(this)));
+            setAtmosphericReasonsCount(JSON.parse(JSON.stringify(newResponse?.atmosphericReasons)).map(formatReasonsData(this)));
+            setVocationalRasonsCount(JSON.parse(JSON.stringify(newResponse?.vocationalRasons)).map(formatReasonsData(this)));
+            setEconomicReasonsCount(JSON.parse(JSON.stringify(newResponse?.economicReasons)).map(formatReasonsData(this)));
+        }
+        else {
+            if (submitting) {
+                getData().then(() => setSubmitting(false));
             }
         }
-        fetchPipelinesData();
-        setSubmitting(true);
     }, [selectedYear, getData, submitting]);
+
+    React.useEffect(() => {
+        // async function fetchPipelinesData() {
+        //     if (selectedYear !== TODOS) {
+        //         let pipeline = JSON.stringify({ selectedYear });
+        //         const { data: newResponse } = await axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/respuestasFiltradas", { pipeline: pipeline });
+        //         setRetiredByYearCount(JSON.parse(JSON.stringify(newResponse?.retiredByYear)).map(formatRetireByYearData(this)));
+        //         setGlobalReasonsCount(JSON.parse(JSON.stringify(newResponse?.globalReasons)).map(formatReasonsData(this)));
+        //         setAcademicReasonOneCount(JSON.parse(JSON.stringify(newResponse?.academicReasonOne)).map(formatReasonsData(this)));
+        //         setAcademicReasonTwoCount(JSON.parse(JSON.stringify(newResponse?.academicReasonTwo)).map(formatReasonsData(this)));
+        //         setAtmosphericReasonsCount(JSON.parse(JSON.stringify(newResponse?.atmosphericReasons)).map(formatReasonsData(this)));
+        //         setVocationalRasonsCount(JSON.parse(JSON.stringify(newResponse?.vocationalRasons)).map(formatReasonsData(this)));
+        //         setEconomicReasonsCount(JSON.parse(JSON.stringify(newResponse?.economicReasons)).map(formatReasonsData(this)));
+        //     }
+        //     else {
+        //         if (submitting) {
+        //             getData().then(() => setSubmitting(false));
+        //         }
+        //     }
+        // }
+        // fetchPipelinesData();
+        fetchPipeData();
+        setSubmitting(true);
+    }, [selectedYear, getData, submitting, fetchPipeData]);
 
     function handleYearChange(event) {
         setSelectedYear(event.target.value);
@@ -264,13 +332,14 @@ export default function Home() {
                                         <Typography textAlign='center' variant="h7">Deserción por años</Typography>
                                         <br />
                                         <div style={{ display: selectedYear === TODOS ? 'block' : 'none' }}>
-                                            <LineChart width={selectedReason === TODAS ? 400 : 900} height={300} data={retiredByYearCount} >
+                                            <LineChart width={selectedReason === TODAS ? 400 : 900} height={300} data={retiredByYearCount}>
                                                 <CartesianGrid strokeDasharray={"3 3"} />
-                                                <XAxis dataKey="Año" />
+                                                <XAxis dataKey="Año" allowDuplicatedCategory={false} />
                                                 <YAxis />
                                                 <Tooltip />
                                                 <Legend />
-                                                <Line type="monotone" isAnimationActive={false} dataKey="Cantidad" stroke="#8884d8" dot={true} />
+                                                <Line type="monotone" isAnimationActive={false} dataKey="CC" stroke="#8884d8" dot={true} />
+                                                <Line type="monotone" isAnimationActive={false} dataKey="CSJ" stroke="#FF0000" dot={true} />
                                             </LineChart>
                                         </div>
                                         <div style={{ display: selectedYear !== TODOS ? 'block' : 'none' }}>
