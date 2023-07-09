@@ -71,6 +71,7 @@ export default function Home() {
         async function fetchData() {
             const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
             setFormattedSurveyData(JSON.parse(JSON.stringify(response.survey)).map(formatSurveyData(this)));
+            setYears([TODOS, ...new Set(formattedSurveyData?.map(item => item.retiro_universidad))]);
 
             let detailVOCResponseArray = [];
             let detailAUResponseArray = [];
@@ -80,7 +81,6 @@ export default function Home() {
             let otherSEFOptionResponseArray = [];
             let otrosMotivoResponseArray = [];
 
-            setYears([TODOS, ...new Set(formattedSurveyData?.map(item => item.retiro_universidad))]);
 
             formattedSurveyData?.forEach(element => {
                 element.Detail_VOC !== "-" ? detailVOCResponseArray.push(element.Detail_VOC) : dummyFunction(element.Detail_VOC);
