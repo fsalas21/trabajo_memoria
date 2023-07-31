@@ -57,17 +57,7 @@ export default function Home() {
         return;
     }
 
-    // const ColoredLine = ({ color }) => (
-    //     <hr
-    //         style={{
-    //             color: color,
-    //             backgroundColor: color,
-    //             height: 1
-    //         }}
-    //     />
-    // );
-
-    React.useMemo(() => {
+    React.useEffect(() => {
         async function fetchData() {
             const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
             setFormattedSurveyData(JSON.parse(JSON.stringify(response.survey)).map(formatSurveyData(this)));
@@ -102,7 +92,7 @@ export default function Home() {
             setOtherOptionResponse(otrosMotivoResponseArray);
         }
         fetchData();
-    }, [formattedSurveyData]);
+    }, [formattedSurveyData, detailVOCResponse, detailAUResponse, otherAUOptionResponse, otherVOCOptionResponse, otherOptionResponse, otherRAOptionResponse, otherSEFOptionResponse]);
 
     const transformRetiredByYear = React.useCallback((object) => {
         let formattedObj = object.map(record => {
@@ -133,19 +123,6 @@ export default function Home() {
 
         let finalresult = Object.keys(result).map(x => result[x]);
         return finalresult;
-        // let retiredYearsCC = object.filter(record => record.color === "Campus Casa Central Valparaíso").map(formatRetireByYearData(this));
-        // let retiredYearsCSJ = object.filter(record => record.color === "Campus Santiago San Joaquín").map(formatRetireByYearData(this));
-        // let seriesData = [
-        //     {
-        //         campus: "Campus Casa Central Valparaíso",
-        //         data: retiredYearsCC
-        //     },
-        //     {
-        //         campus: "Campus Santiago San Joaquín",
-        //         data: retiredYearsCSJ
-        //     }
-        // ];
-        // return seriesData;
     }, []);
 
     const getData = React.useCallback(async () => {
@@ -153,7 +130,6 @@ export default function Home() {
         console.log('response?.retiredByYear', response?.retiredByYear);
         console.log('trasnformed: ', transformRetiredByYear(response?.retiredByYear));
 
-        // setRetiredByYearCount(JSON.parse(JSON.stringify(response?.retiredByYear)).map(formatRetireByYearData(this)));
         setRetiredByYearCount(transformRetiredByYear(response?.retiredByYear));
         setGlobalReasonsCount(JSON.parse(JSON.stringify(response?.globalReasons)).map(formatReasonsData(this)));
         setAcademicReasonOneCount(JSON.parse(JSON.stringify(response?.academicReasonOne)).map(formatReasonsData(this)));
@@ -177,41 +153,26 @@ export default function Home() {
         }
         else {
             if (submitting) {
-                getData().then(() => setSubmitting(false));
+                getData().then(() => {
+                    setSubmitting(false);
+                });
             }
         }
     }, [selectedYear, getData, submitting]);
 
     React.useEffect(() => {
-        // async function fetchPipelinesData() {
-        //     if (selectedYear !== TODOS) {
-        //         let pipeline = JSON.stringify({ selectedYear });
-        //         const { data: newResponse } = await axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/respuestasFiltradas", { pipeline: pipeline });
-        //         setRetiredByYearCount(JSON.parse(JSON.stringify(newResponse?.retiredByYear)).map(formatRetireByYearData(this)));
-        //         setGlobalReasonsCount(JSON.parse(JSON.stringify(newResponse?.globalReasons)).map(formatReasonsData(this)));
-        //         setAcademicReasonOneCount(JSON.parse(JSON.stringify(newResponse?.academicReasonOne)).map(formatReasonsData(this)));
-        //         setAcademicReasonTwoCount(JSON.parse(JSON.stringify(newResponse?.academicReasonTwo)).map(formatReasonsData(this)));
-        //         setAtmosphericReasonsCount(JSON.parse(JSON.stringify(newResponse?.atmosphericReasons)).map(formatReasonsData(this)));
-        //         setVocationalRasonsCount(JSON.parse(JSON.stringify(newResponse?.vocationalRasons)).map(formatReasonsData(this)));
-        //         setEconomicReasonsCount(JSON.parse(JSON.stringify(newResponse?.economicReasons)).map(formatReasonsData(this)));
-        //     }
-        //     else {
-        //         if (submitting) {
-        //             getData().then(() => setSubmitting(false));
-        //         }
-        //     }
-        // }
-        // fetchPipelinesData();
         fetchPipeData();
-        setSubmitting(true);
+        // setSubmitting(true);
     }, [selectedYear, getData, submitting, fetchPipeData]);
 
     function handleYearChange(event) {
         setSelectedYear(event.target.value);
+        setSubmitting(true);
     }
 
     function handleReasonChange(event) {
         setSelectedReson(event.target.value);
+        setSubmitting(true);
     }
 
     function formatSurveyData(self) {
