@@ -180,7 +180,7 @@ const TableTracking = () => {
     function refresh() {
         setTimeout(function () {
             window.location.reload();
-        }, 2000);
+        }, 6000);
     }
 
     const downloadTemplate = ({ data }) => {
