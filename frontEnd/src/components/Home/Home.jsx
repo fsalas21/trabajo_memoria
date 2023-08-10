@@ -17,13 +17,11 @@ const AU_TITLE = 'Ambiente Universitario';
 const TODAS = 'Todas';
 const TODOS = 'Todos';
 
-const RAZONES = [
-    TODAS,
-    AU_TITLE,
-    RA_TITLE,
-    SEF_SECTION_TITLE,
-    VOC_SECTION_TITLE,
-];
+const CASA_CENTRAL = 'Campus Casa Central Valparaíso';
+const CAMPUS_SJ = 'Campus Santiago San Joaquín';
+
+const RAZONES = [TODAS, AU_TITLE, RA_TITLE, SEF_SECTION_TITLE, VOC_SECTION_TITLE];
+const CAMPUS = [TODOS, CASA_CENTRAL, CAMPUS_SJ];
 
 const COLORS = ["#115f9a", "#1984c5", "#22a7f0", "#48b5c4", "#76c68f", "#a6d75b", "#c9e52f", "#d0ee11", "#d0f400"];
 export default function Home() {
@@ -39,6 +37,8 @@ export default function Home() {
     const [submitting, setSubmitting] = React.useState(true);
     const [formattedSurveyData, setFormattedSurveyData] = React.useState();
     const [retiredByYearCount, setRetiredByYearCount] = React.useState();
+    const [generationYearCount, setGenerationYearCount] = React.useState();
+    const [genderCount, setGenderCount] = React.useState();
     const [globalReasonsCount, setGlobalReasonsCount] = React.useState();
     const [academicReasonOneCount, setAcademicReasonOneCount] = React.useState();
     const [academicReasonTwoCount, setAcademicReasonTwoCount] = React.useState();
@@ -47,7 +47,8 @@ export default function Home() {
     const [economicReasonsCount, setEconomicReasonsCount] = React.useState();
     const [years, setYears] = React.useState([TODOS]);
     const [selectedYear, setSelectedYear] = React.useState(TODOS);
-    const [selectedReason, setSelectedReson] = React.useState(TODAS);
+    const [selectedCampus, setSelectedCampus] = React.useState(TODOS);
+    const [selectedReason, setSelectedReason] = React.useState(TODAS);
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -62,9 +63,9 @@ export default function Home() {
             const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
             setFormattedSurveyData(JSON.parse(JSON.stringify(response.survey)).map(formatSurveyData(this)));
             const setAnnos = new Set(formattedSurveyData?.map(item => item.retiro_universidad));
-            console.log('setAnnos: ', setAnnos);
+            // console.log('setAnnos: ', setAnnos);
             const sortedArry = Array.from(setAnnos).sort().reverse();
-            console.log('sortedArry: ', sortedArry);
+            // console.log('sortedArry: ', sortedArry);
             setYears([TODOS, ...sortedArry]);
 
             let detailVOCResponseArray = [];
@@ -74,7 +75,6 @@ export default function Home() {
             let otherRAOptionResponseArray = [];
             let otherSEFOptionResponseArray = [];
             let otrosMotivoResponseArray = [];
-
 
             formattedSurveyData?.forEach(element => {
                 element.Detail_VOC !== "-" ? detailVOCResponseArray.push(element.Detail_VOC) : dummyFunction(element.Detail_VOC);
@@ -98,7 +98,7 @@ export default function Home() {
         fetchData();
     }, [formattedSurveyData, detailVOCResponse, detailAUResponse, otherAUOptionResponse, otherVOCOptionResponse, otherOptionResponse, otherRAOptionResponse, otherSEFOptionResponse]);
 
-    const transformRetiredByYear = React.useCallback((object) => {
+    const transformYear = React.useCallback((object) => {
         let formattedObj = object.map(record => {
             let newObj = {};
             newObj.Año = record.x;
@@ -131,17 +131,20 @@ export default function Home() {
 
     const getData = React.useCallback(async () => {
         const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
-        console.log('response?.retiredByYear', response?.retiredByYear);
-        console.log('trasnformed: ', transformRetiredByYear(response?.retiredByYear));
+        console.log('response?.generationYear', response?.generationYear);
+        console.log('trasnformed generationYear: ', transformYear(response?.generationYear));
+        console.log('trasnformed retiredByYear: ', transformYear(response?.retiredByYear));
 
-        setRetiredByYearCount(transformRetiredByYear(response?.retiredByYear));
+        setRetiredByYearCount(transformYear(response?.retiredByYear));
+        setGenerationYearCount(transformYear(response?.generationYear));
+        setGenderCount(JSON.parse(JSON.stringify(response?.gender)).map(formatGenderData(this)));
         setGlobalReasonsCount(JSON.parse(JSON.stringify(response?.globalReasons)).map(formatReasonsData(this)));
         setAcademicReasonOneCount(JSON.parse(JSON.stringify(response?.academicReasonOne)).map(formatReasonsData(this)));
         setAcademicReasonTwoCount(JSON.parse(JSON.stringify(response?.academicReasonTwo)).map(formatReasonsData(this)));
         setAtmosphericReasonsCount(JSON.parse(JSON.stringify(response?.atmosphericReasons)).map(formatReasonsData(this)));
         setVocationalRasonsCount(JSON.parse(JSON.stringify(response?.vocationalRasons)).map(formatReasonsData(this)));
         setEconomicReasonsCount(JSON.parse(JSON.stringify(response?.economicReasons)).map(formatReasonsData(this)));
-    }, [transformRetiredByYear]);
+    }, [transformYear]);
 
     const fetchPipeData = React.useCallback(async () => {
         if (selectedYear !== TODOS) {
@@ -169,15 +172,69 @@ export default function Home() {
         // setSubmitting(true);
     }, [selectedYear, getData, submitting, fetchPipeData]);
 
+
     function handleYearChange(event) {
         setSelectedYear(event.target.value);
         setSubmitting(true);
     }
 
     function handleReasonChange(event) {
-        setSelectedReson(event.target.value);
+        setSelectedReason(event.target.value);
         setSubmitting(true);
     }
+
+    function handleCampusChange(event) {
+        setSelectedCampus(event.target.value);
+        setSubmitting(true);
+    }
+
+    function renderCustomizedLabel(props) {
+        const RADIAN = Math.PI / 180;
+        const { cx, cy, midAngle, innerRadius, outerRadius, value } = props;
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+                {`${value}`}
+            </text>
+        );
+    };
+
+    function renderCustomizedLabelGender(props) {
+        const RADIAN = Math.PI / 180;
+        const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <g>
+                {/* <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">{`${value}`}</text> */}
+                <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+                    {`${(percent * 100).toFixed(0)}%`}
+                </text>
+            </g>
+        );
+    };
+
+    function renderCustomizedLabelGlobalReason(props) {
+        const RADIAN = Math.PI / 180;
+        const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <g>
+                {/* <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">{`${value}`}</text> */}
+                <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+                    {`${(percent * 100).toFixed(0)}%`}
+                </text>
+            </g>
+        );
+    };
 
     function formatSurveyData(self) {
         return record => {
@@ -206,26 +263,20 @@ export default function Home() {
 
     }
 
-    function renderCustomizedLabel(props) {
-        // console.log('props', props);
-        const RADIAN = Math.PI / 180;
-        const { cx, cy, midAngle, innerRadius, outerRadius, value } = props;
-        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-        const x = cx + radius * Math.cos(-midAngle * RADIAN);
-        const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-        return (
-            <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-                {`${value}`}
-            </text>
-        );
-    };
-
     function formatReasonsData() {
         return record => {
             let object = {};
             object.Razon = record.x.replace(" (pedir detallar)", "");
             object.Cantidad = record.y;
+            return object;
+        };
+    }
+
+    function formatGenderData() {
+        return record => {
+            let object = {};
+            object.Genero = record.label;
+            object.Cantidad = record.value;
             return object;
         };
     }
@@ -244,11 +295,11 @@ export default function Home() {
             <Grid container>
                 <Grid item xs={12} >
                     <Card variant='outlined'>
-                        <CardContent>
+                        <CardContent> {/* Filtros */}
                             <Typography textAlign='left' variant="h5">Filtros</Typography>
                             <br />
                             <Stack direction="row">
-                                <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+                                <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
                                     <InputLabel >Año de retiro</InputLabel>
                                     <Select label="Año de retiro" value={selectedYear} onChange={handleYearChange}>
                                         {years.map(option => {
@@ -258,10 +309,20 @@ export default function Home() {
                                         })}
                                     </Select>
                                 </FormControl>
-                                <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+                                <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
                                     <InputLabel>Razones de retiro</InputLabel>
                                     <Select label="Razones de Retiro" value={selectedReason} onChange={handleReasonChange}>
                                         {RAZONES.map(option => {
+                                            return (
+                                                <MenuItem key={option} value={option}>{option}</MenuItem>
+                                            );
+                                        })}
+                                    </Select>
+                                </FormControl>
+                                <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
+                                    <InputLabel>Campus</InputLabel>
+                                    <Select label="Campus" value={selectedCampus} onChange={handleCampusChange}>
+                                        {CAMPUS.map(option => {
                                             return (
                                                 <MenuItem key={option} value={option}>{option}</MenuItem>
                                             );
@@ -289,7 +350,7 @@ export default function Home() {
                         </CardContent>
                     </Card>
                     <Card>
-                        <CardContent>
+                        <CardContent> {/* Graficos */}
                             <Typography textAlign='center' variant="h4">Gráficos</Typography>
                             <Grid container>
                                 <Grid item xs={selectedReason === TODAS ? 4 : 12}>
@@ -318,13 +379,54 @@ export default function Home() {
                                         </div>
                                     </Box>
                                 </Grid>
-                                <Grid item xs={8}>
+                                <Grid item xs={selectedReason === TODAS ? 8 : 12}>
+                                    <div style={{ display: (selectedReason === TODAS) ? 'block' : 'none' }}>
+                                        <Box className="graphics">
+                                            <Typography textAlign='center' variant="h7">Género</Typography>
+                                            <PieChart width={800} height={300}>
+                                                <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
+                                                <Pie data={genderCount} dataKey="Cantidad" nameKey="Genero" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabelGender} outerRadius={120} innerRadius={30} >
+                                                    {COLORS.map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                    ))}
+                                                </Pie>
+                                            </PieChart>
+                                        </Box>
+                                    </div>
+                                </Grid>
+                                <Grid item xs={selectedReason === TODAS ? 4 : 12}>
+                                    <Box className="graphics" >
+                                        <Typography textAlign='center' variant="h7">Deserción por generación</Typography>
+                                        <br />
+                                        <div style={{ display: selectedYear === TODOS ? 'block' : 'none' }}>
+                                            <LineChart width={selectedReason === TODAS ? 400 : 900} height={300} data={generationYearCount}>
+                                                <CartesianGrid strokeDasharray={"3 3"} />
+                                                <XAxis dataKey="Año" allowDuplicatedCategory={false} />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Line type="monotone" isAnimationActive={false} dataKey="CC" stroke="#8884d8" dot={true} />
+                                                <Line type="monotone" isAnimationActive={false} dataKey="CSJ" stroke="#FF0000" dot={true} />
+                                            </LineChart>
+                                        </div>
+                                        <div style={{ display: selectedYear !== TODOS ? 'block' : 'none' }}>
+                                            <BarChart width={selectedReason === TODAS ? 400 : 900} height={300} data={generationYearCount}>
+                                                <CartesianGrid strokeDasharray={"3 3"} />
+                                                <XAxis dataKey="Año" />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Bar dataKey="Cantidad" fill={COLORS[2]} />
+                                            </BarChart>
+                                        </div>
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={selectedReason === TODAS ? 8 : 12}>
                                     <div style={{ display: (selectedReason === TODAS) ? 'block' : 'none' }}>
                                         <Box className="graphics">
                                             <Typography textAlign='center' variant="h7">Razones Globales de Deserción</Typography>
                                             <PieChart width={800} height={300}>
                                                 <Legend layout="vertical" verticalAlign="middle" align="right" width={400} />
-                                                <Pie data={globalReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={120} innerRadius={30} >
+                                                <Pie data={globalReasonsCount} dataKey="Cantidad" nameKey="Razon" cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabelGlobalReason} outerRadius={120} innerRadius={30} >
                                                     {COLORS.map((entry, index) => (
                                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                                     ))}

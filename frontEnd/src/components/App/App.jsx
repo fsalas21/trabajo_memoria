@@ -1,11 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import moment from 'moment';
 import { Routes, Route } from 'react-router-dom';
-import Graphics from '../Layout/Graphics.js';
-import SurveyForm from '../Survey/Survey.js';
-import Tracking from '../Layout/Tracking';
-import Login from '../Login/Login.js';
-import RequireAuth from '../Auth/RequireAuth.js';
+import Graphics from '../Layout/Graphics.jsx';
+import SurveyForm from '../Survey/Survey.jsx';
+import Tracking from '../Layout/Tracking.jsx';
+import Login from '../Login/Login.jsx';
+import RequireAuth from '../Auth/RequireAuth.jsx';
 
 const App = () => {
 

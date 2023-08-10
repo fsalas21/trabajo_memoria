@@ -3,7 +3,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CheckboxComponent from '../CheckboxComponent/CheckboxComponent';
 // import Header from '../Header/Header';
 import * as React from 'react';
-import { Alert, Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Stack, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, InputLabel, MenuItem, OutlinedInput, Paper, Radio, RadioGroup, Select, Stack, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
 import './survey.css';
 
 const CASA_CENTRAL = 'Campus Casa Central Valparaíso';
@@ -35,6 +35,7 @@ const MAX_RUT_WIDTH = 10;
 const MAX_ROL_WIDTH = 11;
 
 const STEPS = ['Datos Personales', 'Motivos Gobales', 'Motivos Específicos', 'Finalizar'];
+const GENDERS = ['Femenino', 'Masculino', 'No Binario', 'No deseo responder'];
 
 export default function SurveyForm() {
 
@@ -43,6 +44,7 @@ export default function SurveyForm() {
     const [nombre, setNombre] = React.useState("");
     const [primerApellido, setPrimerApellido] = React.useState("");
     const [segundoApellido, setSegundoApellido] = React.useState("");
+    const [genero, setGenero] = React.useState("");
     const [annoIngresoUni, setAnnoIngresoUni] = React.useState("");
     const [annoRetiroUni, setAnnoRetiroUni] = React.useState("");
     const [annoIngresoCarrera, setAnnoIngresoCarrera] = React.useState("");
@@ -96,6 +98,13 @@ export default function SurveyForm() {
         setAnnoRetiroUni(e.target.value);
         updateAnoRetiroUni = { anno_retiro_carrera: parseInt(e.target.value) };
         setJson(jsonString => ({ ...jsonString, ...updateAnoRetiroUni }));
+    }
+
+    function handleChangeGender(e) {
+        let updateGender = {};
+        setGenero(e.target.value);
+        updateGender = { genero: e.target.value };
+        setJson(jsonString => ({ ...jsonString, ...updateGender }));
     }
 
     function handleOtherFamily(e) {
@@ -421,6 +430,7 @@ export default function SurveyForm() {
                 anno_ingreso_carrera: jsonString.anno_ingreso_carrera ? jsonString.anno_ingreso_carrera : null,
                 anno_ingreso_universidad: jsonString.anno_ingreso_universidad ? jsonString.anno_ingreso_universidad : null,
                 anno_retiro_universidad: jsonString.anno_retiro_carrera ? jsonString.anno_retiro_carrera : null,
+                genero: jsonString.genero ? jsonString.genero : null,
                 rut: jsonString.rut ? jsonString.rut : null,
                 rol: jsonString.rol ? jsonString.rol : null,
                 campus: jsonString.campus ? jsonString.campus : null,
@@ -513,12 +523,16 @@ export default function SurveyForm() {
         setJson(jsonString => ({ ...jsonString, ...updateRol }));
     };
 
+    const MenuProps = {
+        PaperProps: {
+            style: {
+                width: 'fit-content'
+            }
+        }
+    };
+
     return (
         <Stack>
-            {/*Recordar eliminar*/}
-            {/* <div>
-                <Header />
-            </div> */}
             <div className='global-container'>
                 <Box display='flex' justifyContent='center'>
                     <div>
@@ -585,6 +599,16 @@ export default function SurveyForm() {
                                                                         </Grid>
                                                                     </Grid>
                                                                     <Grid container direction={'row'} columnSpacing={5}>
+                                                                        <Grid item xs={4}>
+                                                                            <FormControl fullWidth>
+                                                                                <InputLabel>Género</InputLabel>
+                                                                                <Select value={genero} onChange={handleChangeGender} input={<OutlinedInput label="Género" />} MenuProps={MenuProps}>
+                                                                                    {GENDERS.map((gender) => (
+                                                                                        <MenuItem key={gender} value={gender}>{gender}</MenuItem>
+                                                                                    ))}
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                        </Grid>
                                                                         <Grid item xs={4}>
                                                                             <TextField id='rut' label='RUT' inputProps={{ pattern: '[0-9]*-[0-9]', maxLength: 10 }} error={rut.length > MAX_RUT_WIDTH || /[a-zA-Z]/.test(rut)} helperText={errorRutMessage} onChange={handleRUT} fullWidth required />
                                                                         </Grid>

@@ -6,3 +6,9 @@
     -webkit-font-smoothing: antialiased;
     text-transform: capitalize !important;
 }
+
+.nameCol {
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
