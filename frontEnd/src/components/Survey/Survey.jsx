@@ -1,7 +1,7 @@
 import axios from 'axios';
 import CheckIcon from '@mui/icons-material/Check';
 import CheckboxComponent from '../CheckboxComponent/CheckboxComponent';
-// import Header from '../Header/Header';
+import Header from '../Header/Header';
 import * as React from 'react';
 import { Alert, Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, InputLabel, MenuItem, OutlinedInput, Paper, Radio, RadioGroup, Select, Stack, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
 import './survey.css';
@@ -533,6 +533,9 @@ export default function SurveyForm() {
 
     return (
         <Stack>
+            <div>
+                <Header />
+            </div>
             <div className='global-container'>
                 <Box display='flex' justifyContent='center'>
                     <div>

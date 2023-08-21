@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import axios from "axios";
 import "./Login.css";
+import Header from '../Header/Header';
 
 export default function Login() {
     const { setAuth } = useAuth();
@@ -72,6 +73,7 @@ export default function Login() {
 
     return (
         <Stack>
+            <Header />
             <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 open={openAlert}
                 message={errorMsg}
