@@ -9,11 +9,6 @@ const SEF_SECTION_TITLE = 'Situación Económica y Familiar';
 const VOC_SECTION_TITLE = 'Vocacional';
 const RA_TITLE = 'Rendimiento Académico';
 const AU_TITLE = 'Ambiente Universitario';
-// const SEF_TRANSLATED = 'SEF';
-// const VOC_TRANSLATED = 'VOC';
-// const RA1_TRANSLATED = 'RA1';
-// const RA2_TRANSLATED = 'RA2';
-// const AU_TRANSLATED = 'AU';
 const TODAS = 'Todas';
 const TODOS = 'Todos';
 
@@ -89,51 +84,93 @@ export default function Home() {
         return finalresult;
     }, []);
 
+    // React.useEffect(() => {
+    //     async function fetchData() {
+    //         const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
+    //         setFormattedSurveyData(JSON.parse(JSON.stringify(response.survey)).map(formatSurveyData(this)));
+    //         const setAnnos = new Set(formattedSurveyData?.map(item => item.retiro_universidad));
+    //         // console.log('setAnnos: ', setAnnos);
+    //         const sortedArry = Array.from(setAnnos).sort().reverse();
+    //         // console.log('sortedArry: ', sortedArry);
+    //         setYears([TODOS, ...sortedArry]);
+
+    //         let detailVOCResponseArray = [];
+    //         let detailAUResponseArray = [];
+    //         let otherVOCOptionResponseArray = [];
+    //         let otherAUOptionResponseArray = [];
+    //         let otherRAOptionResponseArray = [];
+    //         let otherSEFOptionResponseArray = [];
+    //         let otrosMotivoResponseArray = [];
+
+    //         formattedSurveyData?.forEach(element => {
+    //             element.Detail_VOC !== "-" ? detailVOCResponseArray.push(element.Detail_VOC) : dummyFunction(element.Detail_VOC);
+    //             element.Detail_AU !== "-" ? detailAUResponseArray.push(element.Detail_AU) : dummyFunction(element.Detail_AU);
+    //             element.OTHER_VOC !== "-" ? otherVOCOptionResponseArray.push(element.OTHER_VOC) : dummyFunction(element.OTHER_VOC);
+    //             element.OTHER_AU !== "-" ? otherAUOptionResponseArray.push(element.OTHER_AU) : dummyFunction(element.OTHER_AU);
+    //             element.OTHER_RA1 !== "-" ? otherRAOptionResponseArray.push(element.OTHER_RA1) : dummyFunction(element.OTHER_RA1);
+    //             element.OTHER_RA2 !== "-" ? otherRAOptionResponseArray.push(element.OTHER_RA2) : dummyFunction(element.OTHER_RA2);
+    //             element.OTHER_SEF !== "-" ? otherSEFOptionResponseArray.push(element.OTHER_SEF) : dummyFunction(element.OTHER_SEF);
+    //             element.otro_motivo !== "-" ? otrosMotivoResponseArray.push(element.otro_motivo) : dummyFunction(element.otro_motivo);
+    //         });
+
+    //         setDetailVocationalReasons(detailVOCResponseArray);
+    //         setDetailAtmosphericReasons(detailAUResponseArray);
+    //         setOtherAUOptionResponse(otherAUOptionResponseArray);
+    //         setOtherVOCOptionResponse(otherVOCOptionResponseArray);
+    //         setOtherRAOptionResponse(otherRAOptionResponseArray);
+    //         setOtherSEFOptionResponse(otherSEFOptionResponseArray);
+    //         setOtherOptionResponse(otrosMotivoResponseArray);
+    //     }
+    //     fetchData();
+    // }, [formattedSurveyData, detailVOCResponse, detailAUResponse, otherAUOptionResponse, otherVOCOptionResponse, otherOptionResponse, otherRAOptionResponse, otherSEFOptionResponse]);
+
+
     const getData = React.useCallback(async () => {
-        const { data: response } = await axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas");
-        console.log('getData React.useCallback');
+        axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas")
+            .then(response => {
+                let formatted = JSON.parse(JSON.stringify(response.data.survey)).map(formatSurveyData(this));
+                setFormattedSurveyData(formatted);
+                const yearSet = new Set(formatted?.map(item => item.retiro_universidad));
+                const sortedArry = Array.from(yearSet).sort().reverse();
+                setYears([TODOS, ...sortedArry]);
 
-        setFormattedSurveyData(JSON.parse(JSON.stringify(response.survey)).map(formatSurveyData(this)));
-        const setAnnos = new Set(formattedSurveyData?.map(item => item.retiro_universidad));
-        const sortedArry = Array.from(setAnnos).sort().reverse();
-        setYears([TODOS, ...sortedArry]);
+                let detailVOCResponseArray = [];
+                let detailAUResponseArray = [];
+                let otherVOCOptionResponseArray = [];
+                let otherAUOptionResponseArray = [];
+                let otherRAOptionResponseArray = [];
+                let otherSEFOptionResponseArray = [];
+                let otrosMotivoResponseArray = [];
 
-        let detailVOCResponseArray = [];
-        let detailAUResponseArray = [];
-        let otherVOCOptionResponseArray = [];
-        let otherAUOptionResponseArray = [];
-        let otherRAOptionResponseArray = [];
-        let otherSEFOptionResponseArray = [];
-        let otrosMotivoResponseArray = [];
+                formattedSurveyData?.forEach(element => {
+                    element.Detail_VOC !== "-" ? detailVOCResponseArray.push(element.Detail_VOC) : dummyFunction(element.Detail_VOC);
+                    element.Detail_AU !== "-" ? detailAUResponseArray.push(element.Detail_AU) : dummyFunction(element.Detail_AU);
+                    element.OTHER_VOC !== "-" ? otherVOCOptionResponseArray.push(element.OTHER_VOC) : dummyFunction(element.OTHER_VOC);
+                    element.OTHER_AU !== "-" ? otherAUOptionResponseArray.push(element.OTHER_AU) : dummyFunction(element.OTHER_AU);
+                    element.OTHER_RA1 !== "-" ? otherRAOptionResponseArray.push(element.OTHER_RA1) : dummyFunction(element.OTHER_RA1);
+                    element.OTHER_RA2 !== "-" ? otherRAOptionResponseArray.push(element.OTHER_RA2) : dummyFunction(element.OTHER_RA2);
+                    element.OTHER_SEF !== "-" ? otherSEFOptionResponseArray.push(element.OTHER_SEF) : dummyFunction(element.OTHER_SEF);
+                    element.otro_motivo !== "-" ? otrosMotivoResponseArray.push(element.otro_motivo) : dummyFunction(element.otro_motivo);
+                });
 
-        formattedSurveyData?.forEach(element => {
-            element.Detail_VOC !== "-" ? detailVOCResponseArray.push(element.Detail_VOC) : dummyFunction(element.Detail_VOC);
-            element.Detail_AU !== "-" ? detailAUResponseArray.push(element.Detail_AU) : dummyFunction(element.Detail_AU);
-            element.OTHER_VOC !== "-" ? otherVOCOptionResponseArray.push(element.OTHER_VOC) : dummyFunction(element.OTHER_VOC);
-            element.OTHER_AU !== "-" ? otherAUOptionResponseArray.push(element.OTHER_AU) : dummyFunction(element.OTHER_AU);
-            element.OTHER_RA1 !== "-" ? otherRAOptionResponseArray.push(element.OTHER_RA1) : dummyFunction(element.OTHER_RA1);
-            element.OTHER_RA2 !== "-" ? otherRAOptionResponseArray.push(element.OTHER_RA2) : dummyFunction(element.OTHER_RA2);
-            element.OTHER_SEF !== "-" ? otherSEFOptionResponseArray.push(element.OTHER_SEF) : dummyFunction(element.OTHER_SEF);
-            element.otro_motivo !== "-" ? otrosMotivoResponseArray.push(element.otro_motivo) : dummyFunction(element.otro_motivo);
-        });
+                setDetailVocationalReasons(detailVOCResponseArray);
+                setDetailAtmosphericReasons(detailAUResponseArray);
+                setOtherAUOptionResponse(otherAUOptionResponseArray);
+                setOtherVOCOptionResponse(otherVOCOptionResponseArray);
+                setOtherRAOptionResponse(otherRAOptionResponseArray);
+                setOtherSEFOptionResponse(otherSEFOptionResponseArray);
+                setOtherOptionResponse(otrosMotivoResponseArray);
 
-        setDetailVocationalReasons(detailVOCResponseArray);
-        setDetailAtmosphericReasons(detailAUResponseArray);
-        setOtherAUOptionResponse(otherAUOptionResponseArray);
-        setOtherVOCOptionResponse(otherVOCOptionResponseArray);
-        setOtherRAOptionResponse(otherRAOptionResponseArray);
-        setOtherSEFOptionResponse(otherSEFOptionResponseArray);
-        setOtherOptionResponse(otrosMotivoResponseArray);
-
-        setRetiredByYearCount(transformYear(response?.retiredByYear));
-        setGenerationYearCount(transformYear(response?.generationYear));
-        setGenderCount(JSON.parse(JSON.stringify(response?.gender)).map(formatGenderData(this)));
-        setGlobalReasonsCount(JSON.parse(JSON.stringify(response?.globalReasons)).map(formatReasonsData(this)));
-        setAcademicReasonOneCount(JSON.parse(JSON.stringify(response?.academicReasonOne)).map(formatReasonsData(this)));
-        setAcademicReasonTwoCount(JSON.parse(JSON.stringify(response?.academicReasonTwo)).map(formatReasonsData(this)));
-        setAtmosphericReasonsCount(JSON.parse(JSON.stringify(response?.atmosphericReasons)).map(formatReasonsData(this)));
-        setVocationalRasonsCount(JSON.parse(JSON.stringify(response?.vocationalRasons)).map(formatReasonsData(this)));
-        setEconomicReasonsCount(JSON.parse(JSON.stringify(response?.economicReasons)).map(formatReasonsData(this)));
+                setRetiredByYearCount(transformYear(response?.data?.retiredByYear));
+                setGenerationYearCount(transformYear(response?.data?.generationYear));
+                setGenderCount(JSON.parse(JSON.stringify(response?.data?.gender)).map(formatGenderData(this)));
+                setGlobalReasonsCount(JSON.parse(JSON.stringify(response?.data?.globalReasons)).map(formatReasonsData(this)));
+                setAcademicReasonOneCount(JSON.parse(JSON.stringify(response?.data?.academicReasonOne)).map(formatReasonsData(this)));
+                setAcademicReasonTwoCount(JSON.parse(JSON.stringify(response?.data?.academicReasonTwo)).map(formatReasonsData(this)));
+                setAtmosphericReasonsCount(JSON.parse(JSON.stringify(response?.data?.atmosphericReasons)).map(formatReasonsData(this)));
+                setVocationalRasonsCount(JSON.parse(JSON.stringify(response?.data?.vocationalRasons)).map(formatReasonsData(this)));
+                setEconomicReasonsCount(JSON.parse(JSON.stringify(response?.data?.economicReasons)).map(formatReasonsData(this)));
+            });
     }, [transformYear, formattedSurveyData]);
 
     const fetchPipeData = React.useCallback(async () => {
@@ -142,7 +179,11 @@ export default function Home() {
         if (selectedYear !== TODOS || selectedCampus !== TODOS) {
             pipeline = JSON.stringify({ selectedCampus, selectedYear });
             const { data: newResponse } = await axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/respuestasFiltradas", { pipeline: pipeline });
+            console.log('selectedYear !== TODOS || selectedCampus !== TODOS');
+            console.log('newResponse?.retiredByYear', newResponse?.retiredByYear.map(formatRetireByYearData(this)));
+            console.log('newResponse?.generationYear', newResponse?.generationYear);
             setRetiredByYearCount(JSON.parse(JSON.stringify(newResponse?.retiredByYear)).map(formatRetireByYearData(this)));
+            setGenerationYearCount(JSON.parse(JSON.stringify(newResponse?.generationYear)).map(formatRetireByYearData(this)));
             setGlobalReasonsCount(JSON.parse(JSON.stringify(newResponse?.globalReasons)).map(formatReasonsData(this)));
             setGenderCount(JSON.parse(JSON.stringify(newResponse?.genderReasons)).map(formatGenderData(this)));
             setAcademicReasonOneCount(JSON.parse(JSON.stringify(newResponse?.academicReasonOne)).map(formatReasonsData(this)));
@@ -152,6 +193,7 @@ export default function Home() {
             setEconomicReasonsCount(JSON.parse(JSON.stringify(newResponse?.economicReasons)).map(formatReasonsData(this)));
         }
         else {
+            console.log('Todo en TODOS');
             if (submitting) {
                 getData().then(() => {
                     setSubmitting(false);
@@ -231,25 +273,24 @@ export default function Home() {
     function formatSurveyData(self) {
         return record => {
             let object = {};
-            object.campus = record.campus;
             object.anno_ingreso_carrera = record.anno_ingreso_carrera;
-            object.ingreso_universidad = record.anno_ingreso_universidad;
-            object.retiro_universidad = record.anno_retiro_universidad;
-            object.retiro_universidad = record.anno_retiro_universidad;
-            object.razones = record.razones;
-            object.SEF = record.SEF;
-            object.OTHER_SEF = record.OTHER_SEF;
-            object.VOC = record.VOC;
-            object.OTHER_VOC = record.OTHER_VOC;
-            object.Detail_VOC = record.Detail_VOC;
-            object.RA1 = record.RA1;
-            object.OTHER_RA1 = record.OTHER_RA1;
-            object.RA2 = record.RA2;
-            object.OTHER_RA2 = record.OTHER_RA2;
             object.AU = record.AU;
-            object.OTHER_AU = record.OTHER_AU;
+            object.campus = record.campus;
             object.Detail_AU = record.Detail_AU;
+            object.Detail_VOC = record.Detail_VOC;
+            object.ingreso_universidad = record.anno_ingreso_universidad;
+            object.OTHER_AU = record.OTHER_AU;
+            object.OTHER_RA1 = record.OTHER_RA1;
+            object.OTHER_RA2 = record.OTHER_RA2;
+            object.OTHER_SEF = record.OTHER_SEF;
+            object.OTHER_VOC = record.OTHER_VOC;
             object.otro_motivo = record.otro_motivo;
+            object.RA1 = record.RA1;
+            object.RA2 = record.RA2;
+            object.razones = record.razones;
+            object.retiro_universidad = record.anno_retiro_universidad;
+            object.SEF = record.SEF;
+            object.VOC = record.VOC;
             return object;
         };
 
@@ -349,8 +390,8 @@ export default function Home() {
                                     <Box className="graphics" >
                                         <Typography textAlign='center' variant="h7">Deserción por años</Typography>
                                         <br />
-                                        {/* <div style={{ display: selectedYear === TODOS ? 'block' : 'none' }}> */}
-                                        <div>
+                                        <div style={{ display: selectedYear === TODOS && selectedCampus === TODOS ? 'block' : 'none' }}>
+                                            {/* <div> */}
                                             <LineChart width={selectedReason === TODAS ? 400 : 900} height={300} data={retiredByYearCount}>
                                                 <CartesianGrid strokeDasharray={"3 3"} />
                                                 <XAxis dataKey="Año" allowDuplicatedCategory={false} />
@@ -361,15 +402,16 @@ export default function Home() {
                                                 <Line type="monotone" isAnimationActive={false} dataKey="CSJ" stroke="#FF0000" dot={true} />
                                             </LineChart>
                                         </div>
-                                        {/* <div style={{ display: selectedYear !== TODOS ? 'block' : 'none' }}>
-                                            <BarChart width={selectedReason === TODAS ? 400 : 900} height={300} data={retiredByYearCount}>
+                                        <div style={{ display: selectedCampus !== TODOS && selectedYear === TODOS ? 'block' : 'none' }}>
+                                            <LineChart width={selectedReason === TODAS ? 400 : 900} height={300} data={retiredByYearCount}>
                                                 <CartesianGrid strokeDasharray={"3 3"} />
-                                                <XAxis dataKey="Año" />
+                                                <XAxis dataKey="Año" allowDuplicatedCategory={false} />
                                                 <YAxis />
                                                 <Tooltip />
-                                                <Bar dataKey="Cantidad" fill={COLORS[2]} />
-                                            </BarChart>
-                                        </div> */}
+                                                <Legend />
+                                                <Line type="monotone" isAnimationActive={false} dataKey="Cantidad" stroke="#8884d8" dot={true} />
+                                            </LineChart>
+                                        </div>
                                     </Box>
                                 </Grid>
                                 <Grid item xs={selectedReason === TODAS ? 8 : 12}>
@@ -392,7 +434,7 @@ export default function Home() {
                                         <br />
                                         <Typography textAlign='center' variant="h7">Deserción por generación</Typography>
                                         <br />
-                                        <div style={{ display: selectedYear === TODOS ? 'block' : 'none' }}>
+                                        <div style={{ display: selectedYear === TODOS && selectedCampus === TODOS ? 'block' : 'none' }}>
                                             <LineChart width={selectedReason === TODAS ? 400 : 900} height={300} data={generationYearCount}>
                                                 <CartesianGrid strokeDasharray={"3 3"} />
                                                 <XAxis dataKey="Año" allowDuplicatedCategory={false} />
@@ -401,6 +443,16 @@ export default function Home() {
                                                 <Legend />
                                                 <Line type="monotone" isAnimationActive={false} dataKey="CC" stroke="#8884d8" dot={true} />
                                                 <Line type="monotone" isAnimationActive={false} dataKey="CSJ" stroke="#FF0000" dot={true} />
+                                            </LineChart>
+                                        </div>
+                                        <div style={{ display: selectedCampus !== TODOS && selectedYear === TODOS ? 'block' : 'none' }}>
+                                            <LineChart width={selectedReason === TODAS ? 400 : 900} height={300} data={generationYearCount}>
+                                                <CartesianGrid strokeDasharray={"3 3"} />
+                                                <XAxis dataKey="Año" allowDuplicatedCategory={false} />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Line type="monotone" isAnimationActive={false} dataKey="Cantidad" stroke="#8884d8" dot={true} />
                                             </LineChart>
                                         </div>
                                         <div style={{ display: selectedYear !== TODOS ? 'block' : 'none' }}>
