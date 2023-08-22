@@ -186,9 +186,9 @@ export default function TableTracking() {
         {
             field: 'actions', type: 'actions', width: 60, sortable: false, getActions: (params) =>
                 [
-                    <GridActionsCellItem icon={<SendIcon />} label="Reenviar encuesta" onClick={handleResendMail(params.row)} showInMenu />,
-                    <GridActionsCellItem icon={<QuestionAnswerIcon />} label="Responder encuesta" onClick={handleAnswerSurvey(params.row.codigoAcceso)} showInMenu />,
-                    <GridActionsCellItem icon={<NotInterestedIcon />} label="No desea responder" onClick={handleUpdateStudent(params.row)} showInMenu />,
+                    <GridActionsCellItem icon={<SendIcon />} label="Reenviar encuesta" onClick={handleResendMail(params.row)} disabled={params.row.answeredSurvey} showInMenu />,
+                    <GridActionsCellItem icon={<QuestionAnswerIcon />} label="Responder encuesta" onClick={handleAnswerSurvey(params.row.codigoAcceso)} disabled={params.row.answeredSurvey} showInMenu />,
+                    <GridActionsCellItem icon={<NotInterestedIcon />} label="No desea responder" onClick={handleUpdateStudent(params.row)} disabled={params.row.answeredSurvey} showInMenu />,
                 ]
             , align: 'center', headerAlign: 'center'
         }
