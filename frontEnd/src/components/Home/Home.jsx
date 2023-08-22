@@ -375,6 +375,8 @@ export default function Home() {
                                             <br />
                                             <Typography><b>Razón de retiro:</b> Al elegir esta opción, puedes examinar en detalle las respuesta de los ex-alumnos que se sintieron identificados con ella.</Typography>
                                             <br />
+                                            <Typography><b>Campus:</b> Al elegir esta opción, puedes examinar en detalle las respuesta de los ex-alumnos de cada campus.</Typography>
+                                            <br />
                                             <Typography>Para ver de forma global las razones de deserción en todos los años, es necesario dejar seleccionadas ambas opciones en "Todos" o "Todas" respectivamente.</Typography>
                                         </Box>
                                     </Modal>
