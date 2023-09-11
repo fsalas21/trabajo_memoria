@@ -127,8 +127,9 @@ export default function TableTracking() {
         [],
     );
 
-    const handleAnswerSurvey = React.useCallback((accessCode) => () => {
-        navigate('/signin-code?accessCode=' + accessCode);
+    const handleAnswerSurvey = React.useCallback((nombres, apellidos) => () => {
+        // navigate('/signin-code?accessCode=' + accessCode);
+        navigate('/encuesta-estudiante?nombres=' + nombres + '&apellidos=' + apellidos);
     }, [navigate]);
 
     const detailStyles = React.useMemo(() => ({
@@ -184,13 +185,14 @@ export default function TableTracking() {
         { field: 'answeredSurvey', headerName: 'Encuesta Respondida', flex: 1, align: 'center', valueFormatter: params => transformBooleanValue(params?.value), headerAlign: 'center' },
         { field: 'timesSent', headerName: 'Veces Enviada la Encuesta', flex: 1, align: 'center', headerAlign: 'center' },
         {
-            field: 'actions', type: 'actions', width: 60, sortable: false, getActions: (params) =>
-                [
+            field: 'actions', type: 'actions', width: 60, sortable: false, getActions: (params) => {
+                // console.log(params);
+                return [
                     <GridActionsCellItem icon={<SendIcon />} label="Reenviar encuesta" onClick={handleResendMail(params.row)} disabled={params.row.answeredSurvey} showInMenu />,
-                    <GridActionsCellItem icon={<QuestionAnswerIcon />} label="Responder encuesta" onClick={handleAnswerSurvey(params.row.codigoAcceso)} disabled={params.row.answeredSurvey} showInMenu />,
+                    <GridActionsCellItem icon={<QuestionAnswerIcon />} label="Responder encuesta" onClick={handleAnswerSurvey(params.row.nombre, params.row.apellidos)} disabled={params.row.answeredSurvey} showInMenu />,
                     <GridActionsCellItem icon={<NotInterestedIcon />} label="No desea responder" onClick={handleUpdateStudent(params.row)} disabled={params.row.answeredSurvey} showInMenu />,
-                ]
-            , align: 'center', headerAlign: 'center'
+                ];
+            }, align: 'center', headerAlign: 'center'
         }
     ], [handleResendMail, handleUpdateStudent, handleAnswerSurvey, clickedIndex, detailStyles]);
 

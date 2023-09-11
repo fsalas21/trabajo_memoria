@@ -4,6 +4,7 @@ import CheckboxComponent from '../CheckboxComponent/CheckboxComponent';
 import Header from '../Header/Header';
 import * as React from 'react';
 import { Alert, Box, Button, Card, CardContent, FormControl, FormControlLabel, FormLabel, Grid, InputLabel, MenuItem, OutlinedInput, Paper, Radio, RadioGroup, Select, Stack, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
+import { useSearchParams } from 'react-router-dom';
 import './survey.css';
 
 const CASA_CENTRAL = 'Campus Casa Central Valparaíso';
@@ -530,6 +531,30 @@ export default function SurveyForm() {
             }
         }
     };
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
+
+    React.useEffect(() => {
+        console.log('searchParams:', searchParams);
+        if (searchParams.size > 0) {
+            const nameParam = searchParams.get('nombres');
+            const lastnameParam = searchParams.get('apellidos');
+
+            let apellido_paterno;
+            let apellido_materno;
+
+            if (lastnameParam) {
+                apellido_paterno = lastnameParam.split(' ')[0];
+                apellido_materno = lastnameParam.split(' ')[1];
+            }
+
+            setNombre(nameParam);
+            setPrimerApellido(apellido_paterno);
+            setSegundoApellido(apellido_materno);
+            setJson(jsonString => ({ ...jsonString, nombre: nameParam, apellido_paterno: apellido_paterno, apellido_materno: apellido_materno }));
+        }
+    }, [setSearchParams, searchParams]);
 
     return (
         <Stack>

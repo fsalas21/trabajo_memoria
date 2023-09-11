@@ -5,7 +5,7 @@ import Graphics from '../Layout/Graphics.jsx';
 import SurveyForm from '../Survey/Survey.jsx';
 import Tracking from '../Layout/Tracking.jsx';
 import Login from '../Login/Login.jsx';
-import RequireAuth from '../Auth/RequireAuth.jsx';
+// import RequireAuth from '../Auth/RequireAuth.jsx';
 
 const App = () => {
 
@@ -14,9 +14,9 @@ const App = () => {
 			<Route exact path='/' element={<Graphics />} />
 			<Route exact path='/seguimiento' element={<Tracking />} />
 			<Route exact path='/signin-code' element={<Login />} />
-			<Route element={<RequireAuth />}>
-				<Route exact path='/encuesta-estudiante' element={<SurveyForm />} />
-			</Route>
+			<Route exact path='/encuesta-estudiante' element={<SurveyForm />} />
+			{/* <Route element={<RequireAuth />}>
+			</Route> */}
 		</Routes>
 	);
 };
