@@ -1,0 +1,5 @@
+frontEnd/Schema.txt
+server/encuesta.json
+server/data_sources/mongodb-atlas/memoria/respuestas/schema.json
+server/Models/Encuesta.model.js
+server/Models/Informacion.model.js
