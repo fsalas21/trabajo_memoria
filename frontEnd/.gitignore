@@ -24,3 +24,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 node_modules
+
+*/frontEnd/Schema.txt
+*/frontEnd/src/components/Home/arrayOfAnswers.json
