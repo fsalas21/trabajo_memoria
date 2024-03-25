@@ -2,6 +2,7 @@
   "name": "memoria",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api",
   "dependencies": {
     "@babel/core": "^7.21.0",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",

@@ -41,7 +41,7 @@
                 "type": "integer"
             },
             {
-                "name": "anno_retiro_universidad",
+                "name": "anno_retiro_carrera",
                 "type": "integer"
             },
             {

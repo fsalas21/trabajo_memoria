@@ -52,7 +52,7 @@ const ActionButton = (estudiante) => {
     }
 
     function handleClose() {
-        console.log('params', estudiante);
+        // console.log('params', estudiante);
         setAnchorEl(null);
     };
 

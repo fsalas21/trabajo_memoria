@@ -92,7 +92,7 @@ export default function TableTracking() {
 
     const handleUpdateStudent = React.useCallback(
         (row) => () => {
-            console.log('handleUpdateStudent row Params: ', row);
+            // console.log('handleUpdateStudent row Params: ', row);
             let status = { rut: row.RUT, answeredSurvey: true };
             axios.put("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/updateSurveyStatus", status)
                 .then(result => {
@@ -108,7 +108,7 @@ export default function TableTracking() {
 
     const handleResendMail = React.useCallback(
         (row) => () => {
-            console.log('handleResendMail row params', row);
+            // console.log('handleResendMail row params', row);
             let status = { rut: row.RUT, timesSent: row.timesSent + 1 };
             const nombres = row.nombre;
             const code = row.codigoAcceso;
@@ -217,8 +217,8 @@ export default function TableTracking() {
             fileReader.onload = function (event) {
                 let csvOutput = event.target.result;
                 let date = new Date().toISOString().slice(0, 23);
-                console.log('csvOutput', csvOutput);
-                console.log('file', file);
+                // console.log('csvOutput', csvOutput);
+                // console.log('file', file);
                 const csvHeader = csvOutput.slice(0, csvOutput.indexOf("\r\n")).split(",");
                 const csvRows = csvOutput.slice(csvOutput.indexOf("\n") + 1).split(/\r?\n/).filter(element => element);
 
@@ -228,12 +228,12 @@ export default function TableTracking() {
                         object[header] = values[index];
                         return object;
                     }, {});
-                    console.log('CSV Object', obj);
+                    // console.log('CSV Object', obj);
                     return obj;
                 });
                 array.forEach(element => {
                     const codigo = randomCode();
-                    console.log('Access Code', codigo);
+                    // console.log('Access Code', codigo);
                     let student = {
                         nombre: element.Nombres,
                         apellidos: element.Apellidos,
@@ -245,7 +245,7 @@ export default function TableTracking() {
                         answeredSurvey: false,
                         timesSent: 1,
                     };
-                    console.log('Student Data:', student);
+                    // console.log('Student Data:', student);
                     addStudents(student);
                 });
             };
@@ -261,9 +261,9 @@ export default function TableTracking() {
     function addStudents(student) {
         axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/seguimiento", student)
             .then(response => {
-                console.log('Nombre', student.nombre);
-                console.log('Codigo', student.codigoAcceso);
-                console.log('Correo', student.correo);
+                // console.log('Nombre', student.nombre);
+                // console.log('Codigo', student.codigoAcceso);
+                // console.log('Correo', student.correo);
                 sendEmail(student.nombre, student.codigoAcceso, student.correo);
             });
     }

@@ -11,13 +11,13 @@ export default function Login() {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || '/encuesta-estudiante';
+    const from = location.state?.from?.pathname || '/';
 
     const codeRef = React.useRef();
 
-    const [code, setCode] = React.useState("");
+    const [correo, setCorreo] = React.useState("");
     const [errorMsg, setErrorMsg] = React.useState('');
-    const [surveyAnswered] = React.useState(false);
+    const [activo] = React.useState(true);
     const [openAlert, setOpenAlert] = React.useState(false);
 
     const [params, setParams] = React.useState(null);
@@ -26,7 +26,7 @@ export default function Login() {
         const queryParams = new URLSearchParams(location.search).get('accessCode');
         setParams(queryParams);
         if (params) {
-            setCode(params);
+            setCorreo(params);
         }
     }, [location.search, params]);
 
@@ -35,7 +35,7 @@ export default function Login() {
     }, []);
 
     function handleChange(e) {
-        setCode(e.target.value);
+        setCorreo(e.target.value);
     }
 
     function handleClose() {
@@ -43,7 +43,7 @@ export default function Login() {
     }
 
     function handleKeyDown(event) {
-        console.log('event key', event.key);
+        // console.log('event key', event.key);
         if (event.key === 'Enter') {
             handleLogin(event);
         }
@@ -51,22 +51,22 @@ export default function Login() {
 
     function handleLogin(e) {
         e.preventDefault();
-        let payload = { 'code': code, 'surveyAnswered': surveyAnswered };
+        let payload = { 'correo': correo, 'activo': activo };
 
-        axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/studentCode",
-            payload)
+        axios.post("/allowedUsers", payload)
             .then(result => {
-                console.log('payload ok', payload);
-                console.log('result', result);
-                setAuth({ code: result.data.codigoAcceso, surveyAnswered: result.data.answeredSurvey });
-                setCode('');
+                // console.log('payload ok', payload);
+                // console.log('result', result);
+                setAuth({ correo: result.data.codigoAcceso, activo: result.data.answeredSurvey });
+                setCorreo('');
                 navigate(from, { replace: true });
             })
             .catch(error => {
-                console.log('payload okn\'t', payload);
-                setErrorMsg('Ya se ha respondido una encuesta con el código ingresado o es incorrecto.');
+                // console.log('payload okn\'t', payload);
+                // console.log('payload string', JSON.stringify(payload));
+                setErrorMsg('Correo de usuario no encontrado.');
                 setOpenAlert(true);
-                setCode('');
+                setCorreo('');
                 window.console.log('No es posible obtener datos con ese código. Error: \n' + error);
             });
     }
@@ -83,11 +83,11 @@ export default function Login() {
             <Container component="main" maxWidth="xs">
                 <Box sx={{ boxShadow: 3, borderRadius: 2, px: 4, py: 6, marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <CssBaseline />
-                    <Typography component="h1" variant="h5">Ingrese código de encuesta</Typography>
+                    <Typography component="h1" variant="h5">Ingrese su correo de carrera</Typography>
                     <p></p>
-                    <Typography className="anonMessage" variant="subtitle2">Para acceder a la encuesta, por favor ingrese el código que recibió por correo.</Typography>
+                    <Typography className="anonMessage" variant="subtitle2">Cada usuario tiene un cargo distinto lo cual le permitirá acceder a cierta información.</Typography>
                     <Box >
-                        <TextField margin="normal" ref={codeRef} id="passCode" label="Código de acceso" value={code} onChange={handleChange} onKeyDown={handleKeyDown} fullWidth required />
+                        <TextField margin="normal" ref={codeRef} id="passCode" label="Correo" value={correo} onChange={handleChange} onKeyDown={handleKeyDown} fullWidth required />
                         <Button className="customButton" type="submit" variant="contained" onClick={handleLogin} fullWidth>Ingresar</Button>
                     </Box>
                 </Box>

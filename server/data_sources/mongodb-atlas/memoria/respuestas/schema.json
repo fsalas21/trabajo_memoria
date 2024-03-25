@@ -60,7 +60,7 @@
         "anno_ingreso_universidad": {
             "bsonType": "int"
         },
-        "anno_retiro_universidad": {
+        "anno_retiro_carrera": {
             "bsonType": "int"
         },
         "apellido_materno": {

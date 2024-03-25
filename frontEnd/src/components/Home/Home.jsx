@@ -15,12 +15,29 @@ const TODOS = 'Todos';
 const CASA_CENTRAL = 'Campus Casa Central Valparaíso';
 const CAMPUS_SJ = 'Campus Santiago San Joaquín';
 
+const PRIMER_SEMESTRE = 'Primer Semestre';
+const SEGUNDO_SEMESTRE = 'Segundo Semestre';
+
 const RAZONES = [TODAS, AU_TITLE, RA_TITLE, SEF_SECTION_TITLE, VOC_SECTION_TITLE];
 const CAMPUS = [TODOS, CASA_CENTRAL, CAMPUS_SJ];
+const SEMESTRE = [TODOS, PRIMER_SEMESTRE, SEGUNDO_SEMESTRE];
 
-const COLORS = ["#115f9a", "#1984c5", "#22a7f0", "#48b5c4", "#76c68f", "#a6d75b", "#c9e52f", "#d0ee11", "#d0f400"];
+const CAREERS = [TODAS, 'Arquitectura', 'Construcción Civil', 'Ingeniería Civil', 'Ingeniería Civil Ambiental', 'Ingeniería Civil De Minas', 'Ingeniería Civil Electrónica', 'Ingeniería Civil Eléctrica', 'Ingeniería Civil Industrial', 'Ingeniería Civil Informática', 'Ingeniería Civil Matemática', 'Ingeniería Civil Mecánica', 'Ingeniería Civil Metalúrgica', 'Ingeniería Civil Plan Común', 'Ingeniería Civil Química', 'Ingeniería Civil Telemática', 'Ingeniería Comercial', 'Ingeniería En Aviación Comercial', 'Ingeniería En Diseño De Productos', 'Licenciatura En Astrofísica', 'Licenciatura En Física', 'Técnico Universitario En Mantenimiento Aeronáutico'];
+
+const COLORS = ["#F0B12E", "#F0752E", "#2DB1F0", "#4D91B0", "#B0904D", "#B0724D", "#4D6570", "#70654D", "#705A4D", "#2C3133"];
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
 export default function Home() {
-
     const [otherOptionResponse, setOtherOptionResponse] = React.useState([]);
     const [otherAUOptionResponse, setOtherAUOptionResponse] = React.useState([]);
     const [otherSEFOptionResponse, setOtherSEFOptionResponse] = React.useState([]);
@@ -43,6 +60,8 @@ export default function Home() {
     const [years, setYears] = React.useState([TODOS]);
     const [selectedYear, setSelectedYear] = React.useState(TODOS);
     const [selectedCampus, setSelectedCampus] = React.useState(TODOS);
+    const [selectedSemester, setSelectedSemester] = React.useState(TODOS);
+    const [selectedCareer, setSelectedCareer] = React.useState(TODAS);
     const [selectedReason, setSelectedReason] = React.useState(TODAS);
 
     const [open, setOpen] = React.useState(false);
@@ -55,6 +74,7 @@ export default function Home() {
 
     const transformYear = React.useCallback((object) => {
         let formattedObj = object.map(record => {
+            // console.log('transformYear record', record);
             let newObj = {};
             newObj.Año = record.x;
             if (record.color === "Campus Casa Central Valparaíso") {
@@ -126,11 +146,12 @@ export default function Home() {
 
 
     const getData = React.useCallback(async () => {
-        axios.get("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/encuestasRespondidas")
+        //MongoDB function: getAnsweredSurvey
+        axios.get("/encuestasRespondidas")
             .then(response => {
-                let formatted = JSON.parse(JSON.stringify(response.data.survey)).map(formatSurveyData(this));
-                setFormattedSurveyData(formatted);
-                const yearSet = new Set(formatted?.map(item => item.retiro_universidad));
+                let formattedSurvey = JSON.parse(JSON.stringify(response.data.survey)).map(formatSurveyData(this));
+                setFormattedSurveyData(formattedSurvey);
+                const yearSet = new Set(formattedSurvey?.map(item => item.retiro_universidad));
                 const sortedArry = Array.from(yearSet).sort().reverse();
                 setYears([TODOS, ...sortedArry]);
 
@@ -174,14 +195,15 @@ export default function Home() {
     }, [transformYear, formattedSurveyData]);
 
     const fetchPipeData = React.useCallback(async () => {
-        console.log('fetchPipeData React.useCallback');
         let pipeline;
         if (selectedYear !== TODOS || selectedCampus !== TODOS) {
+            // console.log('Dentro de condición. Campus o Año seleccionado.');
             pipeline = JSON.stringify({ selectedCampus, selectedYear });
-            const { data: newResponse } = await axios.post("https://us-east-1.aws.data.mongodb-api.com/app/application-0-ckkdo/endpoint/api/respuestasFiltradas", { pipeline: pipeline });
-            console.log('selectedYear !== TODOS || selectedCampus !== TODOS');
-            console.log('newResponse?.retiredByYear', newResponse?.retiredByYear.map(formatRetireByYearData(this)));
-            console.log('newResponse?.generationYear', newResponse?.generationYear);
+            const { data: newResponse } = await axios.post("/respuestasFiltradas", { pipeline: pipeline });
+            // console.log('selectedYear !== TODOS || selectedCampus !== TODOS');
+            // console.log('newResponse', newResponse);
+            // console.log('newResponse?.retiredByYear', newResponse?.retiredByYear.map(formatRetireByYearData(this)));
+            // console.log('newResponse?.generationYear', newResponse?.generationYear);
             setRetiredByYearCount(JSON.parse(JSON.stringify(newResponse?.retiredByYear)).map(formatRetireByYearData(this)));
             setGenerationYearCount(JSON.parse(JSON.stringify(newResponse?.generationYear)).map(formatRetireByYearData(this)));
             setGlobalReasonsCount(JSON.parse(JSON.stringify(newResponse?.globalReasons)).map(formatReasonsData(this)));
@@ -193,7 +215,7 @@ export default function Home() {
             setEconomicReasonsCount(JSON.parse(JSON.stringify(newResponse?.economicReasons)).map(formatReasonsData(this)));
         }
         else {
-            console.log('Todo en TODOS');
+            console.log('Obteniendo toda la data. No hay filtros.');
             if (submitting) {
                 getData().then(() => {
                     setSubmitting(false);
@@ -222,6 +244,16 @@ export default function Home() {
         setSubmitting(true);
     }
 
+    function handleSelectedSemester(event) {
+        setSelectedSemester(event.target.value);
+        setSubmitting(true);
+    }
+
+    function handleCareerChange(event) {
+        setSelectedCareer(event.target.value);
+        setSubmitting(true);
+    }
+
     function renderCustomizedLabel(props) {
         const RADIAN = Math.PI / 180;
         const { cx, cy, midAngle, innerRadius, outerRadius, value } = props;
@@ -238,6 +270,7 @@ export default function Home() {
 
     function renderCustomizedLabelGender(props) {
         const RADIAN = Math.PI / 180;
+        // console.log('props: ', props);
         const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
         const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
         const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -273,24 +306,28 @@ export default function Home() {
     function formatSurveyData(self) {
         return record => {
             let object = {};
-            object.anno_ingreso_carrera = record.anno_ingreso_carrera;
-            object.AU = record.AU;
             object.campus = record.campus;
-            object.Detail_AU = record.Detail_AU;
-            object.Detail_VOC = record.Detail_VOC;
+            object.anno_ingreso_carrera = record.anno_ingreso_carrera;
             object.ingreso_universidad = record.anno_ingreso_universidad;
-            object.OTHER_AU = record.OTHER_AU;
-            object.OTHER_RA1 = record.OTHER_RA1;
-            object.OTHER_RA2 = record.OTHER_RA2;
-            object.OTHER_SEF = record.OTHER_SEF;
-            object.OTHER_VOC = record.OTHER_VOC;
-            object.otro_motivo = record.otro_motivo;
-            object.RA1 = record.RA1;
-            object.RA2 = record.RA2;
             object.razones = record.razones;
-            object.retiro_universidad = record.anno_retiro_universidad;
             object.SEF = record.SEF;
+            object.OTHER_SEF = record.OTHER_SEF;
             object.VOC = record.VOC;
+            object.OTHER_VOC = record.OTHER_VOC;
+            object.Detail_VOC = record.Detail_VOC;
+            object.RA1 = record.RA1;
+            object.OTHER_RA1 = record.OTHER_RA1;
+            object.RA2 = record.RA2;
+            object.OTHER_RA2 = record.OTHER_RA2;
+            object.AU = record.AU;
+            object.OTHER_AU = record.OTHER_AU;
+            object.Detail_AU = record.Detail_AU;
+            object.otro_motivo = record.otro_motivo;
+            object.genero = record.genero;
+            object.retiro_universidad = record.anno_retiro_carrera;
+            object.carrera_cambiada = record.carrera_cambiada;
+            object.carrera_inicial = record.carrera_inicial;
+            object.semestre_retiro = record.semestre_retiro;
             return object;
         };
 
@@ -343,6 +380,16 @@ export default function Home() {
                                     </Select>
                                 </FormControl>
                                 <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
+                                    <InputLabel>Semestre de retiro</InputLabel>
+                                    <Select label="Semestre de retiro" value={selectedSemester} onChange={handleSelectedSemester}>
+                                        {SEMESTRE.map(option => {
+                                            return (
+                                                <MenuItem key={option} value={option}>{option}</MenuItem>
+                                            );
+                                        })}
+                                    </Select>
+                                </FormControl>
+                                <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
                                     <InputLabel>Razones de retiro</InputLabel>
                                     <Select label="Razones de Retiro" value={selectedReason} onChange={handleReasonChange}>
                                         {RAZONES.map(option => {
@@ -356,6 +403,16 @@ export default function Home() {
                                     <InputLabel>Campus</InputLabel>
                                     <Select label="Campus" value={selectedCampus} onChange={handleCampusChange}>
                                         {CAMPUS.map(option => {
+                                            return (
+                                                <MenuItem key={option} value={option}>{option}</MenuItem>
+                                            );
+                                        })}
+                                    </Select>
+                                </FormControl>
+                                <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
+                                    <InputLabel>Carrera</InputLabel>
+                                    <Select label="Carrera" value={selectedCareer} onChange={handleCareerChange} MenuProps={MenuProps}>
+                                        {CAREERS.map(option => {
                                             return (
                                                 <MenuItem key={option} value={option}>{option}</MenuItem>
                                             );
@@ -405,6 +462,16 @@ export default function Home() {
                                             </LineChart>
                                         </div>
                                         <div style={{ display: selectedCampus !== TODOS && selectedYear === TODOS ? 'block' : 'none' }}>
+                                            <LineChart width={selectedReason === TODAS ? 400 : 900} height={300} data={retiredByYearCount}>
+                                                <CartesianGrid strokeDasharray={"3 3"} />
+                                                <XAxis dataKey="Año" allowDuplicatedCategory={false} />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Line type="monotone" isAnimationActive={false} dataKey="Cantidad" stroke="#8884d8" dot={true} />
+                                            </LineChart>
+                                        </div>
+                                        <div style={{ display: selectedCampus === TODOS && selectedYear !== TODOS ? 'block' : 'none' }}>
                                             <LineChart width={selectedReason === TODAS ? 400 : 900} height={300} data={retiredByYearCount}>
                                                 <CartesianGrid strokeDasharray={"3 3"} />
                                                 <XAxis dataKey="Año" allowDuplicatedCategory={false} />

@@ -5,12 +5,12 @@ const RequireAuth = () => {
     const { auth } = useAuth();
     const location = useLocation();
 
-    console.log('Auth', auth);
+    // console.log('Auth', auth);
 
     return (
         auth?.code
             ? <Outlet />
-            : <Navigate to='/signin-code' state={{ from: location }} replace />
+            : <Navigate to='/login' state={{ from: location }} replace />
     );
 };
 

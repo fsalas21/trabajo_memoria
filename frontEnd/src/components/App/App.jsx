@@ -13,7 +13,7 @@ const App = () => {
 		<Routes>
 			<Route exact path='/' element={<Graphics />} />
 			<Route exact path='/seguimiento' element={<Tracking />} />
-			<Route exact path='/signin-code' element={<Login />} />
+			<Route exact path='/login' element={<Login />} />
 			<Route exact path='/encuesta-estudiante' element={<SurveyForm />} />
 			{/* <Route element={<RequireAuth />}>
 			</Route> */}
